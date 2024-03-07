@@ -1,0 +1,5 @@
+ReferenceId	String	Client specified id, which is sent back to the client with every data update.
+Timestamp	UtcDateTime	The UTC date and time of the event.
+Data	PriceResponse	The type of data transported by the DomainEvent instance (e.g. price update, position list update etc.).
+PartitionNumber	Int	The partition number if this DomainEvent is a partition.
+TotalPartitions	Int	The total number of partitions if this DomainEvent is a partition.

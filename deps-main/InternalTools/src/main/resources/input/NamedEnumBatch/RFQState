@@ -1,0 +1,4 @@
+CanEnterRfq	Client application can request to enter RFQ
+DealerQuote	This is a dealer quote.
+Error	There was an error in the RFQ flow, please see the ErrorCode
+None	Not in RFQ state

@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    # 'default' in production
+    # assign VM Option "-Dspring.profiles.active=local" during launching for dev to activate local configs
+    active: "default"
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USER}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+# accepting env vars or default value
+logging:
+  level:
+    root: ${LOG_LEVEL:DEBUG}
+
+#org:
+#  example:
+#    spring-web-starter:
+#      admin-doc-enabled: "false"

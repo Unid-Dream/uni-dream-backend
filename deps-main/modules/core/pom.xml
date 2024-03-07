@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>starter</module>
+        <module>rsqlJooq</module>
+        <module>jooqLibs</module>
+        <module>jooqCodeGen</module>
+        <module>feign</module>
+    </modules>
+
+    <parent>
+        <groupId>pwh</groupId>
+        <artifactId>deps</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core-starter</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core-rsql-jooq</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core-jooq-libs</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core-jooq-code-gen</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core-feign</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

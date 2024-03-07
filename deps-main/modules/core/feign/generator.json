@@ -1,0 +1,5 @@
+{
+  "destination": "modules/core",
+  "groupId": "this",
+  "artifactIdPrefix": "core"
+}

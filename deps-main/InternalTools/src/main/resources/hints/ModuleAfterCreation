@@ -1,0 +1,21 @@
+*****************
+!!! ATTENTION !!!
+*****************
+
+===============================================
+Append this to your [parent] `pom.xml` <modules>:
+`
+<module>PVAR_MODULE_NAME</module>
+`
+===============================================
+
+===============================================================
+Append this to your parent's `pom.xml` <dependenciesManagement>
+`
+<dependency>
+    <groupId>PVAR_GROUP_ID</groupId>
+    <artifactId>PVAR_ARTIFACT_ID</artifactId>
+    <version>${PVAR_PARENT_GROUP_ID.version.deps}</version>
+</dependency>
+`
+===============================================================

@@ -1,0 +1,7 @@
+Indicative	This is valid price, but you cannot directly create a position on that price (normally shown as a yellow price).
+NoAccess	User does not have permission to the price feed. While FX prices are normally free, access to other price feeds depends on application type, the partner's default price feeds and feed subscriptions held by the user
+NoMarket	There is currently no access to the market on which the instrument is traded.
+None	Price orgin is unknown.
+OldIndicative	This is valid price, but the price is "old", so you the market may have moved significantly from the price.
+Pending	A price is currently not available, but it will be shortly
+Tradable	Directly tradable price. If this price was received from the /Prices endpoint, as opposed to the /InfoPrices endpoint, the caller use it as the basis for making a trade, by posting to the /Positions endpoint ("TradeOnQuote").

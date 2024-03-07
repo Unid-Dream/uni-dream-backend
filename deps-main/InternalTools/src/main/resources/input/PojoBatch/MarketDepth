@@ -1,0 +1,17 @@
+Ask	Decimal []	List of prices of the current offers to sell in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+AskOrders	Decimal []	List of order counts of the current offers to sell in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+AskSize	Decimal []	List of amounts of the current offers to sell in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Bid	Decimal []	List of prices of the current offers to buy in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+BidOrders	Decimal []	List of order counts of the current offers to buy in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+BidSize	Decimal []	List of amounts of the current offers to buy in the market.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+NoOfBids	Int	Number of current bids on the instrument.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+NoOfOffers	Int	Number of current offers on the instrument.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+UsingOrders	Bool	Using Orders.

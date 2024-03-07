@@ -1,0 +1,5 @@
+{
+  "destination": "modules/core",
+  "groupId": "inherit",
+  "artifactIdPrefix": "core"
+}

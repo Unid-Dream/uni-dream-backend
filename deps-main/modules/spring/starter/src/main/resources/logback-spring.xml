@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="logback/base.xml"/>
+
+    <springProfile name="default">
+        <root level="INFO">
+            <appender-ref ref="ConsoleServer"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="ConsoleLocal"/>
+        </root>
+    </springProfile>
+</configuration>

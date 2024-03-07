@@ -1,0 +1,15 @@
+# Spring Environment Variables
+LOG_LEVEL: "INFO"
+SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5431/product"
+SPRING_DATASOURCE_USER: "duser_app_product"
+SPRING_DATASOURCE_PASSWORD: "diu1^1djnDF"
+
+# Spring standard properties override for Local Development
+logging:
+  level:
+    org:
+      jooq:
+        tools:
+          LoggerListener: DEBUG
+      example:
+        coreRsqlJooq: DEBUG

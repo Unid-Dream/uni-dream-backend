@@ -1,0 +1,7 @@
+Arguments	PriceRequest	Body	Arguments for the subscription request.
+ContextId	String	Body	The streaming context id that this request is associated with. This parameter must only contain letters (a-z) and numbers (0-9) as well as - (dash) and _ (underscore). It is case insensitive. Max length is 50 characters.
+Format	String	Body	Optional Media type (RFC 2046) of the serialized data updates that are streamed to the client. Currently only application/json and application/x-protobuf is supported. If an unrecognized format is specified, the subscription end point will return HTTP status code 400 - Bad format.
+ReferenceId	String	Body	Mandatory client specified reference id for the subscription. This parameter must only contain alphanumberic characters as well as - (dash) and _ (underscore). Cannot start with _. It is case insensitive. Max length is 50 characters.
+RefreshRate	Int	Body	Optional custom refresh rate, measured in milliseconds, between each data update. Note that it is not possible to get a refresh rate lower than the rate specified in the customer service level agreement (SLA).
+ReplaceReferenceId	String	Body	Reference id of the subscription that should be replaced.
+Tag	String	Body	Optional client specified tag used for grouping subscriptions.

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenAPI Documentation</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+    <!--
+    Redoc doesn't change outer page styles
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+    </style>
+</head>
+<body>
+<rapi-pdf spec-url="meta" hide-input="true" pdf-schema-style="table">
+</rapi-pdf>
+<script src="resrc/rapipdf_v221/rapipdf.js"></script>
+<redoc spec-url='meta'></redoc>
+<script src="resrc/redoc_v200/redoc.js"></script>
+</body>
+</html>

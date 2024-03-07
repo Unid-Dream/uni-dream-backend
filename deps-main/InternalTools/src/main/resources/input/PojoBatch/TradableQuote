@@ -1,0 +1,28 @@
+Amount	Int	The amount for which the quote is calculated.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Ask	Decimal	The ask price.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+AskSize	Decimal	The ask size.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Bid	Decimal	The bid price.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+BidSize	Decimal	The bid size.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+DelayedByMinutes	Int	If set, it defines the number of minutes by which the price is delayed.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+ErrorCode	ErrorCode	Gets or sets the error code.
+MarketState	MarketState
+Mid	Decimal	The mid price.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PriceSource	String	The source for the price information
+PriceTypeAsk	PriceQuality	The price type for ask.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PriceTypeBid	PriceQuality	The price type for bid.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+QuoteId	String	The Id of this quote. Only supplied if quote (price) is tradable. You must supply this when trading on the quote, i.e. when posting to the /position resource.
+ReferencePrice	Decimal	Suggested price based on best available price information. Typically used as suggested price when exchange is closed.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+RFQState	RFQState	State of RFQ flow.
+If quote is not in RFQ, then this value will not be returned.
+If quote is in RFQ one of the listed state values will be returned.
+If quote switches from RFQ mode back to normal mode, the RFQState=None value will be sent over the streaming channel once.

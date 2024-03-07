@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>starter</module>
+        <module>webStarter</module>
+        <module>feign</module>
+        <module>webSocket</module>
+        <module>aws</module>
+    </modules>
+
+    <parent>
+        <groupId>pwh</groupId>
+        <artifactId>deps</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>spring</artifactId>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${pwh.version.springboot-cloud}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-starter-aws</artifactId>
+                <version>${pwh.version.springboot.cloud.aws}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>core</artifactId>
+                <version>${pwh.version.deps}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- -->
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>spring-starter</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>spring-web-starter</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>spring-feign</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>spring-web-socket</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <dependency>
+                <groupId>pwh</groupId>
+                <artifactId>spring-aws</artifactId>
+                <version>${pwh.version.deps}</version>
+            </dependency>
+            <!---->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${pwh.version.springboot}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

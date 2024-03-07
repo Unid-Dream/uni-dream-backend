@@ -1,0 +1,7 @@
+# Auto Config
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+pwh.springAws.Config
+
+# Environment Post Processors
+org.springframework.boot.env.EnvironmentPostProcessor=\
+pwh.springAws.env.EnvPostProcessor

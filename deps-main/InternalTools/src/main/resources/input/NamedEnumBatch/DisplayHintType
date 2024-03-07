@@ -1,0 +1,13 @@
+Continuous	Used for the parent ContractFutures.
+CryptoCurrencies	Crypto currencies.
+Etc	Exchange Traded Certificates/Currencies.
+Etf	Exchange Traded Funds.
+Etn	Exchange Traded Notes.
+Forex	Forex. Intended to be used for Cfds on Futures on Forex.
+Fund	Fund.
+Interests	Interest rates. Intended to be used for Cfds on Futures on bonds.
+None	Indicates not special display hint is required.
+PreciousMetal	Metals like XAUUSD.
+Rights	Rights.
+StockIndices	Stock indices. Intended to be used for Cfds on Futures on stock indices.
+Warrant	Warrants.

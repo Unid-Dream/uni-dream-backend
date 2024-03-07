@@ -1,0 +1,59 @@
+Bond	Bond.
+Cash	Cash. Not tradeable!
+CBBCCategoryN	Callable Bull/Bear Contract Category N. Call price or level is equal to its strike price or level, under which you will not receive any cash payment after the occurrence of a mandatory call event, and will lose your entire investment.
+CBBCCategoryR	Callable Bull/Bear Contract Category R. Call price or level is different from its strike price or level, and you may receive a residual cash payment (called "residual value") upon the occurrence of a mandatory call event. However, in the worst case, you will not receive any residual value and will lose your entire investment.
+CertificateBonus	Mirrors the price movement of the underlying only if and when the underlying price exceeds the defined barrier. If the certificate expires below the barrier, it offers partial protection/return of investment.
+CertificateCappedBonus	Certificate Capped Bonus.
+CertificateCappedCapitalProtected	Guarantees a capped percentage increase of the underlying asset's value above the issue price at expiry/maturity. Max loss is the amount invested multiplied by the CapitalProtection percentage.
+CertificateCappedOutperformance	Capped Outperformance Certificate.
+CertificateConstantLeverage	Certificate pwh.springWebStarter.Constant Leverage.
+CertificateDiscount	Yields a capped return if the underlying asset's value is above the specified cap level at expiry. If the underlying's value is below the strike at expiry, the investor received the underlying or equivalent value. Offers direct exposure in underlying at a lower price (discount) with a capped potential profit and limited loss.
+CertificateExpress	Certificate Express kick out.
+CertificateTracker	A certificate that mirrors the price movement of the underlying instrument. Often used to trade movements in indicies. Movements can be a fixed ratio of the underlying and can be inverted for bearish/short speculation. Risk is equivalent to owning the underlying.
+CertificateUncappedCapitalProtection	Guarantees a percentage increase of the underlying asset's value above the issue price at expiry/maturity. Max loss is the amount invested multiplied by the CapitalProtection percentage.
+CertificateUncappedOutperformance	Provides leveraged returns when the underlying price exceeds the threshold strike price. The amount leverage is defined by the Participation %. When the underlying is below the strike price, the certificate mirrors the underlying price 1:1.
+CfdIndexOption	Cfd Index Option.
+CfdOnCompanyWarrant	Cfd on unlisted warrant issued by a corporation.
+CfdOnEtc	Cfd on Etc
+CfdOnEtf	Cfd on Etf
+CfdOnEtn	Cfd on Etn
+CfdOnFund	Cfd on Fund
+CfdOnFutures	Cfd on Futures.
+CfdOnIndex	Cfd on Stock Index.
+CfdOnRights	Cfd on Rights
+CfdOnStock	Cfd on Stock.
+CompanyWarrant	Unlisted warrant issued by a corporation, often physically settled.
+ContractFutures	Contract Futures.
+Etc	Etc
+Etf	Exchange traded fund.
+Etn	Etn
+Fund	Fund
+FuturesOption	Futures Option.
+FuturesStrategy	Futures Strategy.
+FxBinaryOption	Forex Binary Option.
+FxForwards	Forex Forward.
+FxKnockInOption	Forex Knock In Option.
+FxKnockOutOption	Forex Knock Out Option.
+FxNoTouchOption	Forex No Touch Option.
+FxOneTouchOption	Forex One Touch Option.
+FxSpot	Forex Spot.
+FxVanillaOption	Forex Vanilla Option.
+GuaranteeNote	Danish investment scheme (“Grantbevis”). Not online tradeable.
+InlineWarrant	Inline Warrants. Holders receive a pre-determined amount that depends on whether an underlying asset falls at, or within or outside the upper and lower strikes at expiry.
+IpoOnStock	IPO on Stock
+ManagedFund 	Obsolete: Managed Fund.
+MiniFuture	MiniFuture.
+MutualFund	Mutual Fund.
+PortfolioNote	Danish pooled investment scheme (“Pulje”). Not online tradeable.
+Rights	Rights
+SrdOnEtf	SRD. (Service de Règlement Différé) on Etf.
+SrdOnStock	SRD. (Service de Règlement Différé) on Stock.
+Stock	Stock.
+StockIndex	Stock Index.
+StockIndexOption	Stock Index Option.
+StockOption	Stock Option.
+Warrant	Warrant
+WarrantDoubleKnockOut	Warrant with two knock-out barriers.
+WarrantKnockOut	Warrant with a knock-out barrier.
+WarrantOpenEndKnockOut	Knock-out Warrant with no expiry.
+WarrantSpread	Warrant with built-in spread.

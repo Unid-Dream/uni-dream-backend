@@ -1,0 +1,5 @@
+{
+  "destination": "modules/spring",
+  "groupId": "this",
+  "artifactIdPrefix": "spring"
+}

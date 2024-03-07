@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <property name="LOGS" value="./logs"/>
+
+    <appender name="ConsoleLocal" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                [%yellow(%d{ISO8601})] [%highlight(%-5level)] [%blue(%-40t)] [%yellow(%C)] \n[%green(%mdc)] \n%msg%n%throwable\n
+            </pattern>
+        </layout>
+    </appender>
+
+    <appender name="ConsoleServer" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %replace([%d{ISO8601}] [%level] [%t] [%C] [%mdc]: [%msg] [%throwable]){'[\r\n]+','\\n'}%nopex%n
+            </pattern>
+        </layout>
+    </appender>
+</included>
