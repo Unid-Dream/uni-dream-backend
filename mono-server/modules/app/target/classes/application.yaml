@@ -1,0 +1,89 @@
+spring:
+  profiles:
+    # 'default' in production
+    # assign VM Option "-Dspring.profiles.active=local" during launching for dev to activate local configs
+    active: "default"
+    include: local
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USER}
+    password: ${DATASOURCE_PASSWORD}
+  redis:
+    host: ${REDIS_CACHE_HOST}
+    port: ${REDIS_CACHE_PORT}
+    ssl: ${REDIS_CACHE_SSL}
+    username: ${REDIS_CACHE_USER}
+    password: ${REDIS_CACHE_PASSWORD}
+    database: ${REDIS_CACHE_DB}
+  mail:
+    host: ${EMAIL_SMTP_HOST}
+    port: ${EMAIL_SMTP_PORT}
+    username: ${EMAIL_SMTP_LOGIN}
+    password: ${EMAIL_SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: "true"
+          starttls:
+            enable: "true"
+
+springdoc:
+  swagger-ui:
+    tagsSorter: "alpha"
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: "11773391142-jg7qvqpa9eaoigokuggs8eub9ir55ngv.apps.googleusercontent.com"
+#            client-secret: "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"
+#            scope:
+#              - "email"
+
+# accepting env vars or default value
+logging:
+  level:
+    root: ${LOG_LEVEL:DEBUG}
+
+pwh:
+  spring-aws:
+    queue-enabled: "false"
+    queue-prefix: "mono"
+
+unid:
+  monoserver-app:
+    sqs-main: ${SQS_MAIN}
+    sns-email: ${SNS_EMAIl}
+    sns-tagging: ${SNS_TAGGING}
+    sns-educator-meeting: ${SNS_EDUCATOR_MEETING}
+    sns-pending-transaction: ${SNS_PENDING_TRANSACTION}
+    sns-pending-confirmed-meeting: ${SNS_PENDING_CONFIRMED_MEETING}
+    sns-expired-meeting: ${SNS_EXPIRED_MEETING}
+    email-personal: ${EMAIL_DISPLAY_NAME}
+    jwt-expiry-minutes: ${JWT_EXPIRY_MINUTES}
+    jwt-issuer: ${JWT_ISSUER}
+    register-user-timeout-minutes: ${REGISTER_USER_TIMEOUT_MINUTES}
+    register-user-otp-resend-seconds: ${REGISTER_USER_OTP_RESEND_SECONDS}
+    register-user-otp-resend-max-retires: ${REGISTER_USER_OTP_RESEND_MAX_RETRIES}
+    s3-bucket: ${S3_BUCKET}
+    s3-file-path: ${S3_FILE_PATH}
+    s3-file-temp-prefix: ${S3_FILE_TEMP_PREFIX}
+    file-upload-timeout-seconds: ${FILE_UPLOAD_TIMEOUT_SECONDS}
+    cod-api-host: ${COD_API_HOST}
+    cod-merchant-id: ${COD_MERCHANT_ID}
+    cod-pid: ${COD_PID}
+    cod-sid: ${COD_SID}
+    cod-private-key-base64: ${COD_PRIVATE_KEY_BASE64}
+    cod-public-key-base64: ${COD_PUBLIC_KEY_BASE64}
+    cod-secret-key-128: ${COD_SECRET_KEY_128}
+    cod-secret-key-256: ${COD_SECRET_KEY_256}
+    cod-payment-timeout-minutes: ${COD_PAYMENT_TIMEOUT_MINUTES}
+    meeting-allowed-to-book-before-start-minutes: ${MEETING_ALLOWED_TO_BOOK_BEFORE_START_MINUTES}
+    meeting-allowed-to-accept-before-start-minutes: ${MEETING_ALLOWED_TO_ACCEPT_BEFORE_START_MINUTES}
+    meeting-allowed-to-pay-before-start-minutes: ${MEETING_ALLOWED_TO_PAY_BEFORE_START_MINUTES}
+    ms-client-id: ${MS_CLIENT_ID}
+    ms-tenant-id: ${MS_TENANT_ID}
+    ms-secret-value: ${MS_SECRET_VALUE}
+    ms-secret-id: ${MS_SECRET_ID}
+    ms-organizer-id: ${MS_ORGANIZER_ID}

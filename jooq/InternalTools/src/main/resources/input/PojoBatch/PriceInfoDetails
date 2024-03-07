@@ -1,0 +1,18 @@
+AskSize 	Decimal	Obsolete The ask size (Please consider to use 'Quote.AskSize').
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+AskYield	Decimal	Optional ask yield, if available.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+BidSize 	Decimal	Obsolete The bid size (Please consider to use 'Quote.BidSize').
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+BidYield	Decimal	Optional bid yield, if available.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+LastClose	Decimal	The last close.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+LastTraded	Decimal	The last traded.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+LastTradedSize	Decimal	The last traded size.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Open	Decimal	The open.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Volume	Decimal	Optional volume, if available.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.

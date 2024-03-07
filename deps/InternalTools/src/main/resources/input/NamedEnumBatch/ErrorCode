@@ -1,0 +1,12 @@
+DealerCancelsQuote	Dealer cancels quote.
+DealerCannotQuote	Dealer can not give quote at this time.
+DealerCannotTrade	Dealer can not trade at this time.
+DealerDisconnected	Dealer disconnected.
+DealerIsBusy	Dealer is handling other request for client.
+DealerIsUnavailable	Dealer is not available.
+DealerRejectsQuoteRequest	Dealer rejects quote request.
+None	No error code.
+QuoteHasTimedOut	Quote has timed out
+TooSmallTrade	Trade contract size is too small
+WarningAmountLargeOrderSize	Returned when a price request is for a an amount that is larger than will be automatically accepted. For IOC orders, this means that an order on that amount will always be rejected.
+WarningAmountTooSmall	Returned when an amount for an FXO is so small that we do not accept request for quotes on it.

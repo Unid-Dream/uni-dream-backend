@@ -1,0 +1,3 @@
+grant_type	GrantType	GrantType.
+code	String	String
+redirect_uri	String	String

@@ -1,0 +1,142 @@
+{
+    "String": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "Decimal": {
+        "javaImport": ["java.math.BigDecimal"],
+        "javaType": "BigDecimal",
+        "annotations": []
+    },
+    "Int": {
+        "javaImport": [],
+        "javaType": "Integer",
+        "annotations": []
+    },
+    "Bool": {
+        "javaImport": [],
+        "javaType": "Boolean",
+        "annotations": []
+    },
+    "Long": {
+        "javaImport": [],
+        "javaType": "Long",
+        "annotations": []
+    },
+    "Date": {
+        "javaImport": [
+            "java.time.LocalDate",
+            "com.fasterxml.jackson.annotation.JsonFormat"
+        ],
+        "javaType": "LocalDate",
+        "annotations": [
+            "@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = \"yyyy-MM-dd\")"
+        ]
+    },
+    "DateTime": {
+        "javaImport": [
+            "java.time.Instant",
+            "com.fasterxml.jackson.annotation.JsonFormat"
+        ],
+        "javaType": "Instant",
+        "annotations": [
+            "@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = \"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'\", timezone = \"UTC\")"
+        ]
+    },
+    "UtcDateTime": {
+        "javaImport": [
+            "java.time.Instant",
+            "com.fasterxml.jackson.annotation.JsonFormat"
+        ],
+        "javaType": "Instant",
+        "annotations": [
+            "@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = \"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'\", timezone = \"UTC\")"
+        ]
+    },
+    "AccountGroupKey": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "AccountId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "AccountKey": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "Amount": {
+        "javaImport": ["java.math.BigDecimal"],
+        "javaType": "BigDecimal",
+        "annotations": []
+    },
+    "ClientId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "ClientKey": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "CountryCode": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "ExchangeId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "LanguageCode": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "OrderId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "Percentage": {
+        "javaImport": [],
+        "javaType": "Decimal",
+        "annotations": []
+    },
+    "PositionId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "SectorId": {
+        "javaImport": [],
+        "javaType": "Integer",
+        "annotations": []
+    },
+    "Symbol": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "Uic": {
+        "javaImport": [],
+        "javaType": "Integer",
+        "annotations": []
+    },
+    "UserId": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    },
+    "UserKey": {
+        "javaImport": [],
+        "javaType": "String",
+        "annotations": []
+    }
+}

@@ -1,0 +1,6 @@
+response_type	ResponseType	ResponseType.
+client_id	String	String
+state	String	String
+redirect_uri	String	String
+code_challenge	String	String
+code_challenge_method	CodeChallengeMethod	CodeChallengeMethod

@@ -1,0 +1,16 @@
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import pwh.coreStarter.type.NamedEnum;
+
+@RequiredArgsConstructor
+@Getter
+public enum _NAMED_ implements NamedEnum {
+    _ENUMS_;
+
+    private final String value;
+
+    @Override
+    public String toNamedString() {
+        return value;
+    }
+}

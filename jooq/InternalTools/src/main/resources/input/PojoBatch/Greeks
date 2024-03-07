@@ -1,0 +1,7 @@
+Delta	Decimal	Delta - measures of risk from a move of the underlying price.
+Gamma	Decimal	Gamma - rate of change of Delta resulting from movement of the underlying.
+MidVol	Decimal	MidVol - volatility using the option mid price.
+Phi	Decimal	Phi - Option Sensitivity to Dividend.
+Rho	Decimal	Rho - risk measure related to changes in interest rates.
+Theta	Decimal	Theta - measure of the rate of time premium decay and it is always negative.
+Vega	Decimal	Vega - measures of risk from changes in implied volatility.

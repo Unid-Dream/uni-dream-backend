@@ -1,0 +1,8 @@
+ContextId	String	The streaming context id that this response is associated with.
+Format	String	The media type (RFC 2046), of the serialized data updates that are streamed to the client.
+InactivityTimeout	Int	The time (in seconds) that the client should accept the subscription to be inactive before considering it invalid.
+ReferenceId	String	The reference id that (along with streaming context id and session id) identifies the subscription (within the context of a specific service/subscription type)
+RefreshRate	Int	Actual refresh rate assigned to the subscription according to the customers SLA.
+Snapshot	PriceResponse	Snapshot of the current data on hand, when subscription was created.
+State	String	The value "Active".
+Tag	String	Client specified tag assigned to the subscription, if specified in the request.

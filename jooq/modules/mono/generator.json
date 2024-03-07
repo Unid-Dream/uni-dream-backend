@@ -1,0 +1,5 @@
+{
+  "destination": "modules",
+  "groupId": "inherit",
+  "artifactIdPrefix": "jooq"
+}

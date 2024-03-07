@@ -1,0 +1,38 @@
+AccruedInterest	Decimal	Accrued Interest. Valid for: Bonds
+AskYield	Decimal	AskYield are only valid for the bond asset type.
+BidYield	Decimal	BidYield are only valid for the bond asset type.
+CfdBorrowingCost	Decimal	Costs applicable to shorting the CFD.
+CfdHardToFinanceRate	Decimal	A rate relevant for certain long cfd positions
+CfdPriceAdjustment	Bool	Is returned as true when the instrument subscribed for is a CFD and the user is on a special mark-up price configuration. If true, the values in EstPriceBuy and EstPriceSell are relevant (but still only provided given a share price)
+Dma	Bool	Trade is routed to trading venue. Trade on quote not allowed.
+EstPriceBuy	Decimal	May be returned when the instrument subscribed for is a CFD on a stock and the user is set up to trade on the share price, but pay a markup on top. In that case the EstPriceBuy is the markup paied for an eventual buy order. Not relevant for info prices.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+EstPriceSell	Decimal	May be returned when the instrument subscribed for is a CFD and the user is set up to trade on the share price, but pay a markup on top. In that case the EstPriceSell is the markup paied for an eventual sell order. Not relevant for info prices.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+ExpiryDate	Date	Expiry date for contract. Valid for: CFD Futures, FxOptions
+ForwardDateFarLeg	Date	The far leg value date. Applicable for FxSwap
+ForwardDateNearLeg	Date	The near leg value date. Applicable for FxSwap
+IndexRatio	Decimal	IndexRatio, Applicable for inflation linked bond
+IsMarketOpen	Bool	Gets or sets a value indicating whether the market on which the instrument is traded is currently open.
+LowerBarrier	Decimal	Lower Barrier. Valid for: FX One Touch, No TouchOptions and certian derivatives such as Turbos.
+MidForwardPrice	Decimal	The mid forward price.
+MidSpotPrice	Decimal	The post mid price. Valid for: Fx Options.
+MidYield	Decimal	MidYield are only valid for the bond asset type.
+NoticeDate	Date	Futures only - The date on which the owner may be required to take physical delivery of the instrument commodity.
+OpenInterest	Decimal	The number of currently open contracts (available for contract options and futures)
+PaidCfdInterest	Decimal	A rate representing the interest to be paid when holding a CFD short position overnight.
+PaidSrdInterest	Decimal	A rate representing the interest to be paid when holding a SRD short position overnight.
+PremiumDate	DateTime	Premium date
+ReceivedCfdInterest	Decimal	A rate representing the interest received when with holding a CFD long position overnight.
+ReceivedSrdInterest	Decimal	A rate representing the interest received when with holding a SRD long position overnight.
+ShortTradeDisabled	Bool	Set to true if short trading is disabled for this instrument.
+SpotAsk	Decimal	The spot ask price Valid for: FX Forwards.
+SpotBid	Decimal	The post bid price. Valid for: Fx Forwards.
+SpotDate	Date	The Spot Date. Valid for Fx Forwards.
+SrdLastTradeDate	DateTime	Liquidation/Last Trade Date of the SRD
+SrdSettlementDate	DateTime	Settlement Date of the SRD
+StrikePrice	Decimal	Option Strike Price.
+SwapAsk	Decimal	Swap rate for ask, Valid for: FxForwards and FxSwap
+SwapBid	Decimal	Swap rate for bid, Valid for: FxForwards and FxSwap
+UpperBarrier	Decimal	Upper Barrier. Valid for: FX One Touch, No TouchOptions and certian derivatives such as Turbos.
+ValueDate	Date	Actual ValueDate (could be different from what was specified in request due to holidays etc.).

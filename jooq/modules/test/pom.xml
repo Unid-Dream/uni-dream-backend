@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>unid</groupId>
+        <artifactId>jooq-generator</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>jooq-test</artifactId>
+
+    <properties>
+        <unid.jooq-test.generated-package>${project.groupId}.jooqTest.model</unid.jooq-test.generated-package>
+        <!-- override parent -->
+        <unid.jooq-test.db-host>YOUR_VALUE</unid.jooq-test.db-host>
+        <unid.jooq-test.db-port>YOUR_VALUE</unid.jooq-test.db-port>
+        <unid.jooq-test.db-name>YOUR_VALUE</unid.jooq-test.db-name>
+        <unid.jooq-test.db-user>YOUR_VALUE</unid.jooq-test.db-user>
+        <unid.jooq-test.db-password>YOUR_VALUE</unid.jooq-test.db-password>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,5 @@
+access_token	String	String.
+token_type	String	String
+expires_in	Long	Long
+refresh_token	String	String.
+refresh_token_expires_in	Long	Long

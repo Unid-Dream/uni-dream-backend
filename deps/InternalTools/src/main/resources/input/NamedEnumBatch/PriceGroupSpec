@@ -1,0 +1,12 @@
+Commissions	Commission fields are returned in results.
+DisplayAndFormat	Display and Format (not mapped to a QTE strategy)
+Greeks	Greeks are returned in results.
+HistoricalChanges	Historical price changes are returned in results.
+InstrumentPriceDetails	Fields related to the asset type are returned in results.
+MarginImpact	(Obsolete) Margin impact fields are returned in results. Will not be available from 1. October 2018, use MarginImpactBuySell instead.
+MarginImpactBuySell	Margin impact fields are returned in results.
+MarketDepth	Market depth fields are returned in results.
+PriceInfo	Informational price fields are returned in results.
+PriceInfoDetails	Detailed price fields are returned in results.
+Quote	Quote data fields are returned in results.
+Timestamps	Price time stamps

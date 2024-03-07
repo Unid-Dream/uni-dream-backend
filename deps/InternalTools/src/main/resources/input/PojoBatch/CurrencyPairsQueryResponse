@@ -1,0 +1,2 @@
+CurrencyCode	String	Currency code.
+RelatedCurrencies	RelatedCurrency []	List of related currencies to currency code

@@ -1,0 +1,14 @@
+BarrierDecimals	Int	Optional separate display information for option barrier prices
+BarrierFormat	PriceDisplayFormatType	Optional separate display information for option barrier prices
+Currency	String	The ISO currency code of the instrument.
+Decimals	Int	The resolution in which e.g. a price must be displayed and possibly edited.
+Positive numbers are represents digits, and negative numbers represent fractions using this formula: 1/(2^x).
+Description	String	Description of instrument (DAX Index - Nov 2013), in English.
+DisplayHint	DisplayHintType	Hint to the client application about how it should display the instrument.
+Format	PriceDisplayFormatType	Format code specifying how price should be formatted.
+LotSizeText	String	Lot size description of the instrument. Futures only.
+NumeratorDecimals	Int	Some fractional prices have decimals in the numerator, e.g. 2.5/32. This is relevant for futures and cfds on futures.
+OrderDecimals	Int	The number of decimals trigger price for orders should be formatted with.
+StrikeDecimals	Int	Optional separate display information for option strike prices
+StrikeFormat	PriceDisplayFormatType	Optional separate display information for option strike prices
+Symbol	String	Symbol- A combination of letters used to uniquely identify a traded instrument. e.g. ODAX/X13C8950:xeur.

@@ -1,0 +1,15 @@
+AssetType	AssetType	Asset Type of the instrument
+Commissions	Commissions	The commissions
+DisplayAndFormat	InstrumentDisplayAndFormat	Information about the instrument of the net position and how to display it.
+Greeks	Greeks	Greeks - only available for options
+HistoricalChanges	HistoricalChanges	The historical price changes
+InstrumentPriceDetails	InstrumentPriceDetails	Instrument Specific Price Details. Contents vary by AssetType
+LastUpdated	UtcDateTime	Time of last price update
+MarginImpactBuySell	MarginImpactBuySell	The margin impact with currency and values for both buy and sell.
+MarketDepth	MarketDepth	The market depth
+PriceInfo	PriceInfo	Brief price information.
+PriceInfoDetails	PriceInfoDetails	Detailed price information
+PriceSource	String	The source for the price information
+Quote	TradableQuote	The quote data.
+Timestamps	PriceTimestamps	Info about timing of prices, asset type specific.
+Uic	Int	Uic of instrument

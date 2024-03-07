@@ -1,0 +1,23 @@
+AccountKey	AccountKey	Unique key identifying the account used in retrieving the price.
+Amount	Decimal	Order size, defaults to minimal order size for given instrument.
+AmountType	OrderAmountType
+AssetType	AssetType	The instrument's asset type
+ContractId	Int	Optional. ContractId for trading vanilla or binary fx options.
+ExpiryDate	UtcDateTime	Optional expiry date - only relevant for options
+FieldGroups	PriceGroupSpec []	Specification of fields to return in results
+ForwardDate	UtcDateTime	Forward date
+ForwardDateFarLeg	UtcDateTime	Forward date for far leg
+ForwardDateNearLeg	UtcDateTime	Forward date for near leg
+LowerBarrier	Decimal	Lower barrier
+OrderAskPrice	Decimal	Order ask price. When specified, a corresponding cost of buying will be calculated for that price; otherwise the current market ask price will be used.
+OrderBidPrice	Decimal	Order bid price. When specified, a corresponding cost of selling will be calculated for that price; otherwise the current market bid price will be used.
+PutCall	PutCall	Put/call
+QuoteCurrency	Bool
+RequireTradableQuote	Bool	Optional argument to require that the subscription returns tradable quotes i.e. provides a quoteId. The value defaults to false.
+SharePrice	Decimal	Share Price. Used when subscribing on a price when placing an order for CFDs. When provided it may lead to EstPriceSell / EstPriceBuy being returned in the InstrumentPriceDetail. Not relevant for info prices.
+StrategyName	String	Optional argument to specify an algo-order strategy
+StrikePrice	Decimal	Strike price
+ToClosePositionId	Long	Set this if the intention is that the subsequent trade should close the position with the specified position id.
+ToOpenClose	ToOpenClose
+Uic	Int	Unique id of the instrument
+UpperBarrier	Decimal	Upper barrier

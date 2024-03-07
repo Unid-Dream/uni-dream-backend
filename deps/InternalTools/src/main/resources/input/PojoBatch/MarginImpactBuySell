@@ -1,0 +1,12 @@
+Currency	String	Currency for margin impacts.
+InitialMarginAvailableBuy	Decimal	The initial margin available if instrument is bought.
+InitialMarginAvailableCurrent	Decimal	The current initial margin available.
+InitialMarginAvailableSell	Decimal	The initial margin available if instrument is sold.
+InitialMarginBuy	Decimal	The initial margin to pay if instrument is bought.
+InitialMarginSell	Decimal	The initial margin to pay if instrument is sold.
+InitialSpendingPower	Decimal	The initial spending power available.
+MaintenanceMarginBuy	Decimal	The maintenance margin to pay if instrument is bought.
+MaintenanceMarginSell	Decimal	The maintenance margin to pay if instrument is sold.
+MaintenanceSpendingPower	Decimal	The maintenance spending power available.
+MarginBuy	Decimal	The margin to pay if instrument is bought.
+MarginSell	Decimal	The margin to pay if instrument is sold.

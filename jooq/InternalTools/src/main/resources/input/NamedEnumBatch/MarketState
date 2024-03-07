@@ -1,0 +1,9 @@
+Closed	Market is closed
+ClosingAuction	Market is temporary out of normal Trading. This is the Auction that occur after the market closes.
+IntraDayAuction	Market is temporary out of normal Trading. In an Auction state This state is for Intraday Auction. We have 2 specific states for Opening and Closing Auction
+Open	Market is open for trades (Automatic Trading, usually).
+OpeningAuction	Market is temporary out of normal Trading. This is the Auction that occur before the market opens
+PostMarket	Market is in Post Market Auction state
+PreMarket	Market is in Pre Market Auction state
+TradingAtLast	This state is after the Auction has finished, before normal Trading starts.
+Unknown	Default value.

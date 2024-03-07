@@ -1,0 +1,5 @@
+{
+  "destination": ".generated",
+  "includeTool": true,
+  "includeTemplates": ["springModule", "coreModule"]
+}

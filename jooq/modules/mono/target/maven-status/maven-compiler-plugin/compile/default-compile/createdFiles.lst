@@ -1,0 +1,11 @@
+unid/jooqMono/model/enums/MilestoneOptionTypeEnum.class
+unid/jooqMono/model/tables/records/StudentMilestoneQuestionnaireRecord.class
+unid/jooqMono/model/tables/pojos/StudentMilestoneQuestionnairePojo.class
+unid/jooqMono/model/tables/pojos/StudentMilestoneOptionsPojo.class
+unid/jooqMono/model/tables/records/StudentMilestoneOptionsRecord.class
+unid/jooqMono/model/tables/StudentMilestoneQuestionnaireTable.class
+unid/jooqMono/model/tables/daos/StudentMilestoneOptionsDao.class
+unid/jooqMono/model/tables/pojos/StudentMilestoneQuestionnairePojo$Columns.class
+unid/jooqMono/model/tables/daos/StudentMilestoneQuestionnaireDao.class
+unid/jooqMono/model/tables/pojos/StudentMilestoneOptionsPojo$Columns.class
+unid/jooqMono/model/tables/StudentMilestoneOptionsTable.class

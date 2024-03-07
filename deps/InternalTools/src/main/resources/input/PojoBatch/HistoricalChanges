@@ -1,0 +1,25 @@
+
+FiftyTwoWeekHigh	Decimal	The 52 week high
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+FiftyTwoWeekLow	Decimal	The 52 week low
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange1Month	Decimal	The 1 month percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange1Year	Decimal	The 1 year percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange2Months	Decimal	The 2 months percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange2Years	Decimal	The 2 years percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange3Months	Decimal	The 3 months percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange3Years	Decimal	The 3 years percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange5Years	Decimal	The 5 years percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange6Months	Decimal	The 6 months percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChangeDaily	Decimal	The daily percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChangeWeekly	Decimal	The weekly percent change
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.

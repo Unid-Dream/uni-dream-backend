@@ -1,0 +1,8 @@
+High	Decimal	The high.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+Low	Decimal	The low.
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+NetChange	Decimal	The net change in price (Mid price – LastClose price)
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.
+PercentChange	Decimal	The percent change in price. If LastClose greater than 0 , value = NetChange/LastClose * 100 If NetChange less than 0 , value = -100 If NetChange equal to 0 , value = 0 If NetChange greater than 100 , value = +100
+Price values are depending on a subscription to a feed. This can mean no data, delayed data or real time data dependent on the callers subscription setup.

@@ -1,0 +1,8 @@
+AskTime	UtcDateTime	Time of ask for Bonds, Certificate, Turbo, Warrant
+BidTime	UtcDateTime	Time of bid for Bonds, Certificate, Turbo, Warrant
+CloseTime	UtcDateTime	Date of a previous trading day, depending on when product is traded last time (only for exchange traded bond)
+HighTime	UtcDateTime	Time of high for Shares, ETF, CFD, SRD, Bonds (only exchange traded), Certificate, Turbo, Warrant
+LastTradedVolumeTime	UtcDateTime	Time Volume (last traded time) for Shares, ETF, CFD, SRD, Bonds, Certificate, Turbo, Warrant
+LowTime	UtcDateTime	Time of low for Shares, ETF, CFD, SRD, Bonds (only exchange traded), Certificate, Turbo, Warrant
+OpenPriceTime	UtcDateTime	Time of open price for Shares, ETF, CFD, SRD, Bonds (only exchange traded), Certificate, Turbo, Warrant
+UnderlyingUicLastTradeTime	UtcDateTime	Time last ULV (Traded) for Certificate, Turbo, Warrant

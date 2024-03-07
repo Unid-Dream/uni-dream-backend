@@ -1,0 +1,7 @@
+{
+ "rowSeparator": "\\n",
+ "colSeparator": "\\t",
+ "nameColIndex": 0,
+ "typeColIndex": 1,
+ "arrayIndicator": " []"
+}
