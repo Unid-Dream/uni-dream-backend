@@ -18,10 +18,11 @@ import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record16;
-import org.jooq.Row16;
+import org.jooq.Record20;
+import org.jooq.Row20;
 import org.jooq.impl.UpdatableRecordImpl;
 
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 import unid.jooqMono.model.tables.EventTable;
 import unid.jooqMono.model.tables.pojos.EventPojo;
@@ -39,7 +40,7 @@ import unid.jooqMono.model.tables.pojos.EventPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Record16<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> {
+public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Record20<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String, UUID, UUID, EventStatusEnum, UUID> {
 
     private static final long serialVersionUID = 1L;
 
@@ -300,6 +301,70 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
         return (String) get(15);
     }
 
+    /**
+     * Setter for <code>public.event.educator_profile_id</code>.
+     */
+    public EventRecord setEducatorProfileId(@Nullable UUID value) {
+        set(16, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return (UUID) get(16);
+    }
+
+    /**
+     * Setter for <code>public.event.agenda_i18n_id</code>.
+     */
+    public EventRecord setAgendaI18nId(@Nullable UUID value) {
+        set(17, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.agenda_i18n_id</code>.
+     */
+    @Nullable
+    public UUID getAgendaI18nId() {
+        return (UUID) get(17);
+    }
+
+    /**
+     * Setter for <code>public.event.event_status</code>.
+     */
+    public EventRecord setEventStatus(@Nullable EventStatusEnum value) {
+        set(18, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.event_status</code>.
+     */
+    @Nullable
+    public EventStatusEnum getEventStatus() {
+        return (EventStatusEnum) get(18);
+    }
+
+    /**
+     * Setter for <code>public.event.academic_major_id</code>.
+     */
+    public EventRecord setAcademicMajorId(@Nullable UUID value) {
+        set(19, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID getAcademicMajorId() {
+        return (UUID) get(19);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -311,19 +376,19 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     }
 
     // -------------------------------------------------------------------------
-    // Record16 type implementation
+    // Record20 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row16<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row20<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String, UUID, UUID, EventStatusEnum, UUID> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row16<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row16) super.valuesRow();
+    public Row20<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String, UUID, UUID, EventStatusEnum, UUID> valuesRow() {
+        return (Row20) super.valuesRow();
     }
 
     @Override
@@ -424,6 +489,30 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     @Nonnull
+    public Field<UUID> field17() {
+        return EventTable.EVENT.EDUCATOR_PROFILE_ID;
+    }
+
+    @Override
+    @Nonnull
+    public Field<UUID> field18() {
+        return EventTable.EVENT.AGENDA_I18N_ID;
+    }
+
+    @Override
+    @Nonnull
+    public Field<EventStatusEnum> field19() {
+        return EventTable.EVENT.EVENT_STATUS;
+    }
+
+    @Override
+    @Nonnull
+    public Field<UUID> field20() {
+        return EventTable.EVENT.ACADEMIC_MAJOR_ID;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -516,6 +605,30 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     @Nullable
     public String component16() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public UUID component17() {
+        return getEducatorProfileId();
+    }
+
+    @Override
+    @Nullable
+    public UUID component18() {
+        return getAgendaI18nId();
+    }
+
+    @Override
+    @Nullable
+    public EventStatusEnum component19() {
+        return getEventStatus();
+    }
+
+    @Override
+    @Nullable
+    public UUID component20() {
+        return getAcademicMajorId();
     }
 
     @Override
@@ -612,6 +725,30 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     @Nullable
     public String value16() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public UUID value17() {
+        return getEducatorProfileId();
+    }
+
+    @Override
+    @Nullable
+    public UUID value18() {
+        return getAgendaI18nId();
+    }
+
+    @Override
+    @Nullable
+    public EventStatusEnum value19() {
+        return getEventStatus();
+    }
+
+    @Override
+    @Nullable
+    public UUID value20() {
+        return getAcademicMajorId();
     }
 
     @Override
@@ -728,7 +865,35 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     @Nonnull
-    public EventRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nonnull EventTypeEnum value4, @Nullable LocalDate value5, @Nullable LocalDate value6, @Nullable LocalTime value7, @Nullable LocalTime value8, @Nullable BigDecimal value9, @Nullable BigDecimal value10, @Nullable String value11, @Nullable BigDecimal value12, @Nullable OffsetDateTime value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16) {
+    public EventRecord value17(@Nullable UUID value) {
+        setEducatorProfileId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public EventRecord value18(@Nullable UUID value) {
+        setAgendaI18nId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public EventRecord value19(@Nullable EventStatusEnum value) {
+        setEventStatus(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public EventRecord value20(@Nullable UUID value) {
+        setAcademicMajorId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public EventRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nonnull EventTypeEnum value4, @Nullable LocalDate value5, @Nullable LocalDate value6, @Nullable LocalTime value7, @Nullable LocalTime value8, @Nullable BigDecimal value9, @Nullable BigDecimal value10, @Nullable String value11, @Nullable BigDecimal value12, @Nullable OffsetDateTime value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable UUID value17, @Nullable UUID value18, @Nullable EventStatusEnum value19, @Nullable UUID value20) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -745,6 +910,10 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
         value14(value14);
         value15(value15);
         value16(value16);
+        value17(value17);
+        value18(value18);
+        value19(value19);
+        value20(value20);
         return this;
     }
 
@@ -762,8 +931,8 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     /**
      * Create a detached, initialised EventRecord
      */
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public EventRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nonnull EventTypeEnum eventType, @Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable LocalTime startTime, @Nullable LocalTime endTime, @Nullable BigDecimal maxNumberOfStudent, @Nullable BigDecimal fee, @Nullable String posterImage, @Nullable BigDecimal price, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy", "educatorProfileId", "agendaI18nId", "eventStatus", "academicMajorId" })
+    public EventRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nonnull EventTypeEnum eventType, @Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable LocalTime startTime, @Nullable LocalTime endTime, @Nullable BigDecimal maxNumberOfStudent, @Nullable BigDecimal fee, @Nullable String posterImage, @Nullable BigDecimal price, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID educatorProfileId, @Nullable UUID agendaI18nId, @Nullable EventStatusEnum eventStatus, @Nullable UUID academicMajorId) {
         super(EventTable.EVENT);
 
         setId(id);
@@ -782,6 +951,10 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setEducatorProfileId(educatorProfileId);
+        setAgendaI18nId(agendaI18nId);
+        setEventStatus(eventStatus);
+        setAcademicMajorId(academicMajorId);
     }
 
     /**
@@ -807,6 +980,10 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setEducatorProfileId(value.getEducatorProfileId());
+            setAgendaI18nId(value.getAgendaI18nId());
+            setEventStatus(value.getEventStatus());
+            setAcademicMajorId(value.getAcademicMajorId());
         }
     }
 }

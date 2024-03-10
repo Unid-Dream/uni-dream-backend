@@ -1,6 +1,9 @@
 package unid.monoServerApp.api.ecaCourse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import pwh.coreRsqlJooq.model.PaginationRequest;
 import pwh.coreRsqlJooq.model.PaginationResponse;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.educationLevel.EducationLevelPagination;
@@ -33,7 +37,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/student/ecaCourse")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Eca Course")
@@ -41,10 +45,12 @@ import java.util.UUID;
 public class EcaCourseController {
     private final EcaCourseService ecaCourseService;
 
-    @GetMapping
+    @GetMapping("/student/student/ecaCourse")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
     )
+    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"

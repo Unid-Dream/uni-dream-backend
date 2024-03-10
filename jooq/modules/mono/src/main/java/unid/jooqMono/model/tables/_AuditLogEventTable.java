@@ -18,7 +18,6 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row21;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -28,6 +27,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 import unid.jooqMono.model.tables.records._AuditLogEventRecord;
 
@@ -166,6 +166,26 @@ public class _AuditLogEventTable extends TableImpl<_AuditLogEventRecord> {
      */
     public final TableField<_AuditLogEventRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public._audit_log_event.educator_profile_id</code>.
+     */
+    public final TableField<_AuditLogEventRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column <code>public._audit_log_event.agenda_i18n_id</code>.
+     */
+    public final TableField<_AuditLogEventRecord, UUID> AGENDA_I18N_ID = createField(DSL.name("agenda_i18n_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column <code>public._audit_log_event.event_status</code>.
+     */
+    public final TableField<_AuditLogEventRecord, EventStatusEnum> EVENT_STATUS = createField(DSL.name("event_status"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.EventStatusEnum.class), this, "");
+
+    /**
+     * The column <code>public._audit_log_event.academic_major_id</code>.
+     */
+    public final TableField<_AuditLogEventRecord, UUID> ACADEMIC_MAJOR_ID = createField(DSL.name("academic_major_id"), SQLDataType.UUID, this, "");
+
     private _AuditLogEventTable(Name alias, Table<_AuditLogEventRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -239,15 +259,5 @@ public class _AuditLogEventTable extends TableImpl<_AuditLogEventRecord> {
     @Nonnull
     public _AuditLogEventTable rename(Name name) {
         return new _AuditLogEventTable(name, null);
-    }
-
-    // -------------------------------------------------------------------------
-    // Row21 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row21) super.fieldsRow();
     }
 }

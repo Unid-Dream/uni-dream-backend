@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.user.profile.educator.calendar.comment;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import java.util.*;
 @Validated
 @Tag(name = "Educator Session Comment")
 @Slf4j
+@Hidden
 public class EducatorSessionCommentController {
     private final EducatorSessionCommentService educatorSessionCommentService;
     private final EducatorCalendarMapper educatorCalendarMapper;

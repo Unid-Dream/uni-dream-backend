@@ -13,7 +13,7 @@ import unid.monoServerMeta.api.AcademicMajorResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-05T21:42:27+0800",
+    date = "2024-03-10T20:56:03+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -23,8 +23,6 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
     private CommonMapper commonMapper;
     @Autowired
     private I18nMapper i18nMapper;
-    @Autowired
-    private TagMapper tagMapper;
     @Autowired
     private AcademicSubjectMapper academicSubjectMapper;
 
@@ -37,6 +35,7 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
         AcademicMajorPojo academicMajorPojo = new AcademicMajorPojo();
 
         academicMajorPojo.setId( data.getId() );
+        academicMajorPojo.setIconPath( data.getIconPath() );
 
         return academicMajorPojo;
     }
@@ -90,7 +89,7 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
         academicMajorResponse.setId( data.getId() );
         academicMajorResponse.setTitleI18n( i18nMapper.toModel( data.getTitleI18n() ) );
         academicMajorResponse.setDescriptionI18n( i18nMapper.toModel( data.getDescriptionI18n() ) );
-        academicMajorResponse.setTag( tagMapper.toResponse( data.getTag() ) );
+        academicMajorResponse.setIconPath( data.getIconPath() );
         academicMajorResponse.setSubjects( academicSubjectMapper.toResponse( data.getSubjects() ) );
 
         return academicMajorResponse;

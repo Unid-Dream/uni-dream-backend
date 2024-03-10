@@ -9,11 +9,10 @@ import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
 import unid.jooqMono.model.tables.pojos.AcademicSubjectResourcePojo;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResource;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
-import unid.monoServerMeta.model.AcademicSubjectResourceType;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-05T21:42:25+0800",
+    date = "2024-03-10T20:56:03+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -31,10 +30,10 @@ public class AcademicSubjectResourceMapperImpl implements AcademicSubjectResourc
         AcademicSubjectResourcePojo academicSubjectResourcePojo = new AcademicSubjectResourcePojo();
 
         academicSubjectResourcePojo.setId( data.getId() );
-        academicSubjectResourcePojo.setType( academicSubjectResourceTypeToAcademicSubjectResourceTypeEnum( data.getType() ) );
-        academicSubjectResourcePojo.setAuthor( data.getAuthor() );
+        if ( data.getType() != null ) {
+            academicSubjectResourcePojo.setType( Enum.valueOf( AcademicSubjectResourceTypeEnum.class, data.getType() ) );
+        }
         academicSubjectResourcePojo.setUrl( data.getUrl() );
-        academicSubjectResourcePojo.setThumbnail( data.getThumbnail() );
 
         return academicSubjectResourcePojo;
     }
@@ -47,12 +46,14 @@ public class AcademicSubjectResourceMapperImpl implements AcademicSubjectResourc
 
         AcademicSubjectResourcePayload academicSubjectResourcePayload = new AcademicSubjectResourcePayload();
 
-        academicSubjectResourcePayload.setId( data.getId() );
-        academicSubjectResourcePayload.setType( academicSubjectResourceTypeEnumToAcademicSubjectResourceType( data.getType() ) );
-        academicSubjectResourcePayload.setTitleI18n( i18nMapper.toModel( data.getTitleI18n() ) );
-        academicSubjectResourcePayload.setAuthor( data.getAuthor() );
+        academicSubjectResourcePayload.setAuthorI18n( i18nMapper.toModel( data.getAuthorI18n() ) );
+        academicSubjectResourcePayload.setImage( data.getThumbnail() );
         academicSubjectResourcePayload.setUrl( data.getUrl() );
-        academicSubjectResourcePayload.setThumbnail( data.getThumbnail() );
+        if ( data.getType() != null ) {
+            academicSubjectResourcePayload.setType( data.getType().name() );
+        }
+        academicSubjectResourcePayload.setId( data.getId() );
+        academicSubjectResourcePayload.setTitleI18n( i18nMapper.toModel( data.getTitleI18n() ) );
 
         return academicSubjectResourcePayload;
     }
@@ -69,45 +70,5 @@ public class AcademicSubjectResourceMapperImpl implements AcademicSubjectResourc
         }
 
         return list;
-    }
-
-    protected AcademicSubjectResourceTypeEnum academicSubjectResourceTypeToAcademicSubjectResourceTypeEnum(AcademicSubjectResourceType academicSubjectResourceType) {
-        if ( academicSubjectResourceType == null ) {
-            return null;
-        }
-
-        AcademicSubjectResourceTypeEnum academicSubjectResourceTypeEnum;
-
-        switch ( academicSubjectResourceType ) {
-            case READINGS: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.READINGS;
-            break;
-            case VIDEO: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.VIDEO;
-            break;
-            case PODCAST: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.PODCAST;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + academicSubjectResourceType );
-        }
-
-        return academicSubjectResourceTypeEnum;
-    }
-
-    protected AcademicSubjectResourceType academicSubjectResourceTypeEnumToAcademicSubjectResourceType(AcademicSubjectResourceTypeEnum academicSubjectResourceTypeEnum) {
-        if ( academicSubjectResourceTypeEnum == null ) {
-            return null;
-        }
-
-        AcademicSubjectResourceType academicSubjectResourceType;
-
-        switch ( academicSubjectResourceTypeEnum ) {
-            case READINGS: academicSubjectResourceType = AcademicSubjectResourceType.READINGS;
-            break;
-            case VIDEO: academicSubjectResourceType = AcademicSubjectResourceType.VIDEO;
-            break;
-            case PODCAST: academicSubjectResourceType = AcademicSubjectResourceType.PODCAST;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + academicSubjectResourceTypeEnum );
-        }
-
-        return academicSubjectResourceType;
     }
 }

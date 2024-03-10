@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 
 
@@ -36,22 +37,26 @@ public class EventPojo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID           id;
-    private UUID           titleI18nId;
-    private UUID           descriptionI18nId;
-    private EventTypeEnum  eventType;
-    private LocalDate      startDate;
-    private LocalDate      endDate;
-    private LocalTime      startTime;
-    private LocalTime      endTime;
-    private BigDecimal     maxNumberOfStudent;
-    private BigDecimal     fee;
-    private String         posterImage;
-    private BigDecimal     price;
-    private OffsetDateTime createdOn;
-    private String         createdBy;
-    private OffsetDateTime updatedOn;
-    private String         updatedBy;
+    private UUID            id;
+    private UUID            titleI18nId;
+    private UUID            descriptionI18nId;
+    private EventTypeEnum   eventType;
+    private LocalDate       startDate;
+    private LocalDate       endDate;
+    private LocalTime       startTime;
+    private LocalTime       endTime;
+    private BigDecimal      maxNumberOfStudent;
+    private BigDecimal      fee;
+    private String          posterImage;
+    private BigDecimal      price;
+    private OffsetDateTime  createdOn;
+    private String          createdBy;
+    private OffsetDateTime  updatedOn;
+    private String          updatedBy;
+    private UUID            educatorProfileId;
+    private UUID            agendaI18nId;
+    private EventStatusEnum eventStatus;
+    private UUID            academicMajorId;
 
     public EventPojo() {}
 
@@ -72,26 +77,34 @@ public class EventPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.educatorProfileId = value.educatorProfileId;
+        this.agendaI18nId = value.agendaI18nId;
+        this.eventStatus = value.eventStatus;
+        this.academicMajorId = value.academicMajorId;
     }
 
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy", "educatorProfileId", "agendaI18nId", "eventStatus", "academicMajorId" })
     public EventPojo(
-        @Nonnull UUID           id,
-        @Nullable UUID           titleI18nId,
-        @Nullable UUID           descriptionI18nId,
-        @Nonnull EventTypeEnum  eventType,
-        @Nullable LocalDate      startDate,
-        @Nullable LocalDate      endDate,
-        @Nullable LocalTime      startTime,
-        @Nullable LocalTime      endTime,
-        @Nullable BigDecimal     maxNumberOfStudent,
-        @Nullable BigDecimal     fee,
-        @Nullable String         posterImage,
-        @Nullable BigDecimal     price,
-        @Nullable OffsetDateTime createdOn,
-        @Nullable String         createdBy,
-        @Nullable OffsetDateTime updatedOn,
-        @Nullable String         updatedBy
+        @Nonnull UUID            id,
+        @Nullable UUID            titleI18nId,
+        @Nullable UUID            descriptionI18nId,
+        @Nonnull EventTypeEnum   eventType,
+        @Nullable LocalDate       startDate,
+        @Nullable LocalDate       endDate,
+        @Nullable LocalTime       startTime,
+        @Nullable LocalTime       endTime,
+        @Nullable BigDecimal      maxNumberOfStudent,
+        @Nullable BigDecimal      fee,
+        @Nullable String          posterImage,
+        @Nullable BigDecimal      price,
+        @Nullable OffsetDateTime  createdOn,
+        @Nullable String          createdBy,
+        @Nullable OffsetDateTime  updatedOn,
+        @Nullable String          updatedBy,
+        @Nullable UUID            educatorProfileId,
+        @Nullable UUID            agendaI18nId,
+        @Nullable EventStatusEnum eventStatus,
+        @Nullable UUID            academicMajorId
     ) {
         this.id = id;
         this.titleI18nId = titleI18nId;
@@ -109,6 +122,10 @@ public class EventPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.educatorProfileId = educatorProfileId;
+        this.agendaI18nId = agendaI18nId;
+        this.eventStatus = eventStatus;
+        this.academicMajorId = academicMajorId;
     }
 
     /**
@@ -368,6 +385,70 @@ public class EventPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.event.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return this.educatorProfileId;
+    }
+
+    /**
+     * Setter for <code>public.event.educator_profile_id</code>.
+     */
+    public EventPojo setEducatorProfileId(@Nullable UUID educatorProfileId) {
+        this.educatorProfileId = educatorProfileId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.agenda_i18n_id</code>.
+     */
+    @Nullable
+    public UUID getAgendaI18nId() {
+        return this.agendaI18nId;
+    }
+
+    /**
+     * Setter for <code>public.event.agenda_i18n_id</code>.
+     */
+    public EventPojo setAgendaI18nId(@Nullable UUID agendaI18nId) {
+        this.agendaI18nId = agendaI18nId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.event_status</code>.
+     */
+    @Nullable
+    public EventStatusEnum getEventStatus() {
+        return this.eventStatus;
+    }
+
+    /**
+     * Setter for <code>public.event.event_status</code>.
+     */
+    public EventPojo setEventStatus(@Nullable EventStatusEnum eventStatus) {
+        this.eventStatus = eventStatus;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.event.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID getAcademicMajorId() {
+        return this.academicMajorId;
+    }
+
+    /**
+     * Setter for <code>public.event.academic_major_id</code>.
+     */
+    public EventPojo setAcademicMajorId(@Nullable UUID academicMajorId) {
+        this.academicMajorId = academicMajorId;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("EventPojo (");
@@ -388,6 +469,10 @@ public class EventPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(educatorProfileId);
+        sb.append(", ").append(agendaI18nId);
+        sb.append(", ").append(eventStatus);
+        sb.append(", ").append(academicMajorId);
 
         sb.append(")");
         return sb.toString();

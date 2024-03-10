@@ -14,11 +14,12 @@ import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
-import org.jooq.Record16;
-import org.jooq.Row16;
+import org.jooq.Record17;
+import org.jooq.Row17;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
+import unid.jooqMono.model.enums.VideoSourceEnum;
 import unid.jooqMono.model.tables._AuditLogAcademicSubjectResourceTable;
 import unid.jooqMono.model.tables.pojos._AuditLogAcademicSubjectResourcePojo;
 
@@ -35,7 +36,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogAcademicSubjectResourcePojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_AuditLogAcademicSubjectResourceRecord> implements Record16<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String> {
+public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_AuditLogAcademicSubjectResourceRecord> implements Record17<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String, VideoSourceEnum> {
 
     private static final long serialVersionUID = 1L;
 
@@ -326,20 +327,38 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
         return (String) get(15);
     }
 
+    /**
+     * Setter for
+     * <code>public._audit_log_academic_subject_resource.video_source</code>.
+     */
+    public _AuditLogAcademicSubjectResourceRecord setVideoSource(@Nullable VideoSourceEnum value) {
+        set(16, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_academic_subject_resource.video_source</code>.
+     */
+    @Nullable
+    public VideoSourceEnum getVideoSource() {
+        return (VideoSourceEnum) get(16);
+    }
+
     // -------------------------------------------------------------------------
-    // Record16 type implementation
+    // Record17 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row16<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row17<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String, VideoSourceEnum> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row16<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row16) super.valuesRow();
+    public Row17<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String, VideoSourceEnum> valuesRow() {
+        return (Row17) super.valuesRow();
     }
 
     @Override
@@ -440,6 +459,12 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
 
     @Override
     @Nonnull
+    public Field<VideoSourceEnum> field17() {
+        return _AuditLogAcademicSubjectResourceTable._AUDIT_LOG_ACADEMIC_SUBJECT_RESOURCE.VIDEO_SOURCE;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -532,6 +557,12 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
     @Nullable
     public String component16() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public VideoSourceEnum component17() {
+        return getVideoSource();
     }
 
     @Override
@@ -628,6 +659,12 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
     @Nullable
     public String value16() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public VideoSourceEnum value17() {
+        return getVideoSource();
     }
 
     @Override
@@ -744,7 +781,14 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
 
     @Override
     @Nonnull
-    public _AuditLogAcademicSubjectResourceRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nullable AcademicSubjectResourceTypeEnum value8, @Nullable UUID value9, @Nullable String value10, @Nullable String value11, @Nullable String value12, @Nullable OffsetDateTime value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16) {
+    public _AuditLogAcademicSubjectResourceRecord value17(@Nullable VideoSourceEnum value) {
+        setVideoSource(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogAcademicSubjectResourceRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nullable AcademicSubjectResourceTypeEnum value8, @Nullable UUID value9, @Nullable String value10, @Nullable String value11, @Nullable String value12, @Nullable OffsetDateTime value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable VideoSourceEnum value17) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -761,6 +805,7 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
         value14(value14);
         value15(value15);
         value16(value16);
+        value17(value17);
         return this;
     }
 
@@ -778,8 +823,8 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
     /**
      * Create a detached, initialised _AuditLogAcademicSubjectResourceRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "academicSubjectId", "type", "titleI18nId", "author", "url", "thumbnail", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogAcademicSubjectResourceRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID academicSubjectId, @Nullable AcademicSubjectResourceTypeEnum type, @Nullable UUID titleI18nId, @Nullable String author, @Nullable String url, @Nullable String thumbnail, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "academicSubjectId", "type", "titleI18nId", "author", "url", "thumbnail", "createdOn", "createdBy", "updatedOn", "updatedBy", "videoSource" })
+    public _AuditLogAcademicSubjectResourceRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID academicSubjectId, @Nullable AcademicSubjectResourceTypeEnum type, @Nullable UUID titleI18nId, @Nullable String author, @Nullable String url, @Nullable String thumbnail, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable VideoSourceEnum videoSource) {
         super(_AuditLogAcademicSubjectResourceTable._AUDIT_LOG_ACADEMIC_SUBJECT_RESOURCE);
 
         setAuditSeq(auditSeq);
@@ -798,6 +843,7 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setVideoSource(videoSource);
     }
 
     /**
@@ -823,6 +869,7 @@ public class _AuditLogAcademicSubjectResourceRecord extends TableRecordImpl<_Aud
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setVideoSource(value.getVideoSource());
         }
     }
 }

@@ -2,27 +2,29 @@ package unid.monoServerApp.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResource;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
+import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerMeta.api.AcademicMajorResponse;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
 import unid.monoServerMeta.api.EducatorProfileRequest;
 import unid.monoServerMeta.api.EducatorProfileResponse;
+import unid.monoServerMeta.api.EducatorProfileUpdateRequest;
 import unid.monoServerMeta.api.ExpertiseResponse;
-import unid.monoServerMeta.model.AcademicSubjectResourceType;
+import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-05T21:42:26+0800",
+    date = "2024-03-10T20:56:04+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -54,12 +56,6 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         EducatorProfilePojo educatorProfilePojo = new EducatorProfilePojo();
 
         educatorProfilePojo.setCountryId( data.getCountryId() );
-        educatorProfilePojo.setProfilePicture( data.getProfilePicture() );
-        educatorProfilePojo.setPhoneCountryCode( data.getPhoneCountryCode() );
-        educatorProfilePojo.setPhone( data.getPhone() );
-        educatorProfilePojo.setUniversityId( data.getUniversityId() );
-        educatorProfilePojo.setUniversityEducationLevelId( data.getUniversityEducationLevelId() );
-        educatorProfilePojo.setUniversityIdentityId( data.getUniversityIdentityId() );
 
         return educatorProfilePojo;
     }
@@ -71,12 +67,6 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         }
 
         data.setCountryId( source.getCountryId() );
-        data.setProfilePicture( source.getProfilePicture() );
-        data.setPhoneCountryCode( source.getPhoneCountryCode() );
-        data.setPhone( source.getPhone() );
-        data.setUniversityId( source.getUniversityId() );
-        data.setUniversityEducationLevelId( source.getUniversityEducationLevelId() );
-        data.setUniversityIdentityId( source.getUniversityIdentityId() );
     }
 
     @Override
@@ -86,12 +76,21 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         }
 
         data.setCountryId( source.getCountryId() );
-        data.setProfilePicture( source.getProfilePicture() );
-        data.setPhoneCountryCode( source.getPhoneCountryCode() );
-        data.setPhone( source.getPhone() );
-        data.setUniversityId( source.getUniversityId() );
-        data.setUniversityEducationLevelId( source.getUniversityEducationLevelId() );
-        data.setUniversityIdentityId( source.getUniversityIdentityId() );
+    }
+
+    @Override
+    public void merge(EducatorProfilePojo data, EducatorProfileUpdateRequest source) {
+        if ( source == null ) {
+            return;
+        }
+
+        data.setExpertiseId( uUIDListToUUIDArray( source.getExpertises() ) );
+        data.setAcademicMajorId( uUIDListToUUIDArray( source.getSubjects() ) );
+        data.setLanguageId( uUIDListToUUIDArray( source.getLanguages() ) );
+        data.setHourlyRate( source.getHourly_rate() );
+        data.setDescription( source.getDescription() );
+        data.setProfilePicture( source.getPhoto() );
+        data.setCountryId( source.getCountryId() );
     }
 
     @Override
@@ -116,6 +115,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileResponse.setUniversityIdentity( schoolIdentityMapper.toResponse( data.getUniversityIdentity() ) );
         educatorProfileResponse.setLanguages( languageMapper.toResponse( data.getLanguages() ) );
         educatorProfileResponse.setExpertises( resultListToExpertiseResponseList( data.getExpertises() ) );
+        educatorProfileResponse.setDescription( data.getDescription() );
 
         return educatorProfileResponse;
     }
@@ -134,24 +134,19 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         return list;
     }
 
-    protected AcademicSubjectResourceType academicSubjectResourceTypeEnumToAcademicSubjectResourceType(AcademicSubjectResourceTypeEnum academicSubjectResourceTypeEnum) {
-        if ( academicSubjectResourceTypeEnum == null ) {
+    protected UUID[] uUIDListToUUIDArray(List<UUID> list) {
+        if ( list == null ) {
             return null;
         }
 
-        AcademicSubjectResourceType academicSubjectResourceType;
-
-        switch ( academicSubjectResourceTypeEnum ) {
-            case READINGS: academicSubjectResourceType = AcademicSubjectResourceType.READINGS;
-            break;
-            case VIDEO: academicSubjectResourceType = AcademicSubjectResourceType.VIDEO;
-            break;
-            case PODCAST: academicSubjectResourceType = AcademicSubjectResourceType.PODCAST;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + academicSubjectResourceTypeEnum );
+        UUID[] uUIDTmp = new UUID[list.size()];
+        int i = 0;
+        for ( UUID uUID : list ) {
+            uUIDTmp[i] = uUID;
+            i++;
         }
 
-        return academicSubjectResourceType;
+        return uUIDTmp;
     }
 
     protected AcademicSubjectResourcePayload resultToAcademicSubjectResourcePayload(DbAcademicSubjectResource.Result result) {
@@ -162,11 +157,12 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         AcademicSubjectResourcePayload academicSubjectResourcePayload = new AcademicSubjectResourcePayload();
 
         academicSubjectResourcePayload.setId( result.getId() );
-        academicSubjectResourcePayload.setType( academicSubjectResourceTypeEnumToAcademicSubjectResourceType( result.getType() ) );
         academicSubjectResourcePayload.setTitleI18n( i18nMapper.toModel( result.getTitleI18n() ) );
-        academicSubjectResourcePayload.setAuthor( result.getAuthor() );
+        academicSubjectResourcePayload.setAuthorI18n( i18nMapper.toModel( result.getAuthorI18n() ) );
         academicSubjectResourcePayload.setUrl( result.getUrl() );
-        academicSubjectResourcePayload.setThumbnail( result.getThumbnail() );
+        if ( result.getType() != null ) {
+            academicSubjectResourcePayload.setType( result.getType().name() );
+        }
 
         return academicSubjectResourcePayload;
     }
@@ -184,6 +180,19 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         return list1;
     }
 
+    protected List<I18n> resultListToI18nList(List<DbI18N.Result> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<I18n> list1 = new ArrayList<I18n>( list.size() );
+        for ( DbI18N.Result result : list ) {
+            list1.add( i18nMapper.toModel( result ) );
+        }
+
+        return list1;
+    }
+
     protected AcademicSubjectResponse resultToAcademicSubjectResponse(DbAcademicSubject.Result result) {
         if ( result == null ) {
             return null;
@@ -194,10 +203,10 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         academicSubjectResponse.setId( result.getId() );
         academicSubjectResponse.setTitleI18n( i18nMapper.toModel( result.getTitleI18n() ) );
         academicSubjectResponse.setDescriptionI18n( i18nMapper.toModel( result.getDescriptionI18n() ) );
-        academicSubjectResponse.setDescriptionMasterDegreeI18n( i18nMapper.toModel( result.getDescriptionMasterDegreeI18n() ) );
-        academicSubjectResponse.setDescriptionPhdI18n( i18nMapper.toModel( result.getDescriptionPhdI18n() ) );
-        academicSubjectResponse.setTag( tagMapper.toResponse( result.getTag() ) );
-        academicSubjectResponse.setResources( resultListToAcademicSubjectResourcePayloadList( result.getResources() ) );
+        academicSubjectResponse.setBooks( resultListToAcademicSubjectResourcePayloadList( result.getBooks() ) );
+        academicSubjectResponse.setPodcasts( resultListToAcademicSubjectResourcePayloadList( result.getPodcasts() ) );
+        academicSubjectResponse.setVideos( resultListToAcademicSubjectResourcePayloadList( result.getVideos() ) );
+        academicSubjectResponse.setAnswers( resultListToI18nList( result.getAnswers() ) );
 
         return academicSubjectResponse;
     }
@@ -225,7 +234,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         academicMajorResponse.setId( result.getId() );
         academicMajorResponse.setTitleI18n( i18nMapper.toModel( result.getTitleI18n() ) );
         academicMajorResponse.setDescriptionI18n( i18nMapper.toModel( result.getDescriptionI18n() ) );
-        academicMajorResponse.setTag( tagMapper.toResponse( result.getTag() ) );
+        academicMajorResponse.setIconPath( result.getIconPath() );
         academicMajorResponse.setSubjects( resultListToAcademicSubjectResponseList( result.getSubjects() ) );
 
         return academicMajorResponse;

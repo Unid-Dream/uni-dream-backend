@@ -2,27 +2,31 @@ package unid.monoServerApp.api.academicMajor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
 import unid.jooqMono.model.tables.I18nTable;
 import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.cache.CacheTags;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajorSubjectMap;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResource;
+import unid.monoServerApp.database.table.ecaProfile.DbEcaProfileSection;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.mapper.AcademicMajorMapper;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.service.SessionService;
-import unid.monoServerMeta.api.AcademicMajorBatchRequest;
-import unid.monoServerMeta.api.AcademicMajorI18nResponse;
-import unid.monoServerMeta.api.AcademicMajorRequest;
-import unid.monoServerMeta.api.EventEducatorProfileResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
 
+import javax.annotation.PostConstruct;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -255,6 +259,159 @@ public class AcademicMajorService {
     }
 
 
+//    public AcademicMajorI18nResponse getOneBy(UUID id){
+//        return dbAcademicMajor.getDsl().select(
+//                        multiset(
+//                                select(I18N.fields())
+//                                        .from(I18N)
+//                                        .where(I18N.ID.eq(ACADEMIC_MAJOR.TITLE_I18N_ID))
+//                        ).as(AcademicMajorI18nResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+//
+//                        multiset(
+//                                select(I18N.fields())
+//                                        .from(I18N,ACADEMIC_SUBJECT,ACADEMIC_MAJOR_SUBJECT_MAP)
+//                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT.TITLE_I18N_ID).and(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_SUBJECT.ID).and(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_MAJOR_ID.eq(ACADEMIC_MAJOR.ID))))
+//                        ).as(AcademicMajorI18nResponse.Fields.subjects).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class))
+//                )
+//                .from(ACADEMIC_MAJOR)
+//                .where(ACADEMIC_MAJOR.ID.eq(id))
+//                .fetchOptional().orElseThrow(()->Exceptions.notFound("Major Not Found"))
+//                .into(AcademicMajorI18nResponse.class);
+//    }
+
+
+    public List<AcademicMajorResponse> list() {
+       List<DbAcademicMajor.Result> results = dbAcademicMajor.getDsl()
+                .select(
+                        ACADEMIC_MAJOR.asterisk(),
+                        multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_MAJOR.TITLE_I18N_ID))
+                        ).as(DbAcademicMajor.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                        multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_MAJOR.DESCRIPTION_I18N_ID))
+                        ).as(DbAcademicMajor.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                        multiset(
+                                DSL.select(
+                                                ACADEMIC_SUBJECT.asterisk(),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.TITLE_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_MASTER_DEGREE_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionMasterDegreeI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionPhdI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select()
+                                                                .from(I18N)
+                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionPhdI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.asterisk(),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                 )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.READINGS)))
+                                                ).as(DbAcademicSubject.Result.Fields.books).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.ID,
+                                                                        ACADEMIC_SUBJECT_RESOURCE.THUMBNAIL,
+                                                                        ACADEMIC_SUBJECT_RESOURCE.URL,
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.VIDEO)))
+                                                ).as(DbAcademicSubject.Result.Fields.videos).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.asterisk(),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.PODCAST)))
+                                                ).as(DbAcademicSubject.Result.Fields.podcasts).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+
+                                                multiset(
+                                                        DSL.select()
+                                                                .from(I18N)
+                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                                .union(
+                                                                        DSL.select()
+                                                                                .from(I18N)
+                                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_MASTER_DEGREE_I18N_ID))
+                                                                )
+                                                ).as(DbAcademicSubject.Result.Fields.answers).convertFrom(r -> r.isEmpty() ? null : r.into(DbI18N.Result.class))
+
+
+                                        ).from(ACADEMIC_MAJOR_SUBJECT_MAP,ACADEMIC_SUBJECT)
+                                        .where(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_SUBJECT.ID))
+                                        .and(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_MAJOR_ID.eq(ACADEMIC_MAJOR.ID))
+                        ).as(DbAcademicMajor.Result.Fields.subjects).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubject.Result.class))
+
+
+                )
+                .from(ACADEMIC_MAJOR)
+                .fetchInto(DbAcademicMajor.Result.class);
+
+        return academicMajorMapper.toResponse(results);
+    }
+
+//    public Object getOne(UUID id) {
+//        I18nPojo titleI18n = i18nMapper.toPojo(podcast.getNameI18n());
+//        dbI18N.getDao().insert(titleI18n);
+//        UUID titleI18nId = titleI18n.getId();
+//        AcademicSubjectResourcePojo create = new AcademicSubjectResourcePojo()
+//                .setAcademicSubjectId(subjectId)
+//                .setTitleI18nId(titleI18nId)
+//                .setAuthor(podcast.getAuthorI18n().getEnglish())
+//                .setUrl(podcast.getUrl())
+//                .setType(AcademicSubjectResourceTypeEnum.PODCAST)
+//                .setCreatedOn(OffsetDateTime.now())
+//                .setUpdatedOn(OffsetDateTime.now());
+//        dbAcademicSubjectResource.getDao().insert(create);
+//    }
+
+
     public AcademicMajorI18nResponse getOneBy(UUID id){
         return dbAcademicMajor.getDsl().select(
                         multiset(
@@ -274,5 +431,119 @@ public class AcademicMajorService {
                 .fetchOptional().orElseThrow(()->Exceptions.notFound("Major Not Found"))
                 .into(AcademicMajorI18nResponse.class);
     }
+
+
+    public AcademicMajorResponse getOne(UUID academicMajorId,UUID academicSubjectId) {
+        DbAcademicMajor.Result result = dbAcademicMajor.getDsl()
+                .select(
+                        ACADEMIC_MAJOR.asterisk(),
+                        multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_MAJOR.TITLE_I18N_ID))
+                        ).as(DbAcademicMajor.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                        multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_MAJOR.DESCRIPTION_I18N_ID))
+                        ).as(DbAcademicMajor.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                        multiset(
+                                DSL.select(
+                                                ACADEMIC_SUBJECT.asterisk(),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.TITLE_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_MASTER_DEGREE_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionMasterDegreeI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select().from(I18N).where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionPhdI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                multiset(
+                                                        DSL.select()
+                                                                .from(I18N)
+                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                ).as(DbAcademicSubject.Result.Fields.descriptionPhdI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.asterisk(),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.READINGS)))
+                                                ).as(DbAcademicSubject.Result.Fields.books).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.asterisk(),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.VIDEO)))
+                                                ).as(DbAcademicSubject.Result.Fields.videos).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+                                                multiset(
+                                                        DSL.select(
+                                                                        ACADEMIC_SUBJECT_RESOURCE.asterisk(),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ID.eq(ACADEMIC_SUBJECT_RESOURCE.TITLE_I18N_ID))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                                                                        multiset(
+                                                                                DSL.select()
+                                                                                        .from(I18N)
+                                                                                        .where(I18N.ENGLISH.eq(ACADEMIC_SUBJECT_RESOURCE.AUTHOR))
+                                                                        ).as(DbAcademicSubjectResource.Result.Fields.authorI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                                                                )
+                                                                .from(ACADEMIC_SUBJECT_RESOURCE)
+                                                                .where(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID).and(ACADEMIC_SUBJECT_RESOURCE.TYPE.eq(AcademicSubjectResourceTypeEnum.PODCAST)))
+                                                ).as(DbAcademicSubject.Result.Fields.podcasts).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubjectResource.Result.class)),
+
+
+                                                multiset(
+                                                        DSL.select()
+                                                                .from(I18N)
+                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_PHD_I18N_ID))
+                                                                .union(
+                                                                        DSL.select()
+                                                                                .from(I18N)
+                                                                                .where(I18N.ID.eq(ACADEMIC_SUBJECT.DESCRIPTION_MASTER_DEGREE_I18N_ID))
+                                                                )
+                                                ).as(DbAcademicSubject.Result.Fields.answers).convertFrom(r -> r.isEmpty() ? null : r.into(DbI18N.Result.class))
+
+
+                                        ).from(ACADEMIC_MAJOR_SUBJECT_MAP,ACADEMIC_SUBJECT)
+                                        .where(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_SUBJECT.ID).and(academicSubjectId == null?DSL.noCondition():ACADEMIC_SUBJECT.ID.eq(academicSubjectId)))
+                                        .and(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_MAJOR_ID.eq(ACADEMIC_MAJOR.ID))
+                        ).as(DbAcademicMajor.Result.Fields.subjects).convertFrom(r -> r.isEmpty() ? null : r.into(DbAcademicSubject.Result.class))
+                )
+                .from(ACADEMIC_MAJOR).where(ACADEMIC_MAJOR.ID.eq(academicMajorId))
+                .fetchOneInto(DbAcademicMajor.Result.class);
+        return academicMajorMapper.toResponse(result);
+    }
+
+
 }
 

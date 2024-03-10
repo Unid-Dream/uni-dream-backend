@@ -53,7 +53,7 @@ public class EnvPostProcessor extends EnvironPostProcessor<EnvPostProcessor> {
         // ref: https://springdoc.org/#properties
         overrideProperty(environment,
                 "springdoc.swagger-ui.enabled",
-                "false",
+                "true", //是否开启swagger-ui
                 false
         );
         overrideProperty(environment,

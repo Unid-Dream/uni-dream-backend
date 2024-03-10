@@ -59,5 +59,9 @@ public class DbAcademicSubjectResource extends Db<AcademicSubjectResourceTable, 
     // expanding foreign keys
     public static final class Result extends AcademicSubjectResourcePojo implements Serializable {
         private DbI18N.Result titleI18n;
+
+        //new property
+        private DbI18N.Result authorI18n;
+
     }
 }

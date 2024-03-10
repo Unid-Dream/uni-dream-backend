@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.city;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ import java.util.UUID;
 @Validated
 @Tag(name = "Cities")
 @Slf4j
+@Hidden
 public class CityController {
     private final CityService cityService;
     private final CityMapper cityMapper;

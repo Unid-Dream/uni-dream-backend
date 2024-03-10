@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
+import org.jooq.Row9;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -99,6 +99,11 @@ public class AcademicMajorTable extends TableImpl<AcademicMajorRecord> {
      * The column <code>public.academic_major.updated_by</code>.
      */
     public final TableField<AcademicMajorRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.academic_major.icon_path</code>.
+     */
+    public final TableField<AcademicMajorRecord, String> ICON_PATH = createField(DSL.name("icon_path"), SQLDataType.VARCHAR(225), this, "");
 
     private AcademicMajorTable(Name alias, Table<AcademicMajorRecord> aliased) {
         this(alias, aliased, null);
@@ -213,12 +218,12 @@ public class AcademicMajorTable extends TableImpl<AcademicMajorRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row9 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row8<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 }

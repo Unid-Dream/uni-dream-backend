@@ -16,6 +16,7 @@ import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
 import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
 import com.amazonaws.services.securitytoken.model.Credentials;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import pwh.springWebStarter.response.UnifiedResponse;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.FileMapper;
 import unid.monoServerApp.service.JwtTokenService;
@@ -47,7 +50,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/file")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Files")
@@ -64,6 +67,7 @@ public class FileController {
     @Operation(
             summary = "Get Upload Destination"
     )
+    @Hidden
     public @Valid UnifiedResponse<FileResponse> get() {
         sessionService.allowAuthedOnly();
         return UnifiedResponse.of(
@@ -76,6 +80,7 @@ public class FileController {
     @Operation(
             summary = "Get File URL"
     )
+    @Hidden
     public @Valid RedirectView get(
             @PathVariable("fileName") String fileName
     ) {
@@ -88,8 +93,12 @@ public class FileController {
     private static final String s3AccessKey = "AKIA3FLD543H7ZXHRDJW";
     private static final String s3SecretKey= "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";
 
-    @GetMapping("preSignedUrl")
+    @GetMapping("student/file/preSignedUrl")
     @ResponseStatus(HttpStatus.OK)
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
+    )
     @Operation(
             summary = "Get PreSignedUrl"
     )

@@ -1,7 +1,11 @@
 package unid.monoServerApp.api.expertise;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +24,17 @@ import pwh.coreRsqlJooq.model.PaginationRequest;
 import pwh.coreRsqlJooq.model.PaginationResponse;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
+import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
+import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.ExpertiseMapper;
 import unid.monoServerMeta.api.ExpertiseRequest;
 import unid.monoServerMeta.api.ExpertiseResponse;
+import unid.monoServerMeta.api.TagResponse;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.Valid;
@@ -36,7 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/expertise")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Expertises")
@@ -46,8 +53,9 @@ public class ExpertiseController {
     private final ExpertiseMapper expertiseMapper;
     private final DbExpertise dbExpertise;
     private final ObjectMapper objectMapper;
+    private final TagService tagService;
 
-    @GetMapping
+    @GetMapping("/expertise")
     @ACL(
             authed = true
     )
@@ -55,6 +63,7 @@ public class ExpertiseController {
     @Operation(
             summary = "Query"
     )
+    @Hidden
     public @Valid UnifiedResponse<PaginationResponse<ExpertiseResponse>> list(
             @Valid
             @ParameterObject
@@ -109,10 +118,11 @@ public class ExpertiseController {
         );
     }
 
-    @GetMapping("list")
+    @GetMapping("/student/expertise/list")
     @ACL(
             authed = true
     )
+    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get List"
@@ -124,8 +134,23 @@ public class ExpertiseController {
         );
     }
 
+    @GetMapping("/educator/expertise/tags")
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Tags"
+    )
+    public @Valid UnifiedResponse<List<TagResponse>> tags() {
+        var list = tagService.list(TagCategoryEnum.EXPERTISE);
+        return UnifiedResponse.of(
+                list
+        );
+    }
 
-    @GetMapping("{id}")
+
+    @GetMapping("/expertise/{id}")
     @ACL(
             authed = true
     )
@@ -133,6 +158,7 @@ public class ExpertiseController {
     @Operation(
             summary = "Get One"
     )
+    @Hidden
     public @Valid UnifiedResponse<ExpertiseResponse> get(
             @PathVariable("id") UUID id
     ) {
@@ -142,7 +168,7 @@ public class ExpertiseController {
         );
     }
 
-    @PostMapping
+    @PostMapping("/expertise")
     @Transactional
     @ACL(
             authed = true,
@@ -152,6 +178,7 @@ public class ExpertiseController {
     @Operation(
             summary = "Create One"
     )
+    @Hidden
     public @Valid UnifiedResponse<ExpertiseResponse> create(
             @RequestBody @Valid
             ExpertiseRequest payload
@@ -165,7 +192,7 @@ public class ExpertiseController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/expertise/{id}")
     @Transactional
     @ACL(
             authed = true,
@@ -175,6 +202,7 @@ public class ExpertiseController {
     @Operation(
             summary = "Update One"
     )
+    @Hidden
     public @Valid UnifiedResponse<ExpertiseResponse> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid

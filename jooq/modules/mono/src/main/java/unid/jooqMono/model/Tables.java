@@ -23,6 +23,7 @@ import unid.jooqMono.model.tables.EcaProfileSectionTable;
 import unid.jooqMono.model.tables.EducationLevelTable;
 import unid.jooqMono.model.tables.EducatorCalendarExtensionTable;
 import unid.jooqMono.model.tables.EducatorCalendarTable;
+import unid.jooqMono.model.tables.EducatorProfileCopy1Table;
 import unid.jooqMono.model.tables.EducatorProfileExpertiseAcademicMapTable;
 import unid.jooqMono.model.tables.EducatorProfileExtensionTable;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
@@ -496,6 +497,11 @@ public class Tables {
      * The table <code>public.educator_profile</code>.
      */
     public static final EducatorProfileTable EDUCATOR_PROFILE = EducatorProfileTable.EDUCATOR_PROFILE;
+
+    /**
+     * The table <code>public.educator_profile_copy1</code>.
+     */
+    public static final EducatorProfileCopy1Table EDUCATOR_PROFILE_COPY1 = EducatorProfileCopy1Table.EDUCATOR_PROFILE_COPY1;
 
     /**
      * The table <code>public.educator_profile_expertise_academic_map</code>.

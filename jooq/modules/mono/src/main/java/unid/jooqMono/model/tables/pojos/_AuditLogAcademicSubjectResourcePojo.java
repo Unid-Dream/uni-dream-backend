@@ -15,6 +15,7 @@ import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
 import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
+import unid.jooqMono.model.enums.VideoSourceEnum;
 
 
 /**
@@ -49,6 +50,7 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
     private String                          createdBy;
     private OffsetDateTime                  updatedOn;
     private String                          updatedBy;
+    private VideoSourceEnum                 videoSource;
 
     public _AuditLogAcademicSubjectResourcePojo() {}
 
@@ -69,9 +71,10 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.videoSource = value.videoSource;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "academicSubjectId", "type", "titleI18nId", "author", "url", "thumbnail", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "academicSubjectId", "type", "titleI18nId", "author", "url", "thumbnail", "createdOn", "createdBy", "updatedOn", "updatedBy", "videoSource" })
     public _AuditLogAcademicSubjectResourcePojo(
         @Nonnull Long                            auditSeq,
         @Nonnull OffsetDateTime                  auditCreatedon,
@@ -88,7 +91,8 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
         @Nullable OffsetDateTime                  createdOn,
         @Nullable String                          createdBy,
         @Nullable OffsetDateTime                  updatedOn,
-        @Nullable String                          updatedBy
+        @Nullable String                          updatedBy,
+        @Nullable VideoSourceEnum                 videoSource
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -106,6 +110,7 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.videoSource = videoSource;
     }
 
     /**
@@ -395,6 +400,24 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public._audit_log_academic_subject_resource.video_source</code>.
+     */
+    @Nullable
+    public VideoSourceEnum getVideoSource() {
+        return this.videoSource;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_academic_subject_resource.video_source</code>.
+     */
+    public _AuditLogAcademicSubjectResourcePojo setVideoSource(@Nullable VideoSourceEnum videoSource) {
+        this.videoSource = videoSource;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogAcademicSubjectResourcePojo (");
@@ -415,6 +438,7 @@ public class _AuditLogAcademicSubjectResourcePojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(videoSource);
 
         sb.append(")");
         return sb.toString();

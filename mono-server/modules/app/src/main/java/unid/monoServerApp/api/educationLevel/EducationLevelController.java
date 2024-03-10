@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.educationLevel;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ import java.util.UUID;
 @Validated
 @Tag(name = "Education Levels")
 @Slf4j
+@Hidden
 public class EducationLevelController {
     private final EducationLevelService educationLevelService;
     private final EducationLevelMapper educationLevelMapper;

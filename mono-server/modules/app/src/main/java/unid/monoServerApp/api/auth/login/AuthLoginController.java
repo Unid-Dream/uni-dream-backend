@@ -14,13 +14,13 @@ import pwh.springWebStarter.response.UnifiedResponse;
 import unid.monoServerApp.ErrorCode;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.service.JwtTokenService;
+import unid.monoServerMeta.api.AuthEducatorLoginRequest;
 import unid.monoServerMeta.api.AuthLoginRequest;
 import unid.monoServerMeta.api.AuthLoginResponse;
-
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("api/auth/login")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Login")
@@ -29,7 +29,7 @@ public class AuthLoginController {
     private final AuthLoginService authLoginService;
     private final JwtTokenService jwtTokenService;
 
-    @PostMapping
+    @PostMapping("student/auth/login")
     @Transactional
     @ACL(
             noAuthed = true
@@ -41,6 +41,45 @@ public class AuthLoginController {
     public @Valid UnifiedResponse<AuthLoginResponse> login(
             @RequestBody @Valid
             AuthLoginRequest payload
+    ) {
+        var existUserRecord = authLoginService.getExistUser(payload)
+                .orElseThrow(() -> new UnifiedException(
+                        ErrorCode.INCORRECT_CREDENTIAL,
+                        "User Does Not Exist",
+                        HttpStatus.NOT_FOUND.value()
+                ));
+        if (
+                !authLoginService.isUserPasswordCorrect(
+                        payload.getLoginPassword(),
+                        existUserRecord
+                )
+        ) {
+            throw new UnifiedException(
+                    ErrorCode.INCORRECT_CREDENTIAL,
+                    "User Password Incorrect",
+                    HttpStatus.FORBIDDEN.value()
+            );
+        }
+        return UnifiedResponse.of(
+                AuthLoginResponse.builder()
+                        .token(jwtTokenService.generateTokenForUser(existUserRecord))
+                        .build()
+        );
+    }
+
+
+    @PostMapping("educator/auth/login")
+    @Transactional
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Login"
+    )
+    public @Valid UnifiedResponse<AuthLoginResponse> login(
+            @RequestBody @Valid
+            AuthEducatorLoginRequest payload
     ) {
         var existUserRecord = authLoginService.getExistUser(payload)
                 .orElseThrow(() -> new UnifiedException(

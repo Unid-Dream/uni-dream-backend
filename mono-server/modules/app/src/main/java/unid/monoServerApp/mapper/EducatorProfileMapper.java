@@ -5,6 +5,7 @@ import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerMeta.api.EducatorProfileRequest;
 import unid.monoServerMeta.api.EducatorProfileResponse;
+import unid.monoServerMeta.api.EducatorProfileUpdateRequest;
 
 import java.util.List;
 
@@ -32,6 +33,17 @@ public interface EducatorProfileMapper {
     void merge(@MappingTarget DbEducatorProfile.Result data, EducatorProfileRequest source);
 
     void merge(@MappingTarget EducatorProfilePojo data, EducatorProfileRequest source);
+
+    @Mappings({
+            @Mapping(target = EducatorProfilePojo.Columns.expertiseId, source = EducatorProfileUpdateRequest.Fields.expertises),
+            @Mapping(target = EducatorProfilePojo.Columns.academicMajorId, source = EducatorProfileUpdateRequest.Fields.subjects),
+            @Mapping(target = EducatorProfilePojo.Columns.languageId, source = EducatorProfileUpdateRequest.Fields.languages),
+            @Mapping(target = EducatorProfilePojo.Columns.hourlyRate, source = EducatorProfileUpdateRequest.Fields.hourly_rate),
+            @Mapping(target = EducatorProfilePojo.Columns.description, source = EducatorProfileUpdateRequest.Fields.description),
+            @Mapping(target = EducatorProfilePojo.Columns.profilePicture, source = EducatorProfileUpdateRequest.Fields.photo)
+    })
+    void merge(@MappingTarget EducatorProfilePojo data, EducatorProfileUpdateRequest source);
+
 
     @Mappings({
             @Mapping(source = DbEducatorProfile.Result.Columns.createdOn, target = EducatorProfileResponse.BaseResponseFields.createdOnUtc),

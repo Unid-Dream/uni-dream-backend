@@ -15,7 +15,6 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row22;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -177,6 +176,49 @@ public class _AuditLogEducatorProfileTable extends TableImpl<_AuditLogEducatorPr
      */
     public final TableField<_AuditLogEducatorProfileRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public._audit_log_educator_profile.expertise_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EXPERTISE_ID = createField(DSL.name("expertise_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_profile.description</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_profile.language_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> LANGUAGE_ID = createField(DSL.name("language_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_profile.city_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID> CITY_ID = createField(DSL.name("city_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_educator_profile.education_school_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EDUCATION_SCHOOL_ID = createField(DSL.name("education_school_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_educator_profile.academic_major_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> ACADEMIC_MAJOR_ID = createField(DSL.name("academic_major_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_profile.education_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EDUCATION_ID = createField(DSL.name("education_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EDUCATION_DESCRIPTION_ID = createField(DSL.name("education_description_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
     private _AuditLogEducatorProfileTable(Name alias, Table<_AuditLogEducatorProfileRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -252,15 +294,5 @@ public class _AuditLogEducatorProfileTable extends TableImpl<_AuditLogEducatorPr
     @Nonnull
     public _AuditLogEducatorProfileTable rename(Name name) {
         return new _AuditLogEducatorProfileTable(name, null);
-    }
-
-    // -------------------------------------------------------------------------
-    // Row22 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row22<Long, OffsetDateTime, String, String, String, UUID, UUID, ApplicationApprovalEnum, String, String, UUID, String, String, String, Integer, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row22) super.fieldsRow();
     }
 }

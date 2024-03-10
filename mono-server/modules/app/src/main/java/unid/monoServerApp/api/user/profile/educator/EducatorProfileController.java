@@ -2,8 +2,13 @@ package unid.monoServerApp.api.user.profile.educator;//package unid.monoServerAp
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +46,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Educator Profile")
@@ -54,9 +59,10 @@ public class EducatorProfileController {
     private final ObjectMapper objectMapper;
 
 
-    @GetMapping("/profile/educator/page")
+    @GetMapping("student/user/profile/educator/page")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -84,24 +90,26 @@ public class EducatorProfileController {
     }
 
 
-    @GetMapping("/{userId}/profile/educator")
+    @GetMapping(value = { "student/user/{educatorProfileId}/profile/educator","educator/user/{educatorProfileId}/profile/educator"})
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Get One"
+            summary = "Get One Educator"
     )
+    
     public @Valid UnifiedResponse<EducatorResponse> get(
-            @PathVariable("userId") UUID userId
+            @PathVariable("educatorProfileId") UUID educatorProfileId
     ) {
-        var result = educatorProfileService.getCourseEducator(userId);
+        var result = educatorProfileService.getCourseEducator(educatorProfileId);
         return UnifiedResponse.of(
                 result
         );
     }
 
-    @PostMapping("/{userId}/profile/educator")
+    @PostMapping("student/user/{educatorProfileId}/profile/educator")
     @Transactional
     @ACL(
             authed = true,
@@ -109,17 +117,19 @@ public class EducatorProfileController {
             matchingSessionUserId = true,
             skipMatchingForAdministrative = true
     )
+    
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create One"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorProfileResponse> create(
-            @PathVariable("userId") @ACL.UserId UUID userId,
+            @PathVariable("educatorProfileId") @ACL.UserId UUID educatorProfileId,
             @RequestBody @Valid
             EducatorProfileRequest payload
     ) {
         var result = educatorProfileService.get(
-                educatorProfileService.create(userId, payload)
+                educatorProfileService.create(educatorProfileId, payload)
                         .getUserId()
         );
         var response = educatorProfileMapper.toResponse(result);
@@ -127,29 +137,27 @@ public class EducatorProfileController {
         return UnifiedResponse.of(response);
     }
 
-    @PutMapping("/{userId}/profile/educator")
+    @PutMapping("/educator/user/{educatorProfileId}/profile/educator")
     @Transactional
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.EDUCATOR, UserRoleEnum.ADMIN, UserRoleEnum.ROOT},
-            matchingSessionUserId = true,
+            matchingSessionProfileId = true,
             skipMatchingForAdministrative = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update One"
     )
-    public @Valid UnifiedResponse<EducatorProfileResponse> update(
-            @PathVariable("userId") @ACL.UserId UUID userId,
+    public @Valid UnifiedResponse<EducatorResponse> update(
+            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
             @RequestBody @Valid
-            EducatorProfileRequest payload
+            EducatorProfileUpdateRequest payload
     ) {
-        var result = educatorProfileService.get(
-                educatorProfileService.update(userId, payload)
-                        .getUserId()
+        var result = educatorProfileService.getCourseEducator(
+                educatorProfileService.update(educatorProfileId, payload)
+                        .getId()
         );
-        var response = educatorProfileMapper.toResponse(result);
-        tagAppendService.refresh(result);
-        return UnifiedResponse.of(response);
+        return UnifiedResponse.of(result);
     }
 }

@@ -307,4 +307,19 @@ public class SchoolService {
         }
         return list;
     }
+
+    public List<TagResponse> tags() {
+        List<DbTag.Result> list = dbTag.getDsl().select(
+                        TAG.asterisk(),
+                        DSL.multiset(
+                                DSL.select()
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
+                        ).as(DbTag.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(TAG)
+                .where(TAG.TAG_CATEGORY.eq(TagCategoryEnum.UNIVERSITY))
+                .fetchInto(DbTag.Result.class);
+        return tagMapper.toResponse(list);
+    }
 }

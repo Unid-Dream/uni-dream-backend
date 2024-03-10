@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -38,6 +39,7 @@ public class AcademicMajorPojo implements Serializable {
     private String         createdBy;
     private OffsetDateTime updatedOn;
     private String         updatedBy;
+    private String         iconPath;
 
     public AcademicMajorPojo() {}
 
@@ -50,9 +52,10 @@ public class AcademicMajorPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.iconPath = value.iconPath;
     }
 
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
     public AcademicMajorPojo(
         @Nonnull UUID           id,
         @Nullable UUID           titleI18nId,
@@ -61,7 +64,8 @@ public class AcademicMajorPojo implements Serializable {
         @Nullable OffsetDateTime createdOn,
         @Nullable String         createdBy,
         @Nullable OffsetDateTime updatedOn,
-        @Nullable String         updatedBy
+        @Nullable String         updatedBy,
+        @Nullable String         iconPath
     ) {
         this.id = id;
         this.titleI18nId = titleI18nId;
@@ -71,6 +75,7 @@ public class AcademicMajorPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.iconPath = iconPath;
     }
 
     /**
@@ -201,6 +206,23 @@ public class AcademicMajorPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.academic_major.icon_path</code>.
+     */
+    @Size(max = 225)
+    @Nullable
+    public String getIconPath() {
+        return this.iconPath;
+    }
+
+    /**
+     * Setter for <code>public.academic_major.icon_path</code>.
+     */
+    public AcademicMajorPojo setIconPath(@Nullable String iconPath) {
+        this.iconPath = iconPath;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AcademicMajorPojo (");
@@ -213,6 +235,7 @@ public class AcademicMajorPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(iconPath);
 
         sb.append(")");
         return sb.toString();

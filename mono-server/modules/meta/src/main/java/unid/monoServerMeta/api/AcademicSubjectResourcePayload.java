@@ -9,6 +9,7 @@ import unid.monoServerMeta.model.I18n;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -17,17 +18,50 @@ import java.util.UUID;
 @FieldNameConstants
 @Validated
 public class AcademicSubjectResourcePayload {
-    @Nullable
+    //book
     private UUID id;
-    @NotNull
-    private AcademicSubjectResourceType type;
-    @NotNull
-    @Valid
+    @NotBlank
     private I18n titleI18n;
     @Nullable
-    private String author;
-    @Nullable
+    private I18n authorI18n;
+    private String image;
+
+    //video
+//    private UUID id;
+//    @NotBlank
+//    private I18n titleI18n;
+//    @Nullable
+//    private I18n authorI18n;
     private String url;
-    @Nullable
-    private String thumbnail;
+    private String type = "youtube";
+
+    //podcast
+//    private UUID id;
+//    @NotBlank
+//    private I18n titleI18n;
+//    @Nullable
+//    private I18n authorI18n;
+//    private String url;
+
+
+
+
+
+
+
+
+
+//    @Nullable
+//    private UUID id;
+//    @NotNull
+//    private AcademicSubjectResourceType type;
+//    @NotNull
+//    @Valid
+//    private I18n titleI18n;
+//    @Nullable
+//    private String author;
+//    @Nullable
+//    private String url;
+//    @Nullable
+//    private String thumbnail;
 }

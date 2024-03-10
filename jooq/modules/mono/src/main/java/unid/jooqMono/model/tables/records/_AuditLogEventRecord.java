@@ -16,11 +16,9 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
-import org.jooq.Field;
-import org.jooq.Record21;
-import org.jooq.Row21;
 import org.jooq.impl.TableRecordImpl;
 
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 import unid.jooqMono.model.tables._AuditLogEventTable;
 import unid.jooqMono.model.tables.pojos._AuditLogEventPojo;
@@ -38,7 +36,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogEventPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> implements Record21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> {
+public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> {
 
     private static final long serialVersionUID = 1L;
 
@@ -383,572 +381,68 @@ public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> 
         return (String) get(20);
     }
 
-    // -------------------------------------------------------------------------
-    // Record21 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row21) super.fieldsRow();
-    }
-
-    @Override
-    @Nonnull
-    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row21) super.valuesRow();
-    }
-
-    @Override
-    @Nonnull
-    public Field<Long> field1() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.AUDIT_SEQ;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field2() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.AUDIT_CREATEDON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field3() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.AUDIT_CREATEDBY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field4() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.AUDIT_OPERATION;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field5() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.AUDIT_TYPE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field6() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field7() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.TITLE_I18N_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field8() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.DESCRIPTION_I18N_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<EventTypeEnum> field9() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.EVENT_TYPE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<LocalDate> field10() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.START_DATE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<LocalDate> field11() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.END_DATE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<LocalTime> field12() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.START_TIME;
-    }
-
-    @Override
-    @Nonnull
-    public Field<LocalTime> field13() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.END_TIME;
-    }
-
-    @Override
-    @Nonnull
-    public Field<BigDecimal> field14() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.MAX_NUMBER_OF_STUDENT;
-    }
-
-    @Override
-    @Nonnull
-    public Field<BigDecimal> field15() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.FEE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field16() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.POSTER_IMAGE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<BigDecimal> field17() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.PRICE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field18() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.CREATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field19() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.CREATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field20() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.UPDATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field21() {
-        return _AuditLogEventTable._AUDIT_LOG_EVENT.UPDATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Long component1() {
-        return getAuditSeq();
-    }
-
-    @Override
-    @Nonnull
-    public OffsetDateTime component2() {
-        return getAuditCreatedon();
-    }
-
-    @Override
-    @Nonnull
-    public String component3() {
-        return getAuditCreatedby();
-    }
-
-    @Override
-    @Nonnull
-    public String component4() {
-        return getAuditOperation();
-    }
-
-    @Override
-    @Nonnull
-    public String component5() {
-        return getAuditType();
-    }
-
-    @Override
-    @Nonnull
-    public UUID component6() {
-        return getId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component7() {
-        return getTitleI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component8() {
-        return getDescriptionI18nId();
-    }
-
-    @Override
-    @Nonnull
-    public EventTypeEnum component9() {
-        return getEventType();
-    }
-
-    @Override
-    @Nullable
-    public LocalDate component10() {
-        return getStartDate();
-    }
-
-    @Override
-    @Nullable
-    public LocalDate component11() {
-        return getEndDate();
-    }
-
-    @Override
-    @Nullable
-    public LocalTime component12() {
-        return getStartTime();
-    }
-
-    @Override
-    @Nullable
-    public LocalTime component13() {
-        return getEndTime();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal component14() {
-        return getMaxNumberOfStudent();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal component15() {
-        return getFee();
-    }
-
-    @Override
-    @Nullable
-    public String component16() {
-        return getPosterImage();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal component17() {
-        return getPrice();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component18() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component19() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component20() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component21() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public Long value1() {
-        return getAuditSeq();
-    }
-
-    @Override
-    @Nonnull
-    public OffsetDateTime value2() {
-        return getAuditCreatedon();
-    }
-
-    @Override
-    @Nonnull
-    public String value3() {
-        return getAuditCreatedby();
-    }
-
-    @Override
-    @Nonnull
-    public String value4() {
-        return getAuditOperation();
-    }
-
-    @Override
-    @Nonnull
-    public String value5() {
-        return getAuditType();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value6() {
-        return getId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value7() {
-        return getTitleI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value8() {
-        return getDescriptionI18nId();
-    }
-
-    @Override
-    @Nonnull
-    public EventTypeEnum value9() {
-        return getEventType();
-    }
-
-    @Override
-    @Nullable
-    public LocalDate value10() {
-        return getStartDate();
-    }
-
-    @Override
-    @Nullable
-    public LocalDate value11() {
-        return getEndDate();
-    }
-
-    @Override
-    @Nullable
-    public LocalTime value12() {
-        return getStartTime();
-    }
-
-    @Override
-    @Nullable
-    public LocalTime value13() {
-        return getEndTime();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal value14() {
-        return getMaxNumberOfStudent();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal value15() {
-        return getFee();
-    }
-
-    @Override
-    @Nullable
-    public String value16() {
-        return getPosterImage();
-    }
-
-    @Override
-    @Nullable
-    public BigDecimal value17() {
-        return getPrice();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value18() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value19() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value20() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value21() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value1(@Nonnull Long value) {
-        setAuditSeq(value);
+    /**
+     * Setter for <code>public._audit_log_event.educator_profile_id</code>.
+     */
+    public _AuditLogEventRecord setEducatorProfileId(@Nullable UUID value) {
+        set(21, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value2(@Nonnull OffsetDateTime value) {
-        setAuditCreatedon(value);
+    /**
+     * Getter for <code>public._audit_log_event.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return (UUID) get(21);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_event.agenda_i18n_id</code>.
+     */
+    public _AuditLogEventRecord setAgendaI18nId(@Nullable UUID value) {
+        set(22, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value3(@Nonnull String value) {
-        setAuditCreatedby(value);
+    /**
+     * Getter for <code>public._audit_log_event.agenda_i18n_id</code>.
+     */
+    @Nullable
+    public UUID getAgendaI18nId() {
+        return (UUID) get(22);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_event.event_status</code>.
+     */
+    public _AuditLogEventRecord setEventStatus(@Nullable EventStatusEnum value) {
+        set(23, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value4(@Nonnull String value) {
-        setAuditOperation(value);
+    /**
+     * Getter for <code>public._audit_log_event.event_status</code>.
+     */
+    @Nullable
+    public EventStatusEnum getEventStatus() {
+        return (EventStatusEnum) get(23);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_event.academic_major_id</code>.
+     */
+    public _AuditLogEventRecord setAcademicMajorId(@Nullable UUID value) {
+        set(24, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value5(@Nonnull String value) {
-        setAuditType(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value6(@Nonnull UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value7(@Nullable UUID value) {
-        setTitleI18nId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value8(@Nullable UUID value) {
-        setDescriptionI18nId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value9(@Nonnull EventTypeEnum value) {
-        setEventType(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value10(@Nullable LocalDate value) {
-        setStartDate(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value11(@Nullable LocalDate value) {
-        setEndDate(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value12(@Nullable LocalTime value) {
-        setStartTime(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value13(@Nullable LocalTime value) {
-        setEndTime(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value14(@Nullable BigDecimal value) {
-        setMaxNumberOfStudent(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value15(@Nullable BigDecimal value) {
-        setFee(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value16(@Nullable String value) {
-        setPosterImage(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value17(@Nullable BigDecimal value) {
-        setPrice(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value18(@Nullable OffsetDateTime value) {
-        setCreatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value19(@Nullable String value) {
-        setCreatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value20(@Nullable OffsetDateTime value) {
-        setUpdatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord value21(@Nullable String value) {
-        setUpdatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogEventRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nonnull EventTypeEnum value9, @Nullable LocalDate value10, @Nullable LocalDate value11, @Nullable LocalTime value12, @Nullable LocalTime value13, @Nullable BigDecimal value14, @Nullable BigDecimal value15, @Nullable String value16, @Nullable BigDecimal value17, @Nullable OffsetDateTime value18, @Nullable String value19, @Nullable OffsetDateTime value20, @Nullable String value21) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        value5(value5);
-        value6(value6);
-        value7(value7);
-        value8(value8);
-        value9(value9);
-        value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
-        value15(value15);
-        value16(value16);
-        value17(value17);
-        value18(value18);
-        value19(value19);
-        value20(value20);
-        value21(value21);
-        return this;
+    /**
+     * Getter for <code>public._audit_log_event.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID getAcademicMajorId() {
+        return (UUID) get(24);
     }
 
     // -------------------------------------------------------------------------
@@ -965,8 +459,8 @@ public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> 
     /**
      * Create a detached, initialised _AuditLogEventRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogEventRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nonnull EventTypeEnum eventType, @Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable LocalTime startTime, @Nullable LocalTime endTime, @Nullable BigDecimal maxNumberOfStudent, @Nullable BigDecimal fee, @Nullable String posterImage, @Nullable BigDecimal price, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "eventType", "startDate", "endDate", "startTime", "endTime", "maxNumberOfStudent", "fee", "posterImage", "price", "createdOn", "createdBy", "updatedOn", "updatedBy", "educatorProfileId", "agendaI18nId", "eventStatus", "academicMajorId" })
+    public _AuditLogEventRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nonnull EventTypeEnum eventType, @Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable LocalTime startTime, @Nullable LocalTime endTime, @Nullable BigDecimal maxNumberOfStudent, @Nullable BigDecimal fee, @Nullable String posterImage, @Nullable BigDecimal price, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID educatorProfileId, @Nullable UUID agendaI18nId, @Nullable EventStatusEnum eventStatus, @Nullable UUID academicMajorId) {
         super(_AuditLogEventTable._AUDIT_LOG_EVENT);
 
         setAuditSeq(auditSeq);
@@ -990,6 +484,10 @@ public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> 
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setEducatorProfileId(educatorProfileId);
+        setAgendaI18nId(agendaI18nId);
+        setEventStatus(eventStatus);
+        setAcademicMajorId(academicMajorId);
     }
 
     /**
@@ -1020,6 +518,10 @@ public class _AuditLogEventRecord extends TableRecordImpl<_AuditLogEventRecord> 
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setEducatorProfileId(value.getEducatorProfileId());
+            setAgendaI18nId(value.getAgendaI18nId());
+            setEventStatus(value.getEventStatus());
+            setAcademicMajorId(value.getAcademicMajorId());
         }
     }
 }

@@ -93,5 +93,6 @@ public class DbAcademicMajor extends Db<AcademicMajorTable, AcademicMajorDao> {
         private DbI18N.Result descriptionI18n;
         private DbTag.Result tag;
         private List<DbAcademicSubject.Result> subjects;
+
     }
 }

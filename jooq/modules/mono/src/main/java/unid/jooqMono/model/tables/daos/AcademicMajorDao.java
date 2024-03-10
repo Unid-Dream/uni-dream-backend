@@ -212,4 +212,21 @@ public class AcademicMajorDao extends DAOImpl<AcademicMajorRecord, AcademicMajor
     public List<AcademicMajorPojo> fetchByUpdatedBy(String... values) {
         return fetch(AcademicMajorTable.ACADEMIC_MAJOR.UPDATED_BY, values);
     }
+
+    /**
+     * Fetch records that have <code>icon_path BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchRangeOfIconPath(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AcademicMajorTable.ACADEMIC_MAJOR.ICON_PATH, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>icon_path IN (values)</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchByIconPath(String... values) {
+        return fetch(AcademicMajorTable.ACADEMIC_MAJOR.ICON_PATH, values);
+    }
 }

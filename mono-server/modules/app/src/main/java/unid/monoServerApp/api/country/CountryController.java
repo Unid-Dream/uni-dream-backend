@@ -1,7 +1,11 @@
 package unid.monoServerApp.api.country;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +24,11 @@ import pwh.coreRsqlJooq.model.PaginationRequest;
 import pwh.coreRsqlJooq.model.PaginationResponse;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
+import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
+import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbInterviewTopic;
@@ -30,6 +36,7 @@ import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.CountryMapper;
 import unid.monoServerMeta.api.CountryRequest;
 import unid.monoServerMeta.api.CountryResponse;
+import unid.monoServerMeta.api.TagResponse;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.Valid;
@@ -41,7 +48,7 @@ import static org.jooq.impl.DSL.*;
 import static unid.jooqMono.model.Tables.*;
 
 @RestController
-@RequestMapping("api/country")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Countries")
@@ -51,6 +58,7 @@ public class CountryController {
     private final CountryMapper countryMapper;
     private final DbCountry dbCountry;
     private final ObjectMapper objectMapper;
+    private final TagService tagService;
 
 //    @GetMapping
 //    @ACL(
@@ -113,7 +121,7 @@ public class CountryController {
 //                PaginationResponse.asResult(result, countryMapper.toResponse(result.getResult().into(DbCountry.Result.class)))
 //        );
 //    }
-    @GetMapping("list")
+    @GetMapping(value = {"student/country/list"})
     @ACL(
             authed = true
     )
@@ -134,6 +142,29 @@ public class CountryController {
         return UnifiedResponse.of(countryMapper.toResponse(list));
     }
 
+
+    @GetMapping(value = {"educator/country/tags"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query"
+    )
+    public @Valid UnifiedResponse<List<TagResponse>> tags() {
+//        List<DbCountry.Result> list = dbCountry.getDsl().select(
+//                        COUNTRY.ID,
+//                        COUNTRY.NAME_I18N_ID,
+//                        multiset(
+//                                DSL.select(I18N.asterisk()).from(I18N).where(I18N.ID.eq(COUNTRY.NAME_I18N_ID))
+//                        ).as(DbCountry.Result.Fields.nameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+//                ).from(COUNTRY,I18N).where(I18N.CHINESE_SIMPLIFIED.isNotNull().and(I18N.ID.eq(COUNTRY.NAME_I18N_ID)))
+//                .groupBy(COUNTRY.ID,COUNTRY.NAME_I18N_ID)
+//                .fetchInto(DbCountry.Result.class);
+        var list = tagService.list(TagCategoryEnum.COUNTRY);
+        return UnifiedResponse.of(list);
+    }
+
     @GetMapping("{id}")
     @ACL(
             authed = true
@@ -142,6 +173,7 @@ public class CountryController {
     @Operation(
             summary = "Get One"
     )
+    @Hidden
     public @Valid UnifiedResponse<CountryResponse> get(
             @PathVariable("id") UUID id
     ) {
@@ -161,6 +193,7 @@ public class CountryController {
     @Operation(
             summary = "Create One"
     )
+    @Hidden
     public @Valid UnifiedResponse<CountryResponse> create(
             @RequestBody @Valid
             CountryRequest payload
@@ -184,6 +217,7 @@ public class CountryController {
     @Operation(
             summary = "Update One"
     )
+    @Hidden
     public @Valid UnifiedResponse<CountryResponse> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid

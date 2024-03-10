@@ -1,1 +1,9 @@
-version 2.0
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - mvn install -pl deps-main -am
+      - mvn install -pl deps -am
+      - mvn install -pl jooq -am
+      - mvn install -pl mono-server -am

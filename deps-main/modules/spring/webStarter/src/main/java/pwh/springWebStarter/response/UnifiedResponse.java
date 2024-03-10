@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -66,4 +67,5 @@ public class UnifiedResponse<Data> implements Serializable {
         @Schema(description = "Brief description of the error")
         private final List<String> description;
     }
+
 }

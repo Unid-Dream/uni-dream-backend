@@ -2,8 +2,10 @@ package unid.monoServerApp.api.tag;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.tables.pojos.TagPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.i18n.DbI18N;
@@ -13,9 +15,14 @@ import unid.monoServerApp.mapper.TagCategoryMapper;
 import unid.monoServerApp.mapper.TagMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.TagRequest;
+import unid.monoServerMeta.api.TagResponse;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static unid.jooqMono.model.Tables.I18N;
+import static unid.jooqMono.model.Tables.TAG;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -27,6 +34,23 @@ public class TagService {
     private final I18nMapper i18nMapper;
     private final SessionService sessionService;
     private final TagMapper tagMapper;
+
+
+    public List<TagResponse> list(TagCategoryEnum tagCategoryEnum) {
+        List<DbTag.Result> list = dbTag.getDsl().select(
+                        TAG.asterisk(),
+                        DSL.multiset(
+                                DSL.select()
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
+                        ).as(DbTag.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(TAG)
+                .where(TAG.TAG_CATEGORY.eq(tagCategoryEnum))
+                .fetchInto(DbTag.Result.class);
+        return tagMapper.toResponse(list);
+    }
+
 
     DbTag.Result get(UUID id) {
         var table = dbTag.getTable();

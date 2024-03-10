@@ -6,6 +6,7 @@ import cn.hutool.db.PageResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
@@ -35,6 +36,7 @@ import pwh.coreRsqlJooq.model.PaginationResult;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.monoServerApp.Constant;
+import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.schoolIdentity.SchoolIdentityPagination;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.http.RequestHolder;
@@ -63,6 +65,7 @@ import static org.jooq.impl.DSL.*;
 @Validated
 @Tag(name = "Passion Finder")
 @Slf4j
+@Hidden
 public class PassionFinderController {
 
 
@@ -73,8 +76,10 @@ public class PassionFinderController {
     private final CountryMapper countryMapper;
 
     @PostMapping("list")
-    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
+    @ACL(
+            authed = true
+    )
     @Operation(
             summary = "Create By List"
     )
@@ -91,6 +96,9 @@ public class PassionFinderController {
 
     @PostMapping()
     @Transactional
+    @ACL(
+            authed = true
+    )
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create By One"
@@ -107,6 +115,9 @@ public class PassionFinderController {
 
     @GetMapping
     @Transactional
+    @ACL(
+            authed = true
+    )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query List"

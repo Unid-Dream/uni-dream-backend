@@ -5,11 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
-import unid.monoServerMeta.model.BaseResponse;
-import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.*;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -20,24 +20,16 @@ import java.util.UUID;
 @FieldNameConstants
 @Validated
 public class AcademicSubjectResponse extends BaseResponse {
-    @NotNull
     private UUID id;
     @NotNull
     @Valid
     private I18n titleI18n;
-    @Nullable
-    @Valid
-    private I18n descriptionI18n;
-    @Nullable
-    @Valid
-    private I18n descriptionMasterDegreeI18n;
-    @Nullable
-    @Valid
-    private I18n descriptionPhdI18n;
     @NotNull
-    @Valid
-    private TagResponse tag;
-    @Nullable
-    @Valid
-    private List<AcademicSubjectResourcePayload> resources;
+    private I18n descriptionI18n;
+
+    private List<AcademicSubjectResourcePayload> books;
+    private List<AcademicSubjectResourcePayload> podcasts;
+    private List<AcademicSubjectResourcePayload> videos;
+
+    private List<I18n> answers;
 }

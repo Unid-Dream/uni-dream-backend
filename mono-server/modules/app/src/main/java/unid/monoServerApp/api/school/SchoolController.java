@@ -1,7 +1,11 @@
 package unid.monoServerApp.api.school;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +34,7 @@ import unid.monoServerApp.mapper.SchoolMapper;
 import unid.monoServerMeta.api.SchoolMapResponse;
 import unid.monoServerMeta.api.SchoolRequest;
 import unid.monoServerMeta.api.SchoolResponse;
+import unid.monoServerMeta.api.TagResponse;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
@@ -37,7 +42,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/school")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Schools")
@@ -48,7 +53,7 @@ public class SchoolController {
     private final DbSchool dbSchool;
     private final ObjectMapper objectMapper;
 
-    @GetMapping
+    @GetMapping("student/school/")
     @ACL(
             authed = true
     )
@@ -56,6 +61,7 @@ public class SchoolController {
     @Operation(
             summary = "Query"
     )
+    @Hidden
     public @Valid UnifiedResponse<PaginationResponse<SchoolResponse>> list(
             @Valid
             @ParameterObject
@@ -110,7 +116,7 @@ public class SchoolController {
         );
     }
 
-    @GetMapping("{id}")
+    @GetMapping("student/school/{id}")
     @ACL(
             authed = true
     )
@@ -118,6 +124,7 @@ public class SchoolController {
     @Operation(
             summary = "Get One"
     )
+    @Hidden
     public @Valid UnifiedResponse<SchoolResponse> get(
             @PathVariable("id") UUID id
     ) {
@@ -127,7 +134,7 @@ public class SchoolController {
         );
     }
 
-    @PostMapping
+    @PostMapping("student/school/")
     @Transactional
     @ACL(
             authed = true,
@@ -137,6 +144,7 @@ public class SchoolController {
     @Operation(
             summary = "Create One"
     )
+    @Hidden
     public @Valid UnifiedResponse<SchoolResponse> create(
             @RequestBody @Valid
             SchoolRequest payload
@@ -151,7 +159,7 @@ public class SchoolController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("student/school/{id}")
     @Transactional
     @ACL(
             authed = true,
@@ -161,6 +169,7 @@ public class SchoolController {
     @Operation(
             summary = "Update One"
     )
+    @Hidden
     public @Valid UnifiedResponse<SchoolResponse> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid
@@ -175,18 +184,33 @@ public class SchoolController {
         );
     }
 
-
-    @GetMapping("/list")
+    @GetMapping("educator/school/tags")
     @ACL(
             authed = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
+            summary = "Tags"
+    )
+    public @Valid UnifiedResponse<List<TagResponse>> tags() {
+        return UnifiedResponse.of(
+                schoolService.tags()
+        );
+    }
+
+    @GetMapping("student/school/list")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
             summary = "Query School Map"
     )
+    
     public @Valid UnifiedResponse<List<SchoolResponse>> getSchoolMap(
             @RequestParam(required = false) String searchKey,
-            @RequestParam() SchoolLevelEnum  schoolLevel
+            @RequestParam SchoolLevelEnum  schoolLevel
             ) {
         return UnifiedResponse.of(
                 schoolService.list(searchKey,schoolLevel)

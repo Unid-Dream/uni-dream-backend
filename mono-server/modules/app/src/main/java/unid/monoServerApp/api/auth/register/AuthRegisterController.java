@@ -29,7 +29,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/auth/register")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "User Registration")
@@ -62,7 +62,7 @@ public class AuthRegisterController {
         }
     }
 
-    @PostMapping
+    @PostMapping("student/auth/register")
     @Transactional
     @ACL(
             noAuthed = true
@@ -86,7 +86,7 @@ public class AuthRegisterController {
         return UnifiedResponse.of(toResponse(result));
     }
 
-    @PutMapping
+    @PutMapping("student/auth/register")
     @Transactional
     @ACL(
             noAuthed = true
@@ -122,7 +122,7 @@ public class AuthRegisterController {
         );
     }
 
-    @PutMapping("{refId}")
+    @PutMapping("student/auth/register/{refId}")
     @Transactional
     @ACL(
             noAuthed = true

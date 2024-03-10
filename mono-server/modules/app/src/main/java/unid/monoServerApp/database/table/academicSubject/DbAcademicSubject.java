@@ -97,5 +97,14 @@ public class DbAcademicSubject extends Db<AcademicSubjectTable, AcademicSubjectD
         private DbI18N.Result descriptionPhdI18n;
         private DbTag.Result tag;
         private List<DbAcademicSubjectResource.Result> resources;
+
+
+        //new property
+        private List<DbAcademicSubjectResource.Result> books;
+        private List<DbAcademicSubjectResource.Result> videos;
+        private List<DbAcademicSubjectResource.Result> podcasts;
+
+        private List<DbI18N.Result> answers;
+
     }
 }

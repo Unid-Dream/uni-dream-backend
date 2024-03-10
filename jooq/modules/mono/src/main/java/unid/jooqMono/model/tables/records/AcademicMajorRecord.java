@@ -11,11 +11,12 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
+import javax.validation.constraints.Size;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record8;
-import org.jooq.Row8;
+import org.jooq.Record9;
+import org.jooq.Row9;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.tables.AcademicMajorTable;
@@ -34,7 +35,7 @@ import unid.jooqMono.model.tables.pojos.AcademicMajorPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord> implements Record8<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
+public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord> implements Record9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -166,6 +167,23 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         return (String) get(7);
     }
 
+    /**
+     * Setter for <code>public.academic_major.icon_path</code>.
+     */
+    public AcademicMajorRecord setIconPath(@Nullable String value) {
+        set(8, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.academic_major.icon_path</code>.
+     */
+    @Size(max = 225)
+    @Nullable
+    public String getIconPath() {
+        return (String) get(8);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -177,19 +195,19 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     }
 
     // -------------------------------------------------------------------------
-    // Record8 type implementation
+    // Record9 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row8<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row8<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row8) super.valuesRow();
+    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> valuesRow() {
+        return (Row9) super.valuesRow();
     }
 
     @Override
@@ -242,6 +260,12 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
 
     @Override
     @Nonnull
+    public Field<String> field9() {
+        return AcademicMajorTable.ACADEMIC_MAJOR.ICON_PATH;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -286,6 +310,12 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     @Nullable
     public String component8() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public String component9() {
+        return getIconPath();
     }
 
     @Override
@@ -334,6 +364,12 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     @Nullable
     public String value8() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public String value9() {
+        return getIconPath();
     }
 
     @Override
@@ -394,7 +430,14 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
 
     @Override
     @Nonnull
-    public AcademicMajorRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable OffsetDateTime value5, @Nullable String value6, @Nullable OffsetDateTime value7, @Nullable String value8) {
+    public AcademicMajorRecord value9(@Nullable String value) {
+        setIconPath(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public AcademicMajorRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable OffsetDateTime value5, @Nullable String value6, @Nullable OffsetDateTime value7, @Nullable String value8, @Nullable String value9) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -403,6 +446,7 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         value6(value6);
         value7(value7);
         value8(value8);
+        value9(value9);
         return this;
     }
 
@@ -420,8 +464,8 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     /**
      * Create a detached, initialised AcademicMajorRecord
      */
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public AcademicMajorRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
+    public AcademicMajorRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath) {
         super(AcademicMajorTable.ACADEMIC_MAJOR);
 
         setId(id);
@@ -432,6 +476,7 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setIconPath(iconPath);
     }
 
     /**
@@ -449,6 +494,7 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setIconPath(value.getIconPath());
         }
     }
 }

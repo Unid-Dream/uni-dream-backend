@@ -1,17 +1,12 @@
 package unid.monoServerMeta.api;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
 import unid.monoServerMeta.model.I18n;
 
-import javax.annotation.Nullable;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,20 +14,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
-public class EducatorProfileRequest {
+public class EducatorProfileUpdateRequest {
 
     private I18n lastNameI18n;
     private I18n firstNameI18n;
     private UUID countryId;
 //    private UUID cityId;
-    private I18n descriptionI18n;
+    private String description;
 //    private List<EducationLevel> educations;
     private Integer hourly_rate;
     private String photo;
     private List<UUID> expertises;
     private List<UUID> subjects;
     private List<UUID> languages;
-    private List<I18n> expertiseDescriptions;
+    private List<I18n> expertiseDescriptions = Lists.newArrayList();
 
 
 

@@ -13,10 +13,9 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
-import org.jooq.JSONB;
 import org.jooq.Record1;
-import org.jooq.Record14;
-import org.jooq.Row14;
+import org.jooq.Record10;
+import org.jooq.Row10;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.tables.AcademicSubjectTable;
@@ -35,7 +34,7 @@ import unid.jooqMono.model.tables.pojos.AcademicSubjectPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRecord> implements Record14<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, JSONB, JSONB, JSONB, JSONB> {
+public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRecord> implements Record10<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -201,70 +200,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
         return (String) get(9);
     }
 
-    /**
-     * Setter for <code>public.academic_subject.videos</code>.
-     */
-    public AcademicSubjectRecord setVideos(@Nullable JSONB value) {
-        set(10, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.academic_subject.videos</code>.
-     */
-    @Nullable
-    public JSONB getVideos() {
-        return (JSONB) get(10);
-    }
-
-    /**
-     * Setter for <code>public.academic_subject.podcasts</code>.
-     */
-    public AcademicSubjectRecord setPodcasts(@Nullable JSONB value) {
-        set(11, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.academic_subject.podcasts</code>.
-     */
-    @Nullable
-    public JSONB getPodcasts() {
-        return (JSONB) get(11);
-    }
-
-    /**
-     * Setter for <code>public.academic_subject.readings</code>.
-     */
-    public AcademicSubjectRecord setReadings(@Nullable JSONB value) {
-        set(12, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.academic_subject.readings</code>.
-     */
-    @Nullable
-    public JSONB getReadings() {
-        return (JSONB) get(12);
-    }
-
-    /**
-     * Setter for <code>public.academic_subject.answers</code>.
-     */
-    public AcademicSubjectRecord setAnswers(@Nullable JSONB value) {
-        set(13, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.academic_subject.answers</code>.
-     */
-    @Nullable
-    public JSONB getAnswers() {
-        return (JSONB) get(13);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -276,19 +211,19 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
     }
 
     // -------------------------------------------------------------------------
-    // Record14 type implementation
+    // Record10 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, JSONB, JSONB, JSONB, JSONB> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row10<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, JSONB, JSONB, JSONB, JSONB> valuesRow() {
-        return (Row14) super.valuesRow();
+    public Row10<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
+        return (Row10) super.valuesRow();
     }
 
     @Override
@@ -353,30 +288,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
 
     @Override
     @Nonnull
-    public Field<JSONB> field11() {
-        return AcademicSubjectTable.ACADEMIC_SUBJECT.VIDEOS;
-    }
-
-    @Override
-    @Nonnull
-    public Field<JSONB> field12() {
-        return AcademicSubjectTable.ACADEMIC_SUBJECT.PODCASTS;
-    }
-
-    @Override
-    @Nonnull
-    public Field<JSONB> field13() {
-        return AcademicSubjectTable.ACADEMIC_SUBJECT.READINGS;
-    }
-
-    @Override
-    @Nonnull
-    public Field<JSONB> field14() {
-        return AcademicSubjectTable.ACADEMIC_SUBJECT.ANSWERS;
-    }
-
-    @Override
-    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -433,30 +344,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
     @Nullable
     public String component10() {
         return getUpdatedBy();
-    }
-
-    @Override
-    @Nullable
-    public JSONB component11() {
-        return getVideos();
-    }
-
-    @Override
-    @Nullable
-    public JSONB component12() {
-        return getPodcasts();
-    }
-
-    @Override
-    @Nullable
-    public JSONB component13() {
-        return getReadings();
-    }
-
-    @Override
-    @Nullable
-    public JSONB component14() {
-        return getAnswers();
     }
 
     @Override
@@ -517,30 +404,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
     @Nullable
     public String value10() {
         return getUpdatedBy();
-    }
-
-    @Override
-    @Nullable
-    public JSONB value11() {
-        return getVideos();
-    }
-
-    @Override
-    @Nullable
-    public JSONB value12() {
-        return getPodcasts();
-    }
-
-    @Override
-    @Nullable
-    public JSONB value13() {
-        return getReadings();
-    }
-
-    @Override
-    @Nullable
-    public JSONB value14() {
-        return getAnswers();
     }
 
     @Override
@@ -615,35 +478,7 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
 
     @Override
     @Nonnull
-    public AcademicSubjectRecord value11(@Nullable JSONB value) {
-        setVideos(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public AcademicSubjectRecord value12(@Nullable JSONB value) {
-        setPodcasts(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public AcademicSubjectRecord value13(@Nullable JSONB value) {
-        setReadings(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public AcademicSubjectRecord value14(@Nullable JSONB value) {
-        setAnswers(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public AcademicSubjectRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable UUID value5, @Nullable UUID value6, @Nullable OffsetDateTime value7, @Nullable String value8, @Nullable OffsetDateTime value9, @Nullable String value10, @Nullable JSONB value11, @Nullable JSONB value12, @Nullable JSONB value13, @Nullable JSONB value14) {
+    public AcademicSubjectRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable UUID value5, @Nullable UUID value6, @Nullable OffsetDateTime value7, @Nullable String value8, @Nullable OffsetDateTime value9, @Nullable String value10) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -654,10 +489,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
         value8(value8);
         value9(value9);
         value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
         return this;
     }
 
@@ -675,8 +506,8 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
     /**
      * Create a detached, initialised AcademicSubjectRecord
      */
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "descriptionMasterDegreeI18nId", "descriptionPhdI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "videos", "podcasts", "readings", "answers" })
-    public AcademicSubjectRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID descriptionMasterDegreeI18nId, @Nullable UUID descriptionPhdI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable JSONB videos, @Nullable JSONB podcasts, @Nullable JSONB readings, @Nullable JSONB answers) {
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "descriptionMasterDegreeI18nId", "descriptionPhdI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    public AcademicSubjectRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID descriptionMasterDegreeI18nId, @Nullable UUID descriptionPhdI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
         super(AcademicSubjectTable.ACADEMIC_SUBJECT);
 
         setId(id);
@@ -689,10 +520,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
-        setVideos(videos);
-        setPodcasts(podcasts);
-        setReadings(readings);
-        setAnswers(answers);
     }
 
     /**
@@ -712,10 +539,6 @@ public class AcademicSubjectRecord extends UpdatableRecordImpl<AcademicSubjectRe
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
-            setVideos(value.getVideos());
-            setPodcasts(value.getPodcasts());
-            setReadings(value.getReadings());
-            setAnswers(value.getAnswers());
         }
     }
 }

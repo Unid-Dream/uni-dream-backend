@@ -32,6 +32,7 @@ import unid.jooqMono.model.tables.EcaProfileSectionTable;
 import unid.jooqMono.model.tables.EducationLevelTable;
 import unid.jooqMono.model.tables.EducatorCalendarExtensionTable;
 import unid.jooqMono.model.tables.EducatorCalendarTable;
+import unid.jooqMono.model.tables.EducatorProfileCopy1Table;
 import unid.jooqMono.model.tables.EducatorProfileExpertiseAcademicMapTable;
 import unid.jooqMono.model.tables.EducatorProfileExtensionTable;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
@@ -514,6 +515,11 @@ public class Public extends SchemaImpl {
     public final EducatorProfileTable EDUCATOR_PROFILE = EducatorProfileTable.EDUCATOR_PROFILE;
 
     /**
+     * The table <code>public.educator_profile_copy1</code>.
+     */
+    public final EducatorProfileCopy1Table EDUCATOR_PROFILE_COPY1 = EducatorProfileCopy1Table.EDUCATOR_PROFILE_COPY1;
+
+    /**
      * The table <code>public.educator_profile_expertise_academic_map</code>.
      */
     public final EducatorProfileExpertiseAcademicMapTable EDUCATOR_PROFILE_EXPERTISE_ACADEMIC_MAP = EducatorProfileExpertiseAcademicMapTable.EDUCATOR_PROFILE_EXPERTISE_ACADEMIC_MAP;
@@ -933,6 +939,7 @@ public class Public extends SchemaImpl {
             EducatorCalendarTable.EDUCATOR_CALENDAR,
             EducatorCalendarExtensionTable.EDUCATOR_CALENDAR_EXTENSION,
             EducatorProfileTable.EDUCATOR_PROFILE,
+            EducatorProfileCopy1Table.EDUCATOR_PROFILE_COPY1,
             EducatorProfileExpertiseAcademicMapTable.EDUCATOR_PROFILE_EXPERTISE_ACADEMIC_MAP,
             EducatorProfileExtensionTable.EDUCATOR_PROFILE_EXTENSION,
             EducatorProfileLanguageMapTable.EDUCATOR_PROFILE_LANGUAGE_MAP,

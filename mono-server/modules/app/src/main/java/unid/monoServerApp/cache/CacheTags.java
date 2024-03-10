@@ -6,6 +6,8 @@ public class CacheTags {
     public static final String EDUCATOR_PROFILE = "EDUCATOR_PROFILE";
     public static final String USER_TAGS = "USER_TAGS";
     public static final String FILE = "FILE";
+    public static final String ACADEMIC = "ACADEMIC";
+
 
     public static final String SECONDARY_SCHOOL = "SECONDARY_SCHOOL";
 

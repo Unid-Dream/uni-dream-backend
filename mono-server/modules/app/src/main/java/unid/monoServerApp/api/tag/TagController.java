@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.tag;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ import java.util.UUID;
 @Validated
 @Tag(name = "Tags")
 @Slf4j
+@Hidden
 public class TagController {
     private final TagService tagService;
     private final TagMapper tagMapper;

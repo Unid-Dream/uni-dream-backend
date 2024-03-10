@@ -31,11 +31,13 @@ import unid.monoServerApp.database.service.UserCacheService;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfileLanguageMap;
+import unid.monoServerApp.database.table.expertise.DbExpertise;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.CountryMapper;
 import unid.monoServerApp.mapper.EducatorProfileMapper;
 import unid.monoServerApp.mapper.I18nMapper;
+import unid.monoServerApp.mapper.UserMapper;
 import unid.monoServerApp.service.S3Service;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.PageUtils;
@@ -64,6 +66,7 @@ public class EducatorProfileService {
     private final DbEducatorProfileLanguageMap dbEducatorProfileLanguageMap;
     private final UserCacheService userCacheService;
     private final CountryMapper countryMapper;
+    private final DbExpertise dbExpertise;
     private final DSLContext dslContext;
 
     public DbEducatorProfile.Result get(UUID userId) {
@@ -81,7 +84,7 @@ public class EducatorProfileService {
         var profilePojo = educatorProfileMapper.toPojo(payload)
                 .setUserId(userId);
         dbEducatorProfile.getDao().insert(profilePojo);
-        updateUser(userId, payload);
+//        updateUser(userId, payload);
         insertOrUpdateLanguage(
                 profilePojo.getId(),
                 Optional.ofNullable(payload.getLanguages())
@@ -91,30 +94,59 @@ public class EducatorProfileService {
         return profilePojo;
     }
 
-    @CacheEvict(
-            value = CacheTags.EDUCATOR_PROFILE,
-            key = "#userId"
-    )
-    public EducatorProfilePojo update(UUID userId, EducatorProfileRequest payload) {
+//    @CacheEvict(
+//            value = CacheTags.EDUCATOR_PROFILE,
+//            key = "#profileId"
+//    )
+    public EducatorProfilePojo update(UUID profileId, EducatorProfileUpdateRequest payload) {
         sessionService.initDatabaseSession();
-        var existingRecord = Optional.ofNullable(
-                dbEducatorProfile.getDao().fetchOneByUserId(userId)
-        ).orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
-        educatorProfileMapper.merge(existingRecord, payload);
-        dbEducatorProfile.getDao().update(existingRecord);
-        insertOrUpdateLanguage(
-                existingRecord.getId(),
-                Optional.ofNullable(payload.getLanguages())
-                        .orElse(new ArrayList<>())
-        );
-        s3Service.oldToNew(existingRecord.getProfilePicture(), payload.getProfilePicture());
-        return existingRecord;
+        EducatorProfilePojo pojo = dbEducatorProfile
+                .getDsl()
+                .select().from(EDUCATOR_PROFILE).where(EDUCATOR_PROFILE.ID.eq(profileId))
+                .fetchOptionalInto(EducatorProfilePojo.class)
+                .orElseThrow(Exceptions::unknownError);
+        updateUser(pojo.getUserId(), payload);
+        educatorProfileMapper.merge(pojo,payload);
+        List<UUID> expertise = Lists.newArrayList();
+        for(I18n object : payload.getExpertiseDescriptions()){
+            var i18nPojo =  i18nMapper.toPojo(object);
+            dbI18N.getDao().insert(i18nPojo);
+            ExpertisePojo expertisePojo = new ExpertisePojo();
+            expertisePojo.setDescriptionI18nId(i18nPojo.getId());
+            dbExpertise.getDao().insert(expertisePojo);
+            expertise.add(expertisePojo.getId());
+        }
+        pojo.setExpertiseDescriptionId(expertise.toArray(UUID[]::new));
+        dbEducatorProfile.getDao().update(pojo);
+        return pojo;
+
+
+
+
+
+
+
+
+
+
+//        var existingRecord = Optional.ofNullable(
+//                dbEducatorProfile.getDao().fetchOneByUserId(userId)
+//        ).orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
+//        educatorProfileMapper.merge(existingRecord, payload);
+//        dbEducatorProfile.getDao().update(existingRecord);
+//        insertOrUpdateLanguage(
+//                existingRecord.getId(),
+//                Optional.ofNullable(payload.getLanguages())
+//                        .orElse(new ArrayList<>())
+//        );
+//        s3Service.oldToNew(existingRecord.getProfilePicture(), payload.getProfilePicture());
+//        return existingRecord;
     }
 
-    private void updateUser(UUID userId, EducatorProfileRequest payload) {
+    private void updateUser(UUID userId, EducatorProfileUpdateRequest payload) {
         var user = Optional.ofNullable(dbUser.getDao().fetchOneById(userId))
                 .orElseThrow(() -> Exceptions.notFound("User Not Found"));
-        var firstName = i18nMapper.toPojo(payload.getFirstName());
+        var firstName = i18nMapper.toPojo(payload.getFirstNameI18n());
         Optional.ofNullable(user.getFistNameI18nId())
                 .ifPresentOrElse(id -> {
                     firstName.setId(id);
@@ -123,7 +155,7 @@ public class EducatorProfileService {
                     dbI18N.getDao().insert(firstName);
                 });
         user.setFistNameI18nId(firstName.getId());
-        var lastName = i18nMapper.toPojo(payload.getLastName());
+        var lastName = i18nMapper.toPojo(payload.getLastNameI18n());
         Optional.ofNullable(user.getLastNameI18nId())
                 .ifPresentOrElse(id -> {
                     lastName.setId(id);
@@ -192,9 +224,9 @@ public class EducatorProfileService {
                 .leftJoin(I18N).on(TAG.DESCRIPTION_I18N_ID.eq(I18N.ID))
                 .where(I18N.ENGLISH.in(expertiseQuery).or(I18N.CHINESE_SIMPLIFIED.in(expertiseQuery)).or(I18N.CHINESE_TRADITIONAL.in(expertiseQuery))).fetchInto(UUID.class);
 
-        List<UUID> langCondition = dslContext.select(EDUCATOR_PROFILE_EXTENSION.EDUCATOR_PROFILE_ID)
-                .from(EDUCATOR_PROFILE_EXTENSION)
-                .leftJoin(TAG).on(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.LANGUAGE_ID)))
+        List<UUID> langCondition = dslContext.select(EDUCATOR_PROFILE.ID)
+                .from(EDUCATOR_PROFILE)
+                .leftJoin(TAG).on(TAG.ID.eq(any(EDUCATOR_PROFILE.LANGUAGE_ID)))
                 .leftJoin(I18N).on(TAG.DESCRIPTION_I18N_ID.eq(I18N.ID))
                 .where(I18N.ENGLISH.in(languageQuery).or(I18N.CHINESE_SIMPLIFIED.in(languageQuery)).or(I18N.CHINESE_TRADITIONAL.in(languageQuery))).fetchInto(UUID.class);
 
@@ -228,8 +260,11 @@ public class EducatorProfileService {
 
 
     public EducatorResponse getCourseEducator(UUID educatorProfileId) {
-        EducatorResponse response = dbEducatorProfile.getQueryEducatorProfile().and(EDUCATOR_PROFILE.ID.eq(educatorProfileId))
-                .fetchOptional().orElseThrow(()->Exceptions.notFound(" Course Educator Not Found"))
+        EducatorResponse response = dbEducatorProfile
+                .getQueryEducatorProfile()
+                .and(EDUCATOR_PROFILE.ID.eq(educatorProfileId))
+                .fetchOptional()
+                .orElseThrow(()->Exceptions.notFound(" Course Educator Not Found"))
                 .into(EducatorResponse.class);
         I18n descriptionI18n = new I18n();
         descriptionI18n.setEnglish(response.getDescription());

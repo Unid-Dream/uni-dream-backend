@@ -1,11 +1,19 @@
 package unid.monoServerApp.config;
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +31,30 @@ import java.util.stream.Collectors;
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class OpenAPI {
+@OpenAPIDefinition(
+        info = @io.swagger.v3.oas.annotations.info.Info(
+                title = "Swagger3",
+                version = "1.0",
+                description = "Swagger3使用演示",
+                contact = @Contact(name = "TOM")
+        ),
+        security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "unidtoken"),
+        externalDocs = @ExternalDocumentation(description = "参考文档",
+                url = "https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations"
+        )
+)
+@SecurityScheme(type = SecuritySchemeType.APIKEY, name = "unidtoken", in = SecuritySchemeIn.HEADER)
+public class OpenAPIConfiguration {
     @Bean
     public OpenApiCustomiser openApiCustomiser() {
+        // 创建一个新的 Components 对象
         return openAPI -> {
             openAPI.setInfo(
                     new Info()
                             .title("Uni-D OpenAPI Definition")
                             .description("Uni-D OpenAPI Documentation")
             );
+            openAPI.setSecurity(List.of(new SecurityRequirement().addList("unidtoken")));
         };
     }
 
@@ -81,5 +104,30 @@ public class OpenAPI {
                                 .collect(Collectors.joining("\n\n"))
                 )
         );
+    }
+
+
+    @Bean
+    public GroupedOpenApi studentApi() {
+        return GroupedOpenApi.builder()
+                .group("Student")
+                .pathsToMatch("/api/student/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi educatorApi() {
+        return GroupedOpenApi.builder()
+                .group("Educator")
+                .pathsToMatch("/api/educator/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminApi() {
+        return GroupedOpenApi.builder()
+                .group("Admin")
+                .pathsToMatch("/api/admin/**")
+                .build();
     }
 }

@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 
 import org.jooq.Configuration;
-import org.jooq.JSONB;
 import org.jooq.impl.DAOImpl;
 
 import unid.jooqMono.model.tables.AcademicSubjectTable;
@@ -265,73 +264,5 @@ public class AcademicSubjectDao extends DAOImpl<AcademicSubjectRecord, AcademicS
     @Nonnull
     public List<AcademicSubjectPojo> fetchByUpdatedBy(String... values) {
         return fetch(AcademicSubjectTable.ACADEMIC_SUBJECT.UPDATED_BY, values);
-    }
-
-    /**
-     * Fetch records that have <code>videos BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchRangeOfVideos(JSONB lowerInclusive, JSONB upperInclusive) {
-        return fetchRange(AcademicSubjectTable.ACADEMIC_SUBJECT.VIDEOS, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>videos IN (values)</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchByVideos(JSONB... values) {
-        return fetch(AcademicSubjectTable.ACADEMIC_SUBJECT.VIDEOS, values);
-    }
-
-    /**
-     * Fetch records that have <code>podcasts BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchRangeOfPodcasts(JSONB lowerInclusive, JSONB upperInclusive) {
-        return fetchRange(AcademicSubjectTable.ACADEMIC_SUBJECT.PODCASTS, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>podcasts IN (values)</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchByPodcasts(JSONB... values) {
-        return fetch(AcademicSubjectTable.ACADEMIC_SUBJECT.PODCASTS, values);
-    }
-
-    /**
-     * Fetch records that have <code>readings BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchRangeOfReadings(JSONB lowerInclusive, JSONB upperInclusive) {
-        return fetchRange(AcademicSubjectTable.ACADEMIC_SUBJECT.READINGS, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>readings IN (values)</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchByReadings(JSONB... values) {
-        return fetch(AcademicSubjectTable.ACADEMIC_SUBJECT.READINGS, values);
-    }
-
-    /**
-     * Fetch records that have <code>answers BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchRangeOfAnswers(JSONB lowerInclusive, JSONB upperInclusive) {
-        return fetchRange(AcademicSubjectTable.ACADEMIC_SUBJECT.ANSWERS, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>answers IN (values)</code>
-     */
-    @Nonnull
-    public List<AcademicSubjectPojo> fetchByAnswers(JSONB... values) {
-        return fetch(AcademicSubjectTable.ACADEMIC_SUBJECT.ANSWERS, values);
     }
 }

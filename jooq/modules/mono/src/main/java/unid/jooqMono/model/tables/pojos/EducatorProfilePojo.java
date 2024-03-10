@@ -7,12 +7,14 @@ package unid.jooqMono.model.tables.pojos;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 
@@ -50,6 +52,15 @@ public class EducatorProfilePojo implements Serializable {
     private String                  createdBy;
     private OffsetDateTime          updatedOn;
     private String                  updatedBy;
+    private UUID[]                  expertiseId;
+    private String                  description;
+    private UUID[]                  languageId;
+    private UUID                    cityId;
+    private UUID[]                  educationSchoolId;
+    private UUID[]                  academicMajorId;
+    private UUID[]                  educationId;
+    private UUID[]                  expertiseDescriptionId;
+    private String                  timezone;
 
     public EducatorProfilePojo() {}
 
@@ -71,9 +82,18 @@ public class EducatorProfilePojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.expertiseId = value.expertiseId;
+        this.description = value.description;
+        this.languageId = value.languageId;
+        this.cityId = value.cityId;
+        this.educationSchoolId = value.educationSchoolId;
+        this.academicMajorId = value.academicMajorId;
+        this.educationId = value.educationId;
+        this.expertiseDescriptionId = value.expertiseDescriptionId;
+        this.timezone = value.timezone;
     }
 
-    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "expertiseDescriptionId", "timezone" })
     public EducatorProfilePojo(
         @Nonnull UUID                    id,
         @Nonnull UUID                    userId,
@@ -91,7 +111,16 @@ public class EducatorProfilePojo implements Serializable {
         @Nullable OffsetDateTime          createdOn,
         @Nullable String                  createdBy,
         @Nullable OffsetDateTime          updatedOn,
-        @Nullable String                  updatedBy
+        @Nullable String                  updatedBy,
+        @Nullable UUID[]                  expertiseId,
+        @Nullable String                  description,
+        @Nullable UUID[]                  languageId,
+        @Nullable UUID                    cityId,
+        @Nullable UUID[]                  educationSchoolId,
+        @Nullable UUID[]                  academicMajorId,
+        @Nullable UUID[]                  educationId,
+        @Nullable UUID[]                  expertiseDescriptionId,
+        @Nullable String                  timezone
     ) {
         this.id = id;
         this.userId = userId;
@@ -110,6 +139,15 @@ public class EducatorProfilePojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.expertiseId = expertiseId;
+        this.description = description;
+        this.languageId = languageId;
+        this.cityId = cityId;
+        this.educationSchoolId = educationSchoolId;
+        this.academicMajorId = academicMajorId;
+        this.educationId = educationId;
+        this.expertiseDescriptionId = expertiseDescriptionId;
+        this.timezone = timezone;
     }
 
     /**
@@ -387,6 +425,151 @@ public class EducatorProfilePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.educator_profile.expertise_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseId() {
+        return this.expertiseId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.expertise_id</code>.
+     */
+    public EducatorProfilePojo setExpertiseId(@Nullable UUID[] expertiseId) {
+        this.expertiseId = expertiseId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.description</code>.
+     */
+    public EducatorProfilePojo setDescription(@Nullable String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.language_id</code>.
+     */
+    @Nullable
+    public UUID[] getLanguageId() {
+        return this.languageId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.language_id</code>.
+     */
+    public EducatorProfilePojo setLanguageId(@Nullable UUID[] languageId) {
+        this.languageId = languageId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.city_id</code>.
+     */
+    @Nullable
+    public UUID getCityId() {
+        return this.cityId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.city_id</code>.
+     */
+    public EducatorProfilePojo setCityId(@Nullable UUID cityId) {
+        this.cityId = cityId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.education_school_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationSchoolId() {
+        return this.educationSchoolId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.education_school_id</code>.
+     */
+    public EducatorProfilePojo setEducationSchoolId(@Nullable UUID[] educationSchoolId) {
+        this.educationSchoolId = educationSchoolId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID[] getAcademicMajorId() {
+        return this.academicMajorId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.academic_major_id</code>.
+     */
+    public EducatorProfilePojo setAcademicMajorId(@Nullable UUID[] academicMajorId) {
+        this.academicMajorId = academicMajorId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.education_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationId() {
+        return this.educationId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.education_id</code>.
+     */
+    public EducatorProfilePojo setEducationId(@Nullable UUID[] educationId) {
+        this.educationId = educationId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseDescriptionId() {
+        return this.expertiseDescriptionId;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    public EducatorProfilePojo setExpertiseDescriptionId(@Nullable UUID[] expertiseDescriptionId) {
+        this.expertiseDescriptionId = expertiseDescriptionId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return this.timezone;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.timezone</code>.
+     */
+    public EducatorProfilePojo setTimezone(@Nullable String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("EducatorProfilePojo (");
@@ -408,6 +591,15 @@ public class EducatorProfilePojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(Arrays.toString(expertiseId));
+        sb.append(", ").append(description);
+        sb.append(", ").append(Arrays.toString(languageId));
+        sb.append(", ").append(cityId);
+        sb.append(", ").append(Arrays.toString(educationSchoolId));
+        sb.append(", ").append(Arrays.toString(academicMajorId));
+        sb.append(", ").append(Arrays.toString(educationId));
+        sb.append(", ").append(Arrays.toString(expertiseDescriptionId));
+        sb.append(", ").append(timezone);
 
         sb.append(")");
         return sb.toString();

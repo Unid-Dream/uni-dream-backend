@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -44,6 +45,7 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
     private String         createdBy;
     private OffsetDateTime updatedOn;
     private String         updatedBy;
+    private String         iconPath;
 
     public _AuditLogAcademicMajorPojo() {}
 
@@ -61,9 +63,10 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.iconPath = value.iconPath;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
     public _AuditLogAcademicMajorPojo(
         @Nonnull Long           auditSeq,
         @Nonnull OffsetDateTime auditCreatedon,
@@ -77,7 +80,8 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         @Nullable OffsetDateTime createdOn,
         @Nullable String         createdBy,
         @Nullable OffsetDateTime updatedOn,
-        @Nullable String         updatedBy
+        @Nullable String         updatedBy,
+        @Nullable String         iconPath
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -92,6 +96,7 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.iconPath = iconPath;
     }
 
     /**
@@ -308,6 +313,23 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_academic_major.icon_path</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getIconPath() {
+        return this.iconPath;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_academic_major.icon_path</code>.
+     */
+    public _AuditLogAcademicMajorPojo setIconPath(@Nullable String iconPath) {
+        this.iconPath = iconPath;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogAcademicMajorPojo (");
@@ -325,6 +347,7 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(iconPath);
 
         sb.append(")");
         return sb.toString();

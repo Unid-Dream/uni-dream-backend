@@ -1,5 +1,6 @@
 package unid.monoServerApp.api.user.tag;//package unid.monoServerApp.api.country;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Validated
 @Tag(name = "User Tags")
 @Slf4j
+@Hidden
 public class UserTagsController {
     private final UserTagsService userTagsService;
     private final TagMapper tagMapper;

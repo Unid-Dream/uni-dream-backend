@@ -18,6 +18,7 @@ import javax.annotation.processing.Generated;
 import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
 
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 import unid.jooqMono.model.tables.EventTable;
 import unid.jooqMono.model.tables.pojos.EventPojo;
@@ -351,5 +352,73 @@ public class EventDao extends DAOImpl<EventRecord, EventPojo, UUID> {
     @Nonnull
     public List<EventPojo> fetchByUpdatedBy(String... values) {
         return fetch(EventTable.EVENT.UPDATED_BY, values);
+    }
+
+    /**
+     * Fetch records that have <code>educator_profile_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchRangeOfEducatorProfileId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(EventTable.EVENT.EDUCATOR_PROFILE_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>educator_profile_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchByEducatorProfileId(UUID... values) {
+        return fetch(EventTable.EVENT.EDUCATOR_PROFILE_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>agenda_i18n_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchRangeOfAgendaI18nId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(EventTable.EVENT.AGENDA_I18N_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>agenda_i18n_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchByAgendaI18nId(UUID... values) {
+        return fetch(EventTable.EVENT.AGENDA_I18N_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>event_status BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchRangeOfEventStatus(EventStatusEnum lowerInclusive, EventStatusEnum upperInclusive) {
+        return fetchRange(EventTable.EVENT.EVENT_STATUS, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>event_status IN (values)</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchByEventStatus(EventStatusEnum... values) {
+        return fetch(EventTable.EVENT.EVENT_STATUS, values);
+    }
+
+    /**
+     * Fetch records that have <code>academic_major_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchRangeOfAcademicMajorId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(EventTable.EVENT.ACADEMIC_MAJOR_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>academic_major_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EventPojo> fetchByAcademicMajorId(UUID... values) {
+        return fetch(EventTable.EVENT.ACADEMIC_MAJOR_ID, values);
     }
 }

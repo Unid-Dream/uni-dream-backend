@@ -40,7 +40,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/user/profile/student/{profileId}/schedule")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Student Schedule")
@@ -134,9 +134,11 @@ public class StudentScheduleController {
 //    }
 
 
-    @GetMapping
+    @GetMapping("student/user/profile/student/{profileId}/schedule")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT,
+            matchingSessionProfileId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(

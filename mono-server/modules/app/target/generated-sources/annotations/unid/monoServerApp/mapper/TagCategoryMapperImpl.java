@@ -7,7 +7,7 @@ import unid.monoServerMeta.model.TagCategory;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-05T21:42:27+0800",
+    date = "2024-03-10T20:56:04+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -41,6 +41,8 @@ public class TagCategoryMapperImpl implements TagCategoryMapper {
             case CITY: tagCategoryEnum = TagCategoryEnum.CITY;
             break;
             case EDUCATION_LEVEL: tagCategoryEnum = TagCategoryEnum.EDUCATION_LEVEL;
+            break;
+            case UNIVERSITY: tagCategoryEnum = TagCategoryEnum.UNIVERSITY;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + data );
         }
@@ -76,6 +78,8 @@ public class TagCategoryMapperImpl implements TagCategoryMapper {
             case CITY: tagCategory = TagCategory.CITY;
             break;
             case EDUCATION_LEVEL: tagCategory = TagCategory.EDUCATION_LEVEL;
+            break;
+            case UNIVERSITY: tagCategory = TagCategory.UNIVERSITY;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + data );
         }

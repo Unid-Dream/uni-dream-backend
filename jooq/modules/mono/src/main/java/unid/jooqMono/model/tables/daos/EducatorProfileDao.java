@@ -359,4 +359,157 @@ public class EducatorProfileDao extends DAOImpl<EducatorProfileRecord, EducatorP
     public List<EducatorProfilePojo> fetchByUpdatedBy(String... values) {
         return fetch(EducatorProfileTable.EDUCATOR_PROFILE.UPDATED_BY, values);
     }
+
+    /**
+     * Fetch records that have <code>expertise_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfExpertiseId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>expertise_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByExpertiseId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>description BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfDescription(String lowerInclusive, String upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.DESCRIPTION, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>description IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByDescription(String... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.DESCRIPTION, values);
+    }
+
+    /**
+     * Fetch records that have <code>language_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfLanguageId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.LANGUAGE_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>language_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByLanguageId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.LANGUAGE_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>city_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfCityId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.CITY_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>city_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByCityId(UUID... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.CITY_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>education_school_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfEducationSchoolId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.EDUCATION_SCHOOL_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>education_school_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByEducationSchoolId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EDUCATION_SCHOOL_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>academic_major_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfAcademicMajorId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.ACADEMIC_MAJOR_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>academic_major_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByAcademicMajorId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.ACADEMIC_MAJOR_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>education_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfEducationId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.EDUCATION_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>education_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByEducationId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EDUCATION_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>expertise_description_id BETWEEN
+     * lowerInclusive AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfExpertiseDescriptionId(UUID[] lowerInclusive, UUID[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>expertise_description_id IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByExpertiseDescriptionId(UUID[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>timezone BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfTimezone(String lowerInclusive, String upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>timezone IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByTimezone(String... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, values);
+    }
 }

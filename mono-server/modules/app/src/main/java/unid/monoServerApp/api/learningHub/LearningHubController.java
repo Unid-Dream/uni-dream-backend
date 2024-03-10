@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.EventTypeEnum;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.EducatorResponse;
@@ -27,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/learning-hub/")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Learning Hub")
@@ -35,10 +39,12 @@ import java.util.UUID;
 public class LearningHubController {
     private final LearningHubService learningHubService;
 
-    @GetMapping("/page")
+    @GetMapping("/student/learning-hub/page")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
     )
+    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Page"
@@ -59,14 +65,16 @@ public class LearningHubController {
     }
 
 
-    @GetMapping("{id}")
+    @GetMapping("/student/learning-hub/{id}")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get One"
     )
+    
     public @Valid UnifiedResponse<LearningHubResponse> getOne(
             @PathVariable UUID id) {
         return UnifiedResponse.of(
@@ -75,17 +83,20 @@ public class LearningHubController {
     }
 
 
-    @PostMapping("{id}/{studentProfileId}/enroll")
+    @PostMapping("/student/learning-hub/{id}/{studentProfileId}/enroll")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT,
+            matchingSessionProfileId = true
     )
+    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Enroll One"
     )
     public @Valid UnifiedResponse<UUID> enroll(
-            @PathVariable UUID id,
-            @PathVariable UUID studentProfileId) {
+            @PathVariable @ACL.ProfileId UUID studentProfileId,
+            @PathVariable UUID id) {
         return UnifiedResponse.of(learningHubService.enroll(id,studentProfileId));
     }
 }

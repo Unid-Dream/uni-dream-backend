@@ -13,12 +13,11 @@ import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerMeta.api.AcademicSubjectRequest;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
-import unid.monoServerMeta.model.AcademicSubjectResourceType;
 import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-05T21:42:27+0800",
+    date = "2024-03-10T20:56:03+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -28,8 +27,6 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
     private CommonMapper commonMapper;
     @Autowired
     private I18nMapper i18nMapper;
-    @Autowired
-    private TagMapper tagMapper;
     @Autowired
     private AcademicSubjectResourceMapper academicSubjectResourceMapper;
 
@@ -129,10 +126,10 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
         academicSubjectResponse.setId( data.getId() );
         academicSubjectResponse.setTitleI18n( i18nMapper.toModel( data.getTitleI18n() ) );
         academicSubjectResponse.setDescriptionI18n( i18nMapper.toModel( data.getDescriptionI18n() ) );
-        academicSubjectResponse.setDescriptionMasterDegreeI18n( i18nMapper.toModel( data.getDescriptionMasterDegreeI18n() ) );
-        academicSubjectResponse.setDescriptionPhdI18n( i18nMapper.toModel( data.getDescriptionPhdI18n() ) );
-        academicSubjectResponse.setTag( tagMapper.toResponse( data.getTag() ) );
-        academicSubjectResponse.setResources( academicSubjectResourceMapper.toResponse( data.getResources() ) );
+        academicSubjectResponse.setBooks( academicSubjectResourceMapper.toResponse( data.getBooks() ) );
+        academicSubjectResponse.setPodcasts( academicSubjectResourceMapper.toResponse( data.getPodcasts() ) );
+        academicSubjectResponse.setVideos( academicSubjectResourceMapper.toResponse( data.getVideos() ) );
+        academicSubjectResponse.setAnswers( resultListToI18nList( data.getAnswers() ) );
 
         return academicSubjectResponse;
     }
@@ -149,26 +146,6 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
         }
 
         return list;
-    }
-
-    protected AcademicSubjectResourceTypeEnum academicSubjectResourceTypeToAcademicSubjectResourceTypeEnum(AcademicSubjectResourceType academicSubjectResourceType) {
-        if ( academicSubjectResourceType == null ) {
-            return null;
-        }
-
-        AcademicSubjectResourceTypeEnum academicSubjectResourceTypeEnum;
-
-        switch ( academicSubjectResourceType ) {
-            case READINGS: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.READINGS;
-            break;
-            case VIDEO: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.VIDEO;
-            break;
-            case PODCAST: academicSubjectResourceTypeEnum = AcademicSubjectResourceTypeEnum.PODCAST;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + academicSubjectResourceType );
-        }
-
-        return academicSubjectResourceTypeEnum;
     }
 
     protected DbI18N.Result i18nToResult(I18n i18n) {
@@ -193,11 +170,12 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
         DbAcademicSubjectResource.Result result = new DbAcademicSubjectResource.Result();
 
         result.setId( academicSubjectResourcePayload.getId() );
-        result.setType( academicSubjectResourceTypeToAcademicSubjectResourceTypeEnum( academicSubjectResourcePayload.getType() ) );
-        result.setAuthor( academicSubjectResourcePayload.getAuthor() );
+        if ( academicSubjectResourcePayload.getType() != null ) {
+            result.setType( Enum.valueOf( AcademicSubjectResourceTypeEnum.class, academicSubjectResourcePayload.getType() ) );
+        }
         result.setUrl( academicSubjectResourcePayload.getUrl() );
-        result.setThumbnail( academicSubjectResourcePayload.getThumbnail() );
         result.setTitleI18n( i18nToResult( academicSubjectResourcePayload.getTitleI18n() ) );
+        result.setAuthorI18n( i18nToResult( academicSubjectResourcePayload.getAuthorI18n() ) );
 
         return result;
     }
@@ -210,6 +188,19 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
         List<DbAcademicSubjectResource.Result> list1 = new ArrayList<DbAcademicSubjectResource.Result>( list.size() );
         for ( AcademicSubjectResourcePayload academicSubjectResourcePayload : list ) {
             list1.add( academicSubjectResourcePayloadToResult( academicSubjectResourcePayload ) );
+        }
+
+        return list1;
+    }
+
+    protected List<I18n> resultListToI18nList(List<DbI18N.Result> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<I18n> list1 = new ArrayList<I18n>( list.size() );
+        for ( DbI18N.Result result : list ) {
+            list1.add( i18nMapper.toModel( result ) );
         }
 
         return list1;

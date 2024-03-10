@@ -12,10 +12,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.jooq.Field;
-import org.jooq.Record13;
-import org.jooq.Row13;
+import org.jooq.Record14;
+import org.jooq.Row14;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.tables._AuditLogAcademicMajorTable;
@@ -34,7 +35,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogAcademicMajorPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcademicMajorRecord> implements Record13<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
+public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcademicMajorRecord> implements Record14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -252,20 +253,37 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         return (String) get(12);
     }
 
+    /**
+     * Setter for <code>public._audit_log_academic_major.icon_path</code>.
+     */
+    public _AuditLogAcademicMajorRecord setIconPath(@Nullable String value) {
+        set(13, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_academic_major.icon_path</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getIconPath() {
+        return (String) get(13);
+    }
+
     // -------------------------------------------------------------------------
-    // Record13 type implementation
+    // Record14 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row13<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row13<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row13) super.valuesRow();
+    public Row14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> valuesRow() {
+        return (Row14) super.valuesRow();
     }
 
     @Override
@@ -348,6 +366,12 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
 
     @Override
     @Nonnull
+    public Field<String> field14() {
+        return _AuditLogAcademicMajorTable._AUDIT_LOG_ACADEMIC_MAJOR.ICON_PATH;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -422,6 +446,12 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     @Nullable
     public String component13() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public String component14() {
+        return getIconPath();
     }
 
     @Override
@@ -500,6 +530,12 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     @Nullable
     public String value13() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public String value14() {
+        return getIconPath();
     }
 
     @Override
@@ -595,7 +631,14 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
 
     @Override
     @Nonnull
-    public _AuditLogAcademicMajorRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13) {
+    public _AuditLogAcademicMajorRecord value14(@Nullable String value) {
+        setIconPath(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogAcademicMajorRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13, @Nullable String value14) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -609,6 +652,7 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         value11(value11);
         value12(value12);
         value13(value13);
+        value14(value14);
         return this;
     }
 
@@ -626,8 +670,8 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     /**
      * Create a detached, initialised _AuditLogAcademicMajorRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogAcademicMajorRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
+    public _AuditLogAcademicMajorRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath) {
         super(_AuditLogAcademicMajorTable._AUDIT_LOG_ACADEMIC_MAJOR);
 
         setAuditSeq(auditSeq);
@@ -643,6 +687,7 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setIconPath(iconPath);
     }
 
     /**
@@ -665,6 +710,7 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setIconPath(value.getIconPath());
         }
     }
 }

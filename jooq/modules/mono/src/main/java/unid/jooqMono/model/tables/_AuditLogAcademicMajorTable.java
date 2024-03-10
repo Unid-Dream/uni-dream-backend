@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row14;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -123,6 +123,11 @@ public class _AuditLogAcademicMajorTable extends TableImpl<_AuditLogAcademicMajo
      */
     public final TableField<_AuditLogAcademicMajorRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public._audit_log_academic_major.icon_path</code>.
+     */
+    public final TableField<_AuditLogAcademicMajorRecord, String> ICON_PATH = createField(DSL.name("icon_path"), SQLDataType.VARCHAR(255), this, "");
+
     private _AuditLogAcademicMajorTable(Name alias, Table<_AuditLogAcademicMajorRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -201,12 +206,12 @@ public class _AuditLogAcademicMajorTable extends TableImpl<_AuditLogAcademicMajo
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row14 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row13<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 }

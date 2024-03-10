@@ -19,7 +19,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row16;
+import org.jooq.Row20;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -31,6 +31,7 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Keys;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.EventTypeEnum;
 import unid.jooqMono.model.tables.records.EventRecord;
 
@@ -144,6 +145,26 @@ public class EventTable extends TableImpl<EventRecord> {
      */
     public final TableField<EventRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public.event.educator_profile_id</code>.
+     */
+    public final TableField<EventRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column <code>public.event.agenda_i18n_id</code>.
+     */
+    public final TableField<EventRecord, UUID> AGENDA_I18N_ID = createField(DSL.name("agenda_i18n_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column <code>public.event.event_status</code>.
+     */
+    public final TableField<EventRecord, EventStatusEnum> EVENT_STATUS = createField(DSL.name("event_status"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.EventStatusEnum.class), this, "");
+
+    /**
+     * The column <code>public.event.academic_major_id</code>.
+     */
+    public final TableField<EventRecord, UUID> ACADEMIC_MAJOR_ID = createField(DSL.name("academic_major_id"), SQLDataType.UUID, this, "");
+
     private EventTable(Name alias, Table<EventRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -249,12 +270,12 @@ public class EventTable extends TableImpl<EventRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row16 type methods
+    // Row20 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row16<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row20<UUID, UUID, UUID, EventTypeEnum, LocalDate, LocalDate, LocalTime, LocalTime, BigDecimal, BigDecimal, String, BigDecimal, OffsetDateTime, String, OffsetDateTime, String, UUID, UUID, EventStatusEnum, UUID> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 }

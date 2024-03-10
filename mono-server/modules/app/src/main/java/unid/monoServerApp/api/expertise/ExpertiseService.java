@@ -3,6 +3,7 @@ package unid.monoServerApp.api.expertise;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.enums.TagCategoryEnum;
@@ -14,10 +15,14 @@ import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
 import unid.monoServerApp.database.table.expertise.DbExpertiseMajorMap;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.database.table.tag.DbTag;
 import unid.monoServerApp.mapper.ExpertiseMapper;
 import unid.monoServerApp.mapper.I18nMapper;
+import unid.monoServerApp.mapper.TagMapper;
 import unid.monoServerApp.service.SessionService;
+import unid.monoServerMeta.api.EcaCourseResponse;
 import unid.monoServerMeta.api.ExpertiseRequest;
+import unid.monoServerMeta.api.TagResponse;
 import unid.monoServerMeta.model.I18n;
 
 import java.util.ArrayList;
@@ -38,6 +43,7 @@ public class ExpertiseService {
     private final SessionService sessionService;
     private final ExpertiseMapper expertiseMapper;
     private final DbExpertiseMajorMap dbExpertiseMajorMap;
+    private final TagMapper tagMapper;
 
     DbExpertise.Result get(UUID id) {
         var table = dbExpertise.getTable();
@@ -103,5 +109,21 @@ public class ExpertiseService {
                 .where(TAG.TAG_CATEGORY.eq(TagCategoryEnum.EXPERTISE))
                 .groupBy(I18N.ENGLISH,I18N.CHINESE_SIMPLIFIED,I18N.CHINESE_TRADITIONAL)
                 .fetchInto(I18n.class);
+    }
+
+
+    public List<TagResponse> tags() {
+        List<DbTag.Result> list = dbExpertise.getDsl().select(
+                        TAG.asterisk(),
+                        DSL.multiset(
+                                DSL.select()
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
+                        ).as(DbTag.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(TAG)
+                .where(TAG.TAG_CATEGORY.eq(TagCategoryEnum.EXPERTISE))
+                .fetchInto(DbTag.Result.class);
+        return tagMapper.toResponse(list);
     }
 }

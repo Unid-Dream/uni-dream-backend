@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row16;
+import org.jooq.Row17;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -26,6 +26,7 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
 import unid.jooqMono.model.enums.AcademicSubjectResourceTypeEnum;
+import unid.jooqMono.model.enums.VideoSourceEnum;
 import unid.jooqMono.model.tables.records._AuditLogAcademicSubjectResourceRecord;
 
 
@@ -152,6 +153,12 @@ public class _AuditLogAcademicSubjectResourceTable extends TableImpl<_AuditLogAc
      */
     public final TableField<_AuditLogAcademicSubjectResourceRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_academic_subject_resource.video_source</code>.
+     */
+    public final TableField<_AuditLogAcademicSubjectResourceRecord, VideoSourceEnum> VIDEO_SOURCE = createField(DSL.name("video_source"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.VideoSourceEnum.class), this, "");
+
     private _AuditLogAcademicSubjectResourceTable(Name alias, Table<_AuditLogAcademicSubjectResourceRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -231,12 +238,12 @@ public class _AuditLogAcademicSubjectResourceTable extends TableImpl<_AuditLogAc
     }
 
     // -------------------------------------------------------------------------
-    // Row16 type methods
+    // Row17 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row16<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row17<Long, OffsetDateTime, String, String, String, UUID, UUID, AcademicSubjectResourceTypeEnum, UUID, String, String, String, OffsetDateTime, String, OffsetDateTime, String, VideoSourceEnum> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 }

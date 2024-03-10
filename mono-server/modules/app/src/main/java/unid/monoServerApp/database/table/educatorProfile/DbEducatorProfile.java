@@ -7,6 +7,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.daos.EducatorProfileDao;
@@ -121,8 +122,8 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
 
     public @NotNull SelectConditionStep<?> getQueryEducatorProfileCnt(){
         return dsl.selectCount()
-                .from(USER,EDUCATOR_PROFILE,EDUCATOR_PROFILE_EXTENSION)
-                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.ID.eq(EDUCATOR_PROFILE_EXTENSION.EDUCATOR_PROFILE_ID)));
+                .from(USER,EDUCATOR_PROFILE)
+                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
     }
 
     public @NotNull SelectConditionStep<?> getQueryEducatorProfile(){
@@ -144,39 +145,39 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,TAG)
-                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.COUNTRY_ID))))
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(EDUCATOR_PROFILE.COUNTRY_ID)))
                         ).as(EducatorResponse.Fields.countryI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,TAG)
-                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.CITY_ID))))
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE.CITY_ID))))
                         ).as(EducatorResponse.Fields.cityI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,TAG)
-                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.EXPERTISE_ID))))
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE.EXPERTISE_ID))))
                         ).as(EducatorResponse.Fields.expertises).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
 
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,TAG)
-                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.LANGUAGE_ID))))
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE.LANGUAGE_ID))))
                         ).as(EducatorResponse.Fields.languages).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
 
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,TAG)
-                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.MAJOR_ID))))
+                                        .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID).and(TAG.ID.eq(any(EDUCATOR_PROFILE.ACADEMIC_MAJOR_ID))))
                         ).as(EducatorResponse.Fields.subjects).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
 
                         multiset(
                                 select(I18N.fields())
                                         .from(I18N,EXPERTISE)
-                                        .where(I18N.ID.eq(EXPERTISE.DESCRIPTION_I18N_ID).and(EXPERTISE.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.EXPERTISE_DESCRIPTION_ID))))
+                                        .where(I18N.ID.eq(EXPERTISE.DESCRIPTION_I18N_ID).and(EXPERTISE.ID.eq(any(EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION_ID))))
                         ).as(EducatorResponse.Fields.expertiseDescriptions).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
 
 
-                        EDUCATOR_PROFILE_EXTENSION.DESCRIPTION,
+                        EDUCATOR_PROFILE.DESCRIPTION,
                         multiset(
                                 select(
                                         I18N.as("school_i18n").ENGLISH.as(EducatorResponse.Education.Fields.university),
@@ -190,10 +191,8 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                                         .where(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
                         ).as(EducatorResponse.Fields.educations).convertFrom(r -> r.isEmpty() ? null : r.into(EducatorResponse.Education.class))
                  )
-                .from(USER,EDUCATOR_PROFILE,EDUCATOR_PROFILE_EXTENSION)
-                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.ID.eq(EDUCATOR_PROFILE_EXTENSION.EDUCATOR_PROFILE_ID)));
-        //
-        //
+                .from(USER,EDUCATOR_PROFILE)
+                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
     }
 
 

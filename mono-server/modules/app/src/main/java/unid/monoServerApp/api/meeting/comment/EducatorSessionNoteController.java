@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.meeting.comment;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ import java.util.UUID;
 @Validated
 @Tag(name = "Educator Session Note")
 @Slf4j
+@Hidden
 public class EducatorSessionNoteController {
     private final EducatorSessionNoteService educatorSessionNoteService;
     private final EducatorSessionNoteMapper educatorSessionNoteMapper;

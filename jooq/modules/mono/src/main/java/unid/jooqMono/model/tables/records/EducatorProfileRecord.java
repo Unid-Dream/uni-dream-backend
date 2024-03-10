@@ -12,11 +12,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record17;
-import org.jooq.Row17;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
@@ -36,7 +34,7 @@ import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRecord> implements Record17<UUID, UUID, ApplicationApprovalEnum, String, String, UUID, String, String, String, Integer, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
+public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRecord> {
 
     private static final long serialVersionUID = 1L;
 
@@ -315,6 +313,151 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
         return (String) get(16);
     }
 
+    /**
+     * Setter for <code>public.educator_profile.expertise_id</code>.
+     */
+    public EducatorProfileRecord setExpertiseId(@Nullable UUID[] value) {
+        set(17, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.expertise_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseId() {
+        return (UUID[]) get(17);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.description</code>.
+     */
+    public EducatorProfileRecord setDescription(@Nullable String value) {
+        set(18, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return (String) get(18);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.language_id</code>.
+     */
+    public EducatorProfileRecord setLanguageId(@Nullable UUID[] value) {
+        set(19, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.language_id</code>.
+     */
+    @Nullable
+    public UUID[] getLanguageId() {
+        return (UUID[]) get(19);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.city_id</code>.
+     */
+    public EducatorProfileRecord setCityId(@Nullable UUID value) {
+        set(20, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.city_id</code>.
+     */
+    @Nullable
+    public UUID getCityId() {
+        return (UUID) get(20);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.education_school_id</code>.
+     */
+    public EducatorProfileRecord setEducationSchoolId(@Nullable UUID[] value) {
+        set(21, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.education_school_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationSchoolId() {
+        return (UUID[]) get(21);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.academic_major_id</code>.
+     */
+    public EducatorProfileRecord setAcademicMajorId(@Nullable UUID[] value) {
+        set(22, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID[] getAcademicMajorId() {
+        return (UUID[]) get(22);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.education_id</code>.
+     */
+    public EducatorProfileRecord setEducationId(@Nullable UUID[] value) {
+        set(23, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.education_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationId() {
+        return (UUID[]) get(23);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    public EducatorProfileRecord setExpertiseDescriptionId(@Nullable UUID[] value) {
+        set(24, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseDescriptionId() {
+        return (UUID[]) get(24);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.timezone</code>.
+     */
+    public EducatorProfileRecord setTimezone(@Nullable String value) {
+        set(25, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return (String) get(25);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -323,470 +466,6 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     @Nonnull
     public Record1<UUID> key() {
         return (Record1) super.key();
-    }
-
-    // -------------------------------------------------------------------------
-    // Record17 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row17<UUID, UUID, ApplicationApprovalEnum, String, String, UUID, String, String, String, Integer, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row17) super.fieldsRow();
-    }
-
-    @Override
-    @Nonnull
-    public Row17<UUID, UUID, ApplicationApprovalEnum, String, String, UUID, String, String, String, Integer, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row17) super.valuesRow();
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field1() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field2() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.USER_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<ApplicationApprovalEnum> field3() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.APPLICATION_APPROVAL;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field4() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.MICROSOFT_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field5() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.MICROSOFT_EMAIL;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field6() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.COUNTRY_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field7() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.PROFILE_PICTURE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field8() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.PHONE_COUNTRY_CODE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field9() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.PHONE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<Integer> field10() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.HOURLY_RATE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field11() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.UNIVERSITY_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field12() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.UNIVERSITY_EDUCATION_LEVEL_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field13() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.UNIVERSITY_IDENTITY_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field14() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.CREATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field15() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.CREATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field16() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.UPDATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field17() {
-        return EducatorProfileTable.EDUCATOR_PROFILE.UPDATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public UUID component1() {
-        return getId();
-    }
-
-    @Override
-    @Nonnull
-    public UUID component2() {
-        return getUserId();
-    }
-
-    @Override
-    @Nonnull
-    public ApplicationApprovalEnum component3() {
-        return getApplicationApproval();
-    }
-
-    @Override
-    @Nullable
-    public String component4() {
-        return getMicrosoftId();
-    }
-
-    @Override
-    @Nullable
-    public String component5() {
-        return getMicrosoftEmail();
-    }
-
-    @Override
-    @Nullable
-    public UUID component6() {
-        return getCountryId();
-    }
-
-    @Override
-    @Nullable
-    public String component7() {
-        return getProfilePicture();
-    }
-
-    @Override
-    @Nullable
-    public String component8() {
-        return getPhoneCountryCode();
-    }
-
-    @Override
-    @Nullable
-    public String component9() {
-        return getPhone();
-    }
-
-    @Override
-    @Nullable
-    public Integer component10() {
-        return getHourlyRate();
-    }
-
-    @Override
-    @Nullable
-    public UUID component11() {
-        return getUniversityId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component12() {
-        return getUniversityEducationLevelId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component13() {
-        return getUniversityIdentityId();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component14() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component15() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component16() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component17() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value1() {
-        return getId();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value2() {
-        return getUserId();
-    }
-
-    @Override
-    @Nonnull
-    public ApplicationApprovalEnum value3() {
-        return getApplicationApproval();
-    }
-
-    @Override
-    @Nullable
-    public String value4() {
-        return getMicrosoftId();
-    }
-
-    @Override
-    @Nullable
-    public String value5() {
-        return getMicrosoftEmail();
-    }
-
-    @Override
-    @Nullable
-    public UUID value6() {
-        return getCountryId();
-    }
-
-    @Override
-    @Nullable
-    public String value7() {
-        return getProfilePicture();
-    }
-
-    @Override
-    @Nullable
-    public String value8() {
-        return getPhoneCountryCode();
-    }
-
-    @Override
-    @Nullable
-    public String value9() {
-        return getPhone();
-    }
-
-    @Override
-    @Nullable
-    public Integer value10() {
-        return getHourlyRate();
-    }
-
-    @Override
-    @Nullable
-    public UUID value11() {
-        return getUniversityId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value12() {
-        return getUniversityEducationLevelId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value13() {
-        return getUniversityIdentityId();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value14() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value15() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value16() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value17() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value1(@Nonnull UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value2(@Nonnull UUID value) {
-        setUserId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value3(@Nonnull ApplicationApprovalEnum value) {
-        setApplicationApproval(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value4(@Nullable String value) {
-        setMicrosoftId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value5(@Nullable String value) {
-        setMicrosoftEmail(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value6(@Nullable UUID value) {
-        setCountryId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value7(@Nullable String value) {
-        setProfilePicture(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value8(@Nullable String value) {
-        setPhoneCountryCode(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value9(@Nullable String value) {
-        setPhone(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value10(@Nullable Integer value) {
-        setHourlyRate(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value11(@Nullable UUID value) {
-        setUniversityId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value12(@Nullable UUID value) {
-        setUniversityEducationLevelId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value13(@Nullable UUID value) {
-        setUniversityIdentityId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value14(@Nullable OffsetDateTime value) {
-        setCreatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value15(@Nullable String value) {
-        setCreatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value16(@Nullable OffsetDateTime value) {
-        setUpdatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord value17(@Nullable String value) {
-        setUpdatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EducatorProfileRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull ApplicationApprovalEnum value3, @Nullable String value4, @Nullable String value5, @Nullable UUID value6, @Nullable String value7, @Nullable String value8, @Nullable String value9, @Nullable Integer value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        value5(value5);
-        value6(value6);
-        value7(value7);
-        value8(value8);
-        value9(value9);
-        value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
-        value15(value15);
-        value16(value16);
-        value17(value17);
-        return this;
     }
 
     // -------------------------------------------------------------------------
@@ -803,8 +482,8 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     /**
      * Create a detached, initialised EducatorProfileRecord
      */
-    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "expertiseDescriptionId", "timezone" })
+    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable UUID[] expertiseDescriptionId, @Nullable String timezone) {
         super(EducatorProfileTable.EDUCATOR_PROFILE);
 
         setId(id);
@@ -824,6 +503,15 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setExpertiseId(expertiseId);
+        setDescription(description);
+        setLanguageId(languageId);
+        setCityId(cityId);
+        setEducationSchoolId(educationSchoolId);
+        setAcademicMajorId(academicMajorId);
+        setEducationId(educationId);
+        setExpertiseDescriptionId(expertiseDescriptionId);
+        setTimezone(timezone);
     }
 
     /**
@@ -850,6 +538,15 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setExpertiseId(value.getExpertiseId());
+            setDescription(value.getDescription());
+            setLanguageId(value.getLanguageId());
+            setCityId(value.getCityId());
+            setEducationSchoolId(value.getEducationSchoolId());
+            setAcademicMajorId(value.getAcademicMajorId());
+            setEducationId(value.getEducationId());
+            setExpertiseDescriptionId(value.getExpertiseDescriptionId());
+            setTimezone(value.getTimezone());
         }
     }
 }

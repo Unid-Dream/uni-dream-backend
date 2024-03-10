@@ -14,10 +14,9 @@ import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row14;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -111,26 +110,6 @@ public class AcademicSubjectTable extends TableImpl<AcademicSubjectRecord> {
      * The column <code>public.academic_subject.updated_by</code>.
      */
     public final TableField<AcademicSubjectRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>public.academic_subject.videos</code>.
-     */
-    public final TableField<AcademicSubjectRecord, JSONB> VIDEOS = createField(DSL.name("videos"), SQLDataType.JSONB, this, "");
-
-    /**
-     * The column <code>public.academic_subject.podcasts</code>.
-     */
-    public final TableField<AcademicSubjectRecord, JSONB> PODCASTS = createField(DSL.name("podcasts"), SQLDataType.JSONB, this, "");
-
-    /**
-     * The column <code>public.academic_subject.readings</code>.
-     */
-    public final TableField<AcademicSubjectRecord, JSONB> READINGS = createField(DSL.name("readings"), SQLDataType.JSONB, this, "");
-
-    /**
-     * The column <code>public.academic_subject.answers</code>.
-     */
-    public final TableField<AcademicSubjectRecord, JSONB> ANSWERS = createField(DSL.name("answers"), SQLDataType.JSONB, this, "");
 
     private AcademicSubjectTable(Name alias, Table<AcademicSubjectRecord> aliased) {
         this(alias, aliased, null);
@@ -261,12 +240,12 @@ public class AcademicSubjectTable extends TableImpl<AcademicSubjectRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, JSONB, JSONB, JSONB, JSONB> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row10<UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

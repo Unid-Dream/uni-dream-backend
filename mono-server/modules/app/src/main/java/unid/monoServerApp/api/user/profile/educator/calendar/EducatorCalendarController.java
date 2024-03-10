@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.user.profile.educator.calendar;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +42,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/user/profile/educator/{profileId}/calendar")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Educator Calendar")
 @Slf4j
+@Hidden
 public class EducatorCalendarController {
     private final EducatorCalendarService educatorCalendarService;
     private final EducatorCalendarMapper educatorCalendarMapper;
@@ -53,7 +55,7 @@ public class EducatorCalendarController {
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
 
-    @GetMapping
+    @GetMapping("student/user/profile/educator/{profileId}/calendar")
     @ACL(
             authed = true
     )
@@ -61,6 +63,7 @@ public class EducatorCalendarController {
     @Operation(
             summary = "Query"
     )
+    @Hidden
     public @Valid UnifiedResponse<PaginationResponse<EducatorCalendarResponse>> list(
             @PathVariable("profileId") UUID profileId,
             @Valid
@@ -141,14 +144,16 @@ public class EducatorCalendarController {
         );
     }
 
-    @GetMapping("available")
+    @GetMapping("student/user/profile/educator/{profileId}/calendar/available")
     @ACL(
-            authed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get Educator All Available Calendar"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorAvailableScheduleResponse> getAllAvailableFromNow(
             @PathVariable("profileId") UUID profileId
     ) {
@@ -181,7 +186,7 @@ public class EducatorCalendarController {
         );
     }
 
-    @PutMapping("available")
+    @PutMapping("student/user/profile/educator/{profileId}/calendar/available")
     @Transactional
     @ACL(
             authed = true,
@@ -189,6 +194,7 @@ public class EducatorCalendarController {
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
+    @Hidden
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Mark Educator Available Calendar"
@@ -202,7 +208,7 @@ public class EducatorCalendarController {
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("unavailable")
+    @PutMapping("student/user/profile/educator/{profileId}/calendar/unavailable")
     @Transactional
     @ACL(
             authed = true,
@@ -210,6 +216,7 @@ public class EducatorCalendarController {
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
+    @Hidden
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Unmark Educator Available Calendar"
@@ -223,7 +230,7 @@ public class EducatorCalendarController {
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("reserve/accept")
+    @PutMapping("student/user/profile/educator/{profileId}/calendar/reserve/accept")
     @Transactional
     @ACL(
             authed = true,
@@ -235,6 +242,7 @@ public class EducatorCalendarController {
     @Operation(
             summary = "Educator Accept Calendar Reservation"
     )
+    @Hidden
     public @Valid UnifiedResponse<Void> accept(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
@@ -245,7 +253,7 @@ public class EducatorCalendarController {
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("reserve/deny")
+    @PutMapping("student/user/profile/educator/{profileId}/calendar/reserve/deny")
     @Transactional
     @ACL(
             authed = true,

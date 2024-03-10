@@ -7,6 +7,7 @@ package unid.jooqMono.model.tables.pojos;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -55,6 +56,14 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
     private String                  createdBy;
     private OffsetDateTime          updatedOn;
     private String                  updatedBy;
+    private UUID[]                  expertiseId;
+    private String                  description;
+    private UUID[]                  languageId;
+    private UUID                    cityId;
+    private UUID[]                  educationSchoolId;
+    private UUID[]                  academicMajorId;
+    private UUID[]                  educationId;
+    private UUID[]                  educationDescriptionId;
 
     public _AuditLogEducatorProfilePojo() {}
 
@@ -81,9 +90,17 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.expertiseId = value.expertiseId;
+        this.description = value.description;
+        this.languageId = value.languageId;
+        this.cityId = value.cityId;
+        this.educationSchoolId = value.educationSchoolId;
+        this.academicMajorId = value.academicMajorId;
+        this.educationId = value.educationId;
+        this.educationDescriptionId = value.educationDescriptionId;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "educationDescriptionId" })
     public _AuditLogEducatorProfilePojo(
         @Nonnull Long                    auditSeq,
         @Nonnull OffsetDateTime          auditCreatedon,
@@ -106,7 +123,15 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         @Nullable OffsetDateTime          createdOn,
         @Nullable String                  createdBy,
         @Nullable OffsetDateTime          updatedOn,
-        @Nullable String                  updatedBy
+        @Nullable String                  updatedBy,
+        @Nullable UUID[]                  expertiseId,
+        @Nullable String                  description,
+        @Nullable UUID[]                  languageId,
+        @Nullable UUID                    cityId,
+        @Nullable UUID[]                  educationSchoolId,
+        @Nullable UUID[]                  academicMajorId,
+        @Nullable UUID[]                  educationId,
+        @Nullable UUID[]                  educationDescriptionId
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -130,6 +155,14 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.expertiseId = expertiseId;
+        this.description = description;
+        this.languageId = languageId;
+        this.cityId = cityId;
+        this.educationSchoolId = educationSchoolId;
+        this.academicMajorId = academicMajorId;
+        this.educationId = educationId;
+        this.educationDescriptionId = educationDescriptionId;
     }
 
     /**
@@ -508,6 +541,140 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_educator_profile.expertise_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseId() {
+        return this.expertiseId;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.expertise_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setExpertiseId(@Nullable UUID[] expertiseId) {
+        this.expertiseId = expertiseId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_profile.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.description</code>.
+     */
+    public _AuditLogEducatorProfilePojo setDescription(@Nullable String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_profile.language_id</code>.
+     */
+    @Nullable
+    public UUID[] getLanguageId() {
+        return this.languageId;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.language_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setLanguageId(@Nullable UUID[] languageId) {
+        this.languageId = languageId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_profile.city_id</code>.
+     */
+    @Nullable
+    public UUID getCityId() {
+        return this.cityId;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.city_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setCityId(@Nullable UUID cityId) {
+        this.cityId = cityId;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_profile.education_school_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationSchoolId() {
+        return this.educationSchoolId;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_profile.education_school_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setEducationSchoolId(@Nullable UUID[] educationSchoolId) {
+        this.educationSchoolId = educationSchoolId;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_profile.academic_major_id</code>.
+     */
+    @Nullable
+    public UUID[] getAcademicMajorId() {
+        return this.academicMajorId;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_profile.academic_major_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setAcademicMajorId(@Nullable UUID[] academicMajorId) {
+        this.academicMajorId = academicMajorId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_profile.education_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationId() {
+        return this.educationId;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.education_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setEducationId(@Nullable UUID[] educationId) {
+        this.educationId = educationId;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     */
+    @Nullable
+    public UUID[] getEducationDescriptionId() {
+        return this.educationDescriptionId;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     */
+    public _AuditLogEducatorProfilePojo setEducationDescriptionId(@Nullable UUID[] educationDescriptionId) {
+        this.educationDescriptionId = educationDescriptionId;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogEducatorProfilePojo (");
@@ -534,6 +701,14 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(Arrays.toString(expertiseId));
+        sb.append(", ").append(description);
+        sb.append(", ").append(Arrays.toString(languageId));
+        sb.append(", ").append(cityId);
+        sb.append(", ").append(Arrays.toString(educationSchoolId));
+        sb.append(", ").append(Arrays.toString(academicMajorId));
+        sb.append(", ").append(Arrays.toString(educationId));
+        sb.append(", ").append(Arrays.toString(educationDescriptionId));
 
         sb.append(")");
         return sb.toString();
