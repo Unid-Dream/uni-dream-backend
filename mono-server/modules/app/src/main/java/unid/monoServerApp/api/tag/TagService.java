@@ -45,8 +45,8 @@ public class TagService {
                                         .where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
                         ).as(DbTag.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
                 )
-                .from(TAG)
-                .where(TAG.TAG_CATEGORY.eq(tagCategoryEnum))
+                .from(TAG,I18N)
+                .where(TAG.TAG_CATEGORY.eq(tagCategoryEnum).and(TAG.DESCRIPTION_I18N_ID.eq(I18N.ID)).and(I18N.ENGLISH.isNotNull()))
                 .fetchInto(DbTag.Result.class);
         return tagMapper.toResponse(list);
     }

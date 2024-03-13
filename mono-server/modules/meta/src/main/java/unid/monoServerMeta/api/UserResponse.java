@@ -30,4 +30,7 @@ public class UserResponse extends BaseResponse {
     private I18n firstNameI18n;
     @NotNull
     private UserRole userRole;
+
+    private String profilePicture;
+
 }

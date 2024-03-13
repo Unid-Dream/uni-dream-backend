@@ -480,6 +480,23 @@ public class EducatorProfileDao extends DAOImpl<EducatorProfileRecord, EducatorP
     }
 
     /**
+     * Fetch records that have <code>timezone BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfTimezone(String lowerInclusive, String upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>timezone IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByTimezone(String... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, values);
+    }
+
+    /**
      * Fetch records that have <code>expertise_description_id BETWEEN
      * lowerInclusive AND upperInclusive</code>
      */
@@ -497,19 +514,19 @@ public class EducatorProfileDao extends DAOImpl<EducatorProfileRecord, EducatorP
     }
 
     /**
-     * Fetch records that have <code>timezone BETWEEN lowerInclusive AND
-     * upperInclusive</code>
+     * Fetch records that have <code>expertise_description BETWEEN
+     * lowerInclusive AND upperInclusive</code>
      */
     @Nonnull
-    public List<EducatorProfilePojo> fetchRangeOfTimezone(String lowerInclusive, String upperInclusive) {
-        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, lowerInclusive, upperInclusive);
+    public List<EducatorProfilePojo> fetchRangeOfExpertiseDescription(String[] lowerInclusive, String[] upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>timezone IN (values)</code>
+     * Fetch records that have <code>expertise_description IN (values)</code>
      */
     @Nonnull
-    public List<EducatorProfilePojo> fetchByTimezone(String... values) {
-        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.TIMEZONE, values);
+    public List<EducatorProfilePojo> fetchByExpertiseDescription(String[]... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION, values);
     }
 }

@@ -98,22 +98,22 @@ public class _AuditLogEducatorCalendarTable extends TableImpl<_AuditLogEducatorC
      * The column
      * <code>public._audit_log_educator_calendar.educator_profile_id</code>.
      */
-    public final TableField<_AuditLogEducatorCalendarRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<_AuditLogEducatorCalendarRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
 
     /**
      * The column <code>public._audit_log_educator_calendar.date</code>.
      */
-    public final TableField<_AuditLogEducatorCalendarRecord, LocalDate> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATE.nullable(false), this, "");
+    public final TableField<_AuditLogEducatorCalendarRecord, LocalDate> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATE, this, "");
 
     /**
      * The column <code>public._audit_log_educator_calendar.hour_start</code>.
      */
-    public final TableField<_AuditLogEducatorCalendarRecord, LocalTime> HOUR_START = createField(DSL.name("hour_start"), SQLDataType.LOCALTIME(6).nullable(false), this, "");
+    public final TableField<_AuditLogEducatorCalendarRecord, LocalTime> HOUR_START = createField(DSL.name("hour_start"), SQLDataType.LOCALTIME(6), this, "");
 
     /**
      * The column <code>public._audit_log_educator_calendar.hour_end</code>.
      */
-    public final TableField<_AuditLogEducatorCalendarRecord, LocalTime> HOUR_END = createField(DSL.name("hour_end"), SQLDataType.LOCALTIME(6).nullable(false), this, "");
+    public final TableField<_AuditLogEducatorCalendarRecord, LocalTime> HOUR_END = createField(DSL.name("hour_end"), SQLDataType.LOCALTIME(6), this, "");
 
     /**
      * The column

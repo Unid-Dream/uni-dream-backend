@@ -8,6 +8,8 @@ public class Pattern {
     public static final String COD_NOTIFICATION_DATE = "yyyy-MM-dd'T'HH:mm:ssXXX";
     public static final String TIME_CALENDAR = "HH:00:00";
     public static final String TEAM_BOOKING_DATE = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String YYYYMMDDHH = "yyyy-MM-dd'T'HH:00:00";
+
     public static final String LONGITUDE = "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$";
     public static final String LATITUDE = "^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$";
 }

@@ -5,6 +5,7 @@ import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
+import unid.monoServerMeta.api.EducatorCalendarTimeSlot;
 
 import java.util.List;
 
@@ -19,7 +20,11 @@ public interface EducatorCalendarMapper {
 
     EducatorCalendarPojo toPojo(EducatorCalendarResponse data);
 
-    void merge(@MappingTarget EducatorCalendarPojo data, EducatorCalendarRequest source);
+    @Mappings({
+            @Mapping(target = EducatorCalendarPojo.Columns.startDatetime,source = EducatorCalendarTimeSlot.Fields.startDateTimeUtc),
+            @Mapping(target = EducatorCalendarPojo.Columns.endDatetime,source = EducatorCalendarTimeSlot.Fields.endDateTimeUtc),
+    })
+    void merge(@MappingTarget EducatorCalendarPojo data, EducatorCalendarTimeSlot source);
 
     void merge(@MappingTarget DbEducatorCalendar.Result data, EducatorCalendarRequest source);
 

@@ -14,7 +14,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
-import javax.validation.constraints.NotNull;
 
 import unid.jooqMono.model.enums.BookingStatusEnum;
 
@@ -48,6 +47,8 @@ public class EducatorCalendarPojo implements Serializable {
     private String            createdBy;
     private OffsetDateTime    updatedOn;
     private String            updatedBy;
+    private OffsetDateTime    startDatetime;
+    private OffsetDateTime    endDatetime;
 
     public EducatorCalendarPojo() {}
 
@@ -65,15 +66,17 @@ public class EducatorCalendarPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.startDatetime = value.startDatetime;
+        this.endDatetime = value.endDatetime;
     }
 
-    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startDatetime", "endDatetime" })
     public EducatorCalendarPojo(
         @Nonnull UUID              id,
-        @Nonnull UUID              educatorProfileId,
-        @Nonnull LocalDate         date,
-        @Nonnull LocalTime         hourStart,
-        @Nonnull LocalTime         hourEnd,
+        @Nullable UUID              educatorProfileId,
+        @Nullable LocalDate         date,
+        @Nullable LocalTime         hourStart,
+        @Nullable LocalTime         hourEnd,
         @Nullable BookingStatusEnum bookingStatus,
         @Nullable UUID              paymentTransactionId,
         @Nullable String            meetingUrl,
@@ -81,7 +84,9 @@ public class EducatorCalendarPojo implements Serializable {
         @Nullable OffsetDateTime    createdOn,
         @Nullable String            createdBy,
         @Nullable OffsetDateTime    updatedOn,
-        @Nullable String            updatedBy
+        @Nullable String            updatedBy,
+        @Nullable OffsetDateTime    startDatetime,
+        @Nullable OffsetDateTime    endDatetime
     ) {
         this.id = id;
         this.educatorProfileId = educatorProfileId;
@@ -96,6 +101,8 @@ public class EducatorCalendarPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.startDatetime = startDatetime;
+        this.endDatetime = endDatetime;
     }
 
     /**
@@ -117,8 +124,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public.educator_calendar.educator_profile_id</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public UUID getEducatorProfileId() {
         return this.educatorProfileId;
     }
@@ -126,7 +132,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public.educator_calendar.educator_profile_id</code>.
      */
-    public EducatorCalendarPojo setEducatorProfileId(@Nonnull UUID educatorProfileId) {
+    public EducatorCalendarPojo setEducatorProfileId(@Nullable UUID educatorProfileId) {
         this.educatorProfileId = educatorProfileId;
         return this;
     }
@@ -134,8 +140,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public.educator_calendar.date</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalDate getDate() {
         return this.date;
     }
@@ -143,7 +148,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public.educator_calendar.date</code>.
      */
-    public EducatorCalendarPojo setDate(@Nonnull LocalDate date) {
+    public EducatorCalendarPojo setDate(@Nullable LocalDate date) {
         this.date = date;
         return this;
     }
@@ -151,8 +156,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public.educator_calendar.hour_start</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourStart() {
         return this.hourStart;
     }
@@ -160,7 +164,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public.educator_calendar.hour_start</code>.
      */
-    public EducatorCalendarPojo setHourStart(@Nonnull LocalTime hourStart) {
+    public EducatorCalendarPojo setHourStart(@Nullable LocalTime hourStart) {
         this.hourStart = hourStart;
         return this;
     }
@@ -168,8 +172,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public.educator_calendar.hour_end</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourEnd() {
         return this.hourEnd;
     }
@@ -177,7 +180,7 @@ public class EducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public.educator_calendar.hour_end</code>.
      */
-    public EducatorCalendarPojo setHourEnd(@Nonnull LocalTime hourEnd) {
+    public EducatorCalendarPojo setHourEnd(@Nullable LocalTime hourEnd) {
         this.hourEnd = hourEnd;
         return this;
     }
@@ -310,6 +313,38 @@ public class EducatorCalendarPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.educator_calendar.start_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getStartDatetime() {
+        return this.startDatetime;
+    }
+
+    /**
+     * Setter for <code>public.educator_calendar.start_datetime</code>.
+     */
+    public EducatorCalendarPojo setStartDatetime(@Nullable OffsetDateTime startDatetime) {
+        this.startDatetime = startDatetime;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_calendar.end_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getEndDatetime() {
+        return this.endDatetime;
+    }
+
+    /**
+     * Setter for <code>public.educator_calendar.end_datetime</code>.
+     */
+    public EducatorCalendarPojo setEndDatetime(@Nullable OffsetDateTime endDatetime) {
+        this.endDatetime = endDatetime;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("EducatorCalendarPojo (");
@@ -327,6 +362,8 @@ public class EducatorCalendarPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(startDatetime);
+        sb.append(", ").append(endDatetime);
 
         sb.append(")");
         return sb.toString();

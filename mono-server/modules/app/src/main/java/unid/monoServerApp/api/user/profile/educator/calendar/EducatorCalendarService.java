@@ -13,7 +13,9 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.mapper.EducatorCalendarMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
+import unid.monoServerMeta.api.EducatorCalendarTimeSlot;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,25 +36,28 @@ public class EducatorCalendarService {
                 .into(DbEducatorCalendar.Result.class);
     }
 
-    List<DbEducatorCalendar.Result> getAllAvailableFromNow(UUID profileId) {
+    //仅查询可用时间
+    List<DbEducatorCalendar.Result> getAllAvailableFromNow(UUID profileId, OffsetDateTime startTimeUtc,OffsetDateTime endTimeUtc) {
         var table = dbEducatorCalendar.getTable();
-        return dbEducatorCalendar.getQuery(table)
+        return dbEducatorCalendar.getQuery()
                 .where(table.EDUCATOR_PROFILE_ID.eq(profileId)
                         .and(dbEducatorCalendar.validateCondition(table)))
                 .and(table.BOOKING_STATUS.eq(BookingStatusEnum.AVAILABLE))
                 .and(dbEducatorCalendar.timeSlotIsValidToBook(table))
+                .and(table.START_DATETIME.ge(startTimeUtc))
+                .and(table.END_DATETIME.le(endTimeUtc))
                 .fetchInto(DbEducatorCalendar.Result.class);
     }
 
-    public EducatorCalendarPojo markAvailable(UUID profileId, EducatorCalendarRequest payload) {
+    public EducatorCalendarPojo markAvailable(UUID profileId, EducatorCalendarTimeSlot payload) {
         sessionService.initDatabaseSession();
         var table = dbEducatorCalendar.getTable();
         dbEducatorCalendar.getQuery(table)
                 .where(table.EDUCATOR_PROFILE_ID.eq(profileId))
-                .and(table.DATE.eq(payload.getDate()))
+                .and(table.START_DATETIME.eq(payload.getStartDateTimeUtc()))
                 .and(table.BOOKING_STATUS.notIn(BookingStatusEnum.REJECTED, BookingStatusEnum.VOID))
                 .and(dbEducatorCalendar.validateCondition(table))
-                .and(table.HOUR_START.eq(payload.getHourStart()))
+                .and(table.END_DATETIME.eq(payload.getEndDateTimeUtc()))
                 .fetchOptional()
                 .ifPresent(record -> {
                     throw Exceptions.invalidTimeslot();
@@ -65,15 +70,15 @@ public class EducatorCalendarService {
         return pojo;
     }
 
-    void unmarkAvailable(UUID profileId, EducatorCalendarRequest payload) {
+    void unmarkAvailable(UUID profileId, EducatorCalendarTimeSlot payload) {
         sessionService.initDatabaseSession();
         var table = dbEducatorCalendar.getTable();
         var existingRecord = dbEducatorCalendar.getQuery(table)
                 .where(table.EDUCATOR_PROFILE_ID.eq(profileId))
-                .and(table.DATE.eq(payload.getDate()))
+                .and(table.START_DATETIME.eq(payload.getStartDateTimeUtc()))
                 .and(table.BOOKING_STATUS.eq(BookingStatusEnum.AVAILABLE))
                 .and(dbEducatorCalendar.validateCondition(table))
-                .and(table.HOUR_START.eq(payload.getHourStart()))
+                .and(table.END_DATETIME.eq(payload.getEndDateTimeUtc()))
                 .fetchOptionalInto(EducatorCalendarPojo.class)
                 .orElseThrow(() -> Exceptions.invalidTimeslot());
         dbEducatorCalendar.getDao().delete(existingRecord);
@@ -81,16 +86,16 @@ public class EducatorCalendarService {
 
     DbEducatorCalendar.Result acceptOrDenyBooking(
             UUID educatorProfileId,
-            EducatorCalendarRequest payload,
+            EducatorCalendarTimeSlot payload,
             boolean accept
     ) {
         sessionService.initDatabaseSession();
         var calendarTable = dbEducatorCalendar.getTable();
         var calendar = dbEducatorCalendar.getQuery(calendarTable)
                 .where(calendarTable.EDUCATOR_PROFILE_ID.eq(educatorProfileId))
-                .and(calendarTable.DATE.eq(payload.getDate()))
+                .and(calendarTable.START_DATETIME.eq(payload.getStartDateTimeUtc()))
                 .and(dbEducatorCalendar.validateCondition(calendarTable))
-                .and(calendarTable.HOUR_START.eq(payload.getHourStart()))
+                .and(calendarTable.END_DATETIME.eq(payload.getEndDateTimeUtc()))
                 .and(calendarTable.BOOKING_STATUS.eq(BookingStatusEnum.RESERVED))
                 .and(dbEducatorCalendar.timeSlotIsValidToAccept(calendarTable))
                 .fetchOptionalInto(EducatorCalendarPojo.class)

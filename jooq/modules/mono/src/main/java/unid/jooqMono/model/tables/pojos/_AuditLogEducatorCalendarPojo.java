@@ -85,10 +85,10 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         @Nonnull String            auditOperation,
         @Nonnull String            auditType,
         @Nonnull UUID              id,
-        @Nonnull UUID              educatorProfileId,
-        @Nonnull LocalDate         date,
-        @Nonnull LocalTime         hourStart,
-        @Nonnull LocalTime         hourEnd,
+        @Nullable UUID              educatorProfileId,
+        @Nullable LocalDate         date,
+        @Nullable LocalTime         hourStart,
+        @Nullable LocalTime         hourEnd,
         @Nullable BookingStatusEnum bookingStatus,
         @Nullable UUID              paymentTransactionId,
         @Nullable String            meetingUrl,
@@ -228,8 +228,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
      * Getter for
      * <code>public._audit_log_educator_calendar.educator_profile_id</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public UUID getEducatorProfileId() {
         return this.educatorProfileId;
     }
@@ -238,7 +237,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
      * Setter for
      * <code>public._audit_log_educator_calendar.educator_profile_id</code>.
      */
-    public _AuditLogEducatorCalendarPojo setEducatorProfileId(@Nonnull UUID educatorProfileId) {
+    public _AuditLogEducatorCalendarPojo setEducatorProfileId(@Nullable UUID educatorProfileId) {
         this.educatorProfileId = educatorProfileId;
         return this;
     }
@@ -246,8 +245,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public._audit_log_educator_calendar.date</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalDate getDate() {
         return this.date;
     }
@@ -255,7 +253,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public._audit_log_educator_calendar.date</code>.
      */
-    public _AuditLogEducatorCalendarPojo setDate(@Nonnull LocalDate date) {
+    public _AuditLogEducatorCalendarPojo setDate(@Nullable LocalDate date) {
         this.date = date;
         return this;
     }
@@ -263,8 +261,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public._audit_log_educator_calendar.hour_start</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourStart() {
         return this.hourStart;
     }
@@ -272,7 +269,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public._audit_log_educator_calendar.hour_start</code>.
      */
-    public _AuditLogEducatorCalendarPojo setHourStart(@Nonnull LocalTime hourStart) {
+    public _AuditLogEducatorCalendarPojo setHourStart(@Nullable LocalTime hourStart) {
         this.hourStart = hourStart;
         return this;
     }
@@ -280,8 +277,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Getter for <code>public._audit_log_educator_calendar.hour_end</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourEnd() {
         return this.hourEnd;
     }
@@ -289,7 +285,7 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     /**
      * Setter for <code>public._audit_log_educator_calendar.hour_end</code>.
      */
-    public _AuditLogEducatorCalendarPojo setHourEnd(@Nonnull LocalTime hourEnd) {
+    public _AuditLogEducatorCalendarPojo setHourEnd(@Nullable LocalTime hourEnd) {
         this.hourEnd = hourEnd;
         return this;
     }

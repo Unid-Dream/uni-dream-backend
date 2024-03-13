@@ -34,4 +34,5 @@ public class JwtTokenClaims implements Serializable {
     @Nullable
     private String email;
     private String profilePicture;
+    private String applicationApproval;
 }

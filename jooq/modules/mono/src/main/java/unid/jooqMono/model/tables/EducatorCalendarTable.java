@@ -18,7 +18,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row15;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -71,22 +71,22 @@ public class EducatorCalendarTable extends TableImpl<EducatorCalendarRecord> {
     /**
      * The column <code>public.educator_calendar.educator_profile_id</code>.
      */
-    public final TableField<EducatorCalendarRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<EducatorCalendarRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
 
     /**
      * The column <code>public.educator_calendar.date</code>.
      */
-    public final TableField<EducatorCalendarRecord, LocalDate> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATE.nullable(false), this, "");
+    public final TableField<EducatorCalendarRecord, LocalDate> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATE, this, "");
 
     /**
      * The column <code>public.educator_calendar.hour_start</code>.
      */
-    public final TableField<EducatorCalendarRecord, LocalTime> HOUR_START = createField(DSL.name("hour_start"), SQLDataType.LOCALTIME(6).nullable(false), this, "");
+    public final TableField<EducatorCalendarRecord, LocalTime> HOUR_START = createField(DSL.name("hour_start"), SQLDataType.LOCALTIME(6), this, "");
 
     /**
      * The column <code>public.educator_calendar.hour_end</code>.
      */
-    public final TableField<EducatorCalendarRecord, LocalTime> HOUR_END = createField(DSL.name("hour_end"), SQLDataType.LOCALTIME(6).nullable(false), this, "");
+    public final TableField<EducatorCalendarRecord, LocalTime> HOUR_END = createField(DSL.name("hour_end"), SQLDataType.LOCALTIME(6), this, "");
 
     /**
      * The column <code>public.educator_calendar.booking_status</code>.
@@ -127,6 +127,16 @@ public class EducatorCalendarTable extends TableImpl<EducatorCalendarRecord> {
      * The column <code>public.educator_calendar.updated_by</code>.
      */
     public final TableField<EducatorCalendarRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.educator_calendar.start_datetime</code>.
+     */
+    public final TableField<EducatorCalendarRecord, OffsetDateTime> START_DATETIME = createField(DSL.name("start_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+
+    /**
+     * The column <code>public.educator_calendar.end_datetime</code>.
+     */
+    public final TableField<EducatorCalendarRecord, OffsetDateTime> END_DATETIME = createField(DSL.name("end_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     private EducatorCalendarTable(Name alias, Table<EducatorCalendarRecord> aliased) {
         this(alias, aliased, null);
@@ -233,12 +243,12 @@ public class EducatorCalendarTable extends TableImpl<EducatorCalendarRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row15 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row13<UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row15<UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 }

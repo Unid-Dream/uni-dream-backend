@@ -182,14 +182,19 @@ public class EducatorProfileTable extends TableImpl<EducatorProfileRecord> {
     public final TableField<EducatorProfileRecord, UUID[]> EDUCATION_ID = createField(DSL.name("education_id"), SQLDataType.UUID.getArrayDataType(), this, "");
 
     /**
+     * The column <code>public.educator_profile.timezone</code>.
+     */
+    public final TableField<EducatorProfileRecord, String> TIMEZONE = createField(DSL.name("timezone"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>public.educator_profile.expertise_description_id</code>.
      */
     public final TableField<EducatorProfileRecord, UUID[]> EXPERTISE_DESCRIPTION_ID = createField(DSL.name("expertise_description_id"), SQLDataType.UUID.getArrayDataType(), this, "");
 
     /**
-     * The column <code>public.educator_profile.timezone</code>.
+     * The column <code>public.educator_profile.expertise_description</code>.
      */
-    public final TableField<EducatorProfileRecord, String> TIMEZONE = createField(DSL.name("timezone"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<EducatorProfileRecord, String[]> EXPERTISE_DESCRIPTION = createField(DSL.name("expertise_description"), SQLDataType.CLOB.getArrayDataType(), this, "");
 
     private EducatorProfileTable(Name alias, Table<EducatorProfileRecord> aliased) {
         this(alias, aliased, null);

@@ -426,26 +426,10 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     }
 
     /**
-     * Setter for <code>public.educator_profile.expertise_description_id</code>.
-     */
-    public EducatorProfileRecord setExpertiseDescriptionId(@Nullable UUID[] value) {
-        set(24, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.educator_profile.expertise_description_id</code>.
-     */
-    @Nullable
-    public UUID[] getExpertiseDescriptionId() {
-        return (UUID[]) get(24);
-    }
-
-    /**
      * Setter for <code>public.educator_profile.timezone</code>.
      */
     public EducatorProfileRecord setTimezone(@Nullable String value) {
-        set(25, value);
+        set(24, value);
         return this;
     }
 
@@ -455,7 +439,39 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     @Size(max = 255)
     @Nullable
     public String getTimezone() {
-        return (String) get(25);
+        return (String) get(24);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    public EducatorProfileRecord setExpertiseDescriptionId(@Nullable UUID[] value) {
+        set(25, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.expertise_description_id</code>.
+     */
+    @Nullable
+    public UUID[] getExpertiseDescriptionId() {
+        return (UUID[]) get(25);
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.expertise_description</code>.
+     */
+    public EducatorProfileRecord setExpertiseDescription(@Nullable String[] value) {
+        set(26, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.expertise_description</code>.
+     */
+    @Nullable
+    public String[] getExpertiseDescription() {
+        return (String[]) get(26);
     }
 
     // -------------------------------------------------------------------------
@@ -482,8 +498,8 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     /**
      * Create a detached, initialised EducatorProfileRecord
      */
-    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "expertiseDescriptionId", "timezone" })
-    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable UUID[] expertiseDescriptionId, @Nullable String timezone) {
+    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
+    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable String timezone, @Nullable UUID[] expertiseDescriptionId, @Nullable String[] expertiseDescription) {
         super(EducatorProfileTable.EDUCATOR_PROFILE);
 
         setId(id);
@@ -510,8 +526,9 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
         setEducationSchoolId(educationSchoolId);
         setAcademicMajorId(academicMajorId);
         setEducationId(educationId);
-        setExpertiseDescriptionId(expertiseDescriptionId);
         setTimezone(timezone);
+        setExpertiseDescriptionId(expertiseDescriptionId);
+        setExpertiseDescription(expertiseDescription);
     }
 
     /**
@@ -545,8 +562,9 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
             setEducationSchoolId(value.getEducationSchoolId());
             setAcademicMajorId(value.getAcademicMajorId());
             setEducationId(value.getEducationId());
-            setExpertiseDescriptionId(value.getExpertiseDescriptionId());
             setTimezone(value.getTimezone());
+            setExpertiseDescriptionId(value.getExpertiseDescriptionId());
+            setExpertiseDescription(value.getExpertiseDescription());
         }
     }
 }

@@ -31,10 +31,12 @@ import unid.monoServerApp.service.EmailService;
 import unid.monoServerMeta.Pattern;
 import unid.monoServerMeta.api.EducatorAvailableScheduleResponse;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
+import unid.monoServerMeta.api.EducatorCalendarRequestPayload;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +49,6 @@ import java.util.stream.Collectors;
 @Validated
 @Tag(name = "Educator Calendar")
 @Slf4j
-@Hidden
 public class EducatorCalendarController {
     private final EducatorCalendarService educatorCalendarService;
     private final EducatorCalendarMapper educatorCalendarMapper;
@@ -144,49 +145,49 @@ public class EducatorCalendarController {
         );
     }
 
-    @GetMapping("student/user/profile/educator/{profileId}/calendar/available")
+    @GetMapping(value = {
+            "educator/user/profile/educator/{profileId}/calendar/available",
+            "student/user/profile/educator/{profileId}/calendar/available"
+    })
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = {UserRoleEnum.EDUCATOR,UserRoleEnum.STUDENT}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get Educator All Available Calendar"
     )
-    @Hidden
     public @Valid UnifiedResponse<EducatorAvailableScheduleResponse> getAllAvailableFromNow(
-            @PathVariable("profileId") UUID profileId
+            @PathVariable("profileId") UUID profileId,
+            @ParameterObject EducatorCalendarRequestPayload payload
     ) {
-        var result = educatorCalendarService.getAllAvailableFromNow(profileId);
+        var result = educatorCalendarService.getAllAvailableFromNow(profileId,payload.getStartDateTimeUtc(),payload.getEndDateTimeUtc());
         var dateFormat = DateTimeFormatter.ofPattern(Pattern.DATE);
         var timeFormat = DateTimeFormatter.ofPattern(Pattern.TIME_CALENDAR);
-        var map = result.stream()
-                .map(schedule -> Map.<String, Set<String>>entry(
-                        dateFormat.format(schedule.getDate()),
-                        new HashSet<String>() {{
-                            add(String.format(
-                                    "%s-%s",
-                                    timeFormat.format(schedule.getHourStart()),
-                                    timeFormat.format(schedule.getHourEnd())
-                            ));
-                        }}
-                ))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (a, b) -> {
-                            a.addAll(b);
-                            return a;
-                        }
-                ));
-        return UnifiedResponse.of(
-                EducatorAvailableScheduleResponse.builder()
-                        .availableSchedules(new HashMap<>(map))
-                        .build()
-        );
+//        var map = result.stream()
+//                .map(schedule -> Map.<String, Set<String>>entry(
+//                        dateFormat.format(schedule.getDate()),
+//                        new HashSet<String>() {{
+//                            add(String.format(
+//                                    "%s-%s",
+//                                    timeFormat.format(schedule.getHourStart()),
+//                                    timeFormat.format(schedule.getHourEnd())
+//                            ));
+//                        }}
+//                ))
+//                .collect(Collectors.toMap(
+//                        Map.Entry::getKey,
+//                        Map.Entry::getValue,
+//                        (a, b) -> {
+//                            a.addAll(b);
+//                            return a;
+//                        }
+//                ));
+
+        return UnifiedResponse.of(null);
     }
 
-    @PutMapping("student/user/profile/educator/{profileId}/calendar/available")
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
     @Transactional
     @ACL(
             authed = true,
@@ -194,7 +195,6 @@ public class EducatorCalendarController {
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
-    @Hidden
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Mark Educator Available Calendar"
@@ -203,12 +203,14 @@ public class EducatorCalendarController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
             EducatorCalendarRequest payload) {
-        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-        educatorCalendarService.markAvailable(profileId, payload);
+        payload.getSlots().forEach(slot->{
+            dbEducatorCalendar.validateMarking(slot.getStartDateTimeUtc(), slot.getEndDateTimeUtc());
+            educatorCalendarService.markAvailable(profileId, slot);
+        });
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("student/user/profile/educator/{profileId}/calendar/unavailable")
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/unavailable")
     @Transactional
     @ACL(
             authed = true,
@@ -216,7 +218,6 @@ public class EducatorCalendarController {
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
-    @Hidden
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Unmark Educator Available Calendar"
@@ -225,12 +226,12 @@ public class EducatorCalendarController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
             EducatorCalendarRequest payload) {
-        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-        educatorCalendarService.unmarkAvailable(profileId, payload);
+//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
+//        educatorCalendarService.unmarkAvailable(profileId, payload);
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("student/user/profile/educator/{profileId}/calendar/reserve/accept")
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/reserve/accept")
     @Transactional
     @ACL(
             authed = true,
@@ -242,18 +243,17 @@ public class EducatorCalendarController {
     @Operation(
             summary = "Educator Accept Calendar Reservation"
     )
-    @Hidden
     public @Valid UnifiedResponse<Void> accept(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
             EducatorCalendarRequest payload) {
-        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-        var result = educatorCalendarService.acceptOrDenyBooking(profileId, payload, true);
-        emailService.requestStudentBookingAccepted(result);
+//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
+//        var result = educatorCalendarService.acceptOrDenyBooking(profileId, payload, true);
+//        emailService.requestStudentBookingAccepted(result);
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("student/user/profile/educator/{profileId}/calendar/reserve/deny")
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/reserve/deny")
     @Transactional
     @ACL(
             authed = true,
@@ -269,8 +269,8 @@ public class EducatorCalendarController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
             EducatorCalendarRequest payload) {
-        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-        educatorCalendarService.acceptOrDenyBooking(profileId, payload, false);
+//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
+//        educatorCalendarService.acceptOrDenyBooking(profileId, payload, false);
         return UnifiedResponse.of(null);
     }
 }

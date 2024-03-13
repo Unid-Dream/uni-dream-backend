@@ -151,7 +151,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
      * Setter for
      * <code>public._audit_log_educator_calendar.educator_profile_id</code>.
      */
-    public _AuditLogEducatorCalendarRecord setEducatorProfileId(@Nonnull UUID value) {
+    public _AuditLogEducatorCalendarRecord setEducatorProfileId(@Nullable UUID value) {
         set(6, value);
         return this;
     }
@@ -160,8 +160,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
      * Getter for
      * <code>public._audit_log_educator_calendar.educator_profile_id</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public UUID getEducatorProfileId() {
         return (UUID) get(6);
     }
@@ -169,7 +168,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Setter for <code>public._audit_log_educator_calendar.date</code>.
      */
-    public _AuditLogEducatorCalendarRecord setDate(@Nonnull LocalDate value) {
+    public _AuditLogEducatorCalendarRecord setDate(@Nullable LocalDate value) {
         set(7, value);
         return this;
     }
@@ -177,8 +176,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Getter for <code>public._audit_log_educator_calendar.date</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalDate getDate() {
         return (LocalDate) get(7);
     }
@@ -186,7 +184,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Setter for <code>public._audit_log_educator_calendar.hour_start</code>.
      */
-    public _AuditLogEducatorCalendarRecord setHourStart(@Nonnull LocalTime value) {
+    public _AuditLogEducatorCalendarRecord setHourStart(@Nullable LocalTime value) {
         set(8, value);
         return this;
     }
@@ -194,8 +192,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Getter for <code>public._audit_log_educator_calendar.hour_start</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourStart() {
         return (LocalTime) get(8);
     }
@@ -203,7 +200,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Setter for <code>public._audit_log_educator_calendar.hour_end</code>.
      */
-    public _AuditLogEducatorCalendarRecord setHourEnd(@Nonnull LocalTime value) {
+    public _AuditLogEducatorCalendarRecord setHourEnd(@Nullable LocalTime value) {
         set(9, value);
         return this;
     }
@@ -211,8 +208,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Getter for <code>public._audit_log_educator_calendar.hour_end</code>.
      */
-    @NotNull
-    @Nonnull
+    @Nullable
     public LocalTime getHourEnd() {
         return (LocalTime) get(9);
     }
@@ -510,25 +506,25 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public UUID component7() {
         return getEducatorProfileId();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalDate component8() {
         return getDate();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalTime component9() {
         return getHourStart();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalTime component10() {
         return getHourEnd();
     }
@@ -618,25 +614,25 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public UUID value7() {
         return getEducatorProfileId();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalDate value8() {
         return getDate();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalTime value9() {
         return getHourStart();
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public LocalTime value10() {
         return getHourEnd();
     }
@@ -733,28 +729,28 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord value7(@Nonnull UUID value) {
+    public _AuditLogEducatorCalendarRecord value7(@Nullable UUID value) {
         setEducatorProfileId(value);
         return this;
     }
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord value8(@Nonnull LocalDate value) {
+    public _AuditLogEducatorCalendarRecord value8(@Nullable LocalDate value) {
         setDate(value);
         return this;
     }
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord value9(@Nonnull LocalTime value) {
+    public _AuditLogEducatorCalendarRecord value9(@Nullable LocalTime value) {
         setHourStart(value);
         return this;
     }
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord value10(@Nonnull LocalTime value) {
+    public _AuditLogEducatorCalendarRecord value10(@Nullable LocalTime value) {
         setHourEnd(value);
         return this;
     }
@@ -817,7 +813,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull LocalDate value8, @Nonnull LocalTime value9, @Nonnull LocalTime value10, @Nullable BookingStatusEnum value11, @Nullable UUID value12, @Nullable String value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18) {
+    public _AuditLogEducatorCalendarRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable LocalDate value8, @Nullable LocalTime value9, @Nullable LocalTime value10, @Nullable BookingStatusEnum value11, @Nullable UUID value12, @Nullable String value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -854,7 +850,7 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
      * Create a detached, initialised _AuditLogEducatorCalendarRecord
      */
     @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogEducatorCalendarRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID educatorProfileId, @Nonnull LocalDate date, @Nonnull LocalTime hourStart, @Nonnull LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    public _AuditLogEducatorCalendarRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID educatorProfileId, @Nullable LocalDate date, @Nullable LocalTime hourStart, @Nullable LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
         super(_AuditLogEducatorCalendarTable._AUDIT_LOG_EDUCATOR_CALENDAR);
 
         setAuditSeq(auditSeq);

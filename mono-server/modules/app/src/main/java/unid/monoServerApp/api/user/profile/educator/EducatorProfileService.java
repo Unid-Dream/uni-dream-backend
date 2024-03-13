@@ -16,6 +16,7 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pwh.coreRsqlJooq.model.PaginationRequest;
 import pwh.coreRsqlJooq.model.PaginationResponse;
@@ -33,6 +34,7 @@ import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfileLanguageMap;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.CountryMapper;
 import unid.monoServerApp.mapper.EducatorProfileMapper;
@@ -68,6 +70,7 @@ public class EducatorProfileService {
     private final CountryMapper countryMapper;
     private final DbExpertise dbExpertise;
     private final DSLContext dslContext;
+    private final DbEducatorSchool dbEducatorSchool;
 
     public DbEducatorProfile.Result get(UUID userId) {
         // TODO ACL (educator: get self only, admin: get all)
@@ -94,11 +97,11 @@ public class EducatorProfileService {
         return profilePojo;
     }
 
-//    @CacheEvict(
-//            value = CacheTags.EDUCATOR_PROFILE,
-//            key = "#profileId"
-//    )
-    public EducatorProfilePojo update(UUID profileId, EducatorProfileUpdateRequest payload) {
+    @CacheEvict(
+            value = CacheTags.EDUCATOR_SIMPLE_PROFILE,
+            key = "#profileId"
+    )
+    public EducatorProfilePojo update(UUID profileId, EducatorProfileSimpleRequest payload) {
         sessionService.initDatabaseSession();
         EducatorProfilePojo pojo = dbEducatorProfile
                 .getDsl()
@@ -106,44 +109,29 @@ public class EducatorProfileService {
                 .fetchOptionalInto(EducatorProfilePojo.class)
                 .orElseThrow(Exceptions::unknownError);
         updateUser(pojo.getUserId(), payload);
-        educatorProfileMapper.merge(pojo,payload);
-        List<UUID> expertise = Lists.newArrayList();
-        for(I18n object : payload.getExpertiseDescriptions()){
-            var i18nPojo =  i18nMapper.toPojo(object);
-            dbI18N.getDao().insert(i18nPojo);
-            ExpertisePojo expertisePojo = new ExpertisePojo();
-            expertisePojo.setDescriptionI18nId(i18nPojo.getId());
-            dbExpertise.getDao().insert(expertisePojo);
-            expertise.add(expertisePojo.getId());
-        }
-        pojo.setExpertiseDescriptionId(expertise.toArray(UUID[]::new));
+        educatorProfileMapper.merge(pojo, payload);
+        payload.getEducationLevel().forEach(obj->{
+            insertOrUpdateSchoolLevel(profileId,obj);
+        });
         dbEducatorProfile.getDao().update(pojo);
         return pojo;
-
-
-
-
-
-
-
-
-
-
-//        var existingRecord = Optional.ofNullable(
-//                dbEducatorProfile.getDao().fetchOneByUserId(userId)
-//        ).orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
-//        educatorProfileMapper.merge(existingRecord, payload);
-//        dbEducatorProfile.getDao().update(existingRecord);
-//        insertOrUpdateLanguage(
-//                existingRecord.getId(),
-//                Optional.ofNullable(payload.getLanguages())
-//                        .orElse(new ArrayList<>())
-//        );
-//        s3Service.oldToNew(existingRecord.getProfilePicture(), payload.getProfilePicture());
-//        return existingRecord;
     }
 
-    private void updateUser(UUID userId, EducatorProfileUpdateRequest payload) {
+
+    private void insertOrUpdateSchoolLevel(UUID profileId,EducatorProfileSimpleRequest.EducationLevel educationLevel){
+        var table = dbEducatorSchool.getTable();
+        dbEducatorSchool.getDsl().deleteFrom(table)
+                .where(table.EDUCATOR_PROFILE_ID.eq(profileId))
+                .execute();
+        dbEducatorSchool.getDao().insert(new EducatorSchoolPojo().setEducatorProfileId(profileId)
+                .setDegreeId(educationLevel.getDegreeId())
+                .setUniversityId(educationLevel.getUniversityId()));
+    }
+
+
+
+
+    private void updateUser(UUID userId, EducatorProfileSimpleRequest payload) {
         var user = Optional.ofNullable(dbUser.getDao().fetchOneById(userId))
                 .orElseThrow(() -> Exceptions.notFound("User Not Found"));
         var firstName = i18nMapper.toPojo(payload.getFirstNameI18n());
@@ -217,7 +205,6 @@ public class EducatorProfileService {
                 .where(I18N.ENGLISH.in(subjectQuery).or(I18N.CHINESE_SIMPLIFIED.in(subjectQuery)).or(I18N.CHINESE_TRADITIONAL.in(subjectQuery))).fetchInto(UUID.class);
 
 
-
         List<UUID> expertiseCondition = dslContext.select(EDUCATOR_PROFILE_EXTENSION.EDUCATOR_PROFILE_ID)
                 .from(EDUCATOR_PROFILE_EXTENSION)
                 .leftJoin(TAG).on(TAG.ID.eq(any(EDUCATOR_PROFILE_EXTENSION.EXPERTISE_ID)))
@@ -232,25 +219,25 @@ public class EducatorProfileService {
 
         Integer totalRecords = dbEducatorProfile
                 .getQueryEducatorProfileCnt()
-                .and(schoolQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(schoolCondition))
-                .and(subjectQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(majorCondition))
-                .and(expertiseQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(expertiseCondition))
-                .and(languageQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(langCondition))
+                .and(schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
+                .and(subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
+                .and(expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
+                .and(languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
                 .fetchOptionalInto(Integer.class).orElse(0);
 
         // 计算总页数
         int totalPages = (totalRecords + pageSize - 1) / pageSize;
         List<EducatorResponse> list = dbEducatorProfile
                 .getQueryEducatorProfile()
-                .and(schoolQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(schoolCondition))
-                .and(subjectQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(majorCondition))
-                .and(expertiseQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(expertiseCondition))
-                .and(languageQuery.isEmpty()?DSL.noCondition():EDUCATOR_PROFILE.ID.in(langCondition))
+                .and(schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
+                .and(subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
+                .and(expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
+                .and(languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
                 .offset((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .fetchInto(EducatorResponse.class);
-        StaticLog.info(" query educator page size : {}",list.size());
-        for(EducatorResponse obj : list){
+        StaticLog.info(" query educator page size : {}", list.size());
+        for (EducatorResponse obj : list) {
             I18n descriptionI18n = new I18n();
             descriptionI18n.setEnglish(obj.getDescription());
             obj.setDescriptionI18n(descriptionI18n);
@@ -264,12 +251,41 @@ public class EducatorProfileService {
                 .getQueryEducatorProfile()
                 .and(EDUCATOR_PROFILE.ID.eq(educatorProfileId))
                 .fetchOptional()
-                .orElseThrow(()->Exceptions.notFound(" Course Educator Not Found"))
+                .orElseThrow(() -> Exceptions.notFound(" Course Educator Not Found"))
                 .into(EducatorResponse.class);
         I18n descriptionI18n = new I18n();
         descriptionI18n.setEnglish(response.getDescription());
         response.setDescriptionI18n(descriptionI18n);
         return response;
     }
+
+    @Cacheable(value = CacheTags.EDUCATOR_SIMPLE_PROFILE, key = "#profileId")
+    public EducatorProfileSimpleResponse getSimpleCache(UUID profileId) {
+        DbEducatorProfile.Result result = dbEducatorProfile.getDsl().select(
+                        EDUCATOR_PROFILE.asterisk(),
+                        multiset(
+                                select(
+                                        EDUCATOR_SCHOOL.UNIVERSITY_ID.as(EducatorSchoolPojo.Columns.universityId),
+                                        EDUCATOR_SCHOOL.DEGREE_ID.as(EducatorSchoolPojo.Columns.degreeId)
+                                        )
+                                        .from(EDUCATOR_SCHOOL)
+                                        .where(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
+                        ).as(DbEducatorProfile.Result.Fields.educationLevel).convertFrom(r -> r.isEmpty() ? null : r.into(DbEducatorSchool.Result.class)),
+                        multiset(
+                                select()
+                                        .from(I18N,USER)
+                                        .where(I18N.ID.eq(USER.LAST_NAME_I18N_ID).and(USER.ID.eq(EDUCATOR_PROFILE.USER_ID)))
+                        ).as(DbEducatorProfile.Result.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                        multiset(
+                                select()
+                                        .from(I18N,USER)
+                                        .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(EDUCATOR_PROFILE.USER_ID)))
+                        ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                ).from(EDUCATOR_PROFILE)
+                .where(EDUCATOR_PROFILE.ID.eq(profileId))
+                .fetchOneInto(DbEducatorProfile.Result.class);
+        return educatorProfileMapper.toSimpleResponse(result);
+    }
+
 
 }

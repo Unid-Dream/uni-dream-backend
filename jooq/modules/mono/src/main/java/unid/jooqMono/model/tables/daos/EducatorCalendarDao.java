@@ -293,4 +293,38 @@ public class EducatorCalendarDao extends DAOImpl<EducatorCalendarRecord, Educato
     public List<EducatorCalendarPojo> fetchByUpdatedBy(String... values) {
         return fetch(EducatorCalendarTable.EDUCATOR_CALENDAR.UPDATED_BY, values);
     }
+
+    /**
+     * Fetch records that have <code>start_datetime BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorCalendarPojo> fetchRangeOfStartDatetime(OffsetDateTime lowerInclusive, OffsetDateTime upperInclusive) {
+        return fetchRange(EducatorCalendarTable.EDUCATOR_CALENDAR.START_DATETIME, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>start_datetime IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorCalendarPojo> fetchByStartDatetime(OffsetDateTime... values) {
+        return fetch(EducatorCalendarTable.EDUCATOR_CALENDAR.START_DATETIME, values);
+    }
+
+    /**
+     * Fetch records that have <code>end_datetime BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorCalendarPojo> fetchRangeOfEndDatetime(OffsetDateTime lowerInclusive, OffsetDateTime upperInclusive) {
+        return fetchRange(EducatorCalendarTable.EDUCATOR_CALENDAR.END_DATETIME, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>end_datetime IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorCalendarPojo> fetchByEndDatetime(OffsetDateTime... values) {
+        return fetch(EducatorCalendarTable.EDUCATOR_CALENDAR.END_DATETIME, values);
+    }
 }

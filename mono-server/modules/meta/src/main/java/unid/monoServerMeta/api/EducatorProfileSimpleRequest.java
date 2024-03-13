@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
+import unid.monoServerMeta.model.ApplicationApprovalEnum;
 import unid.monoServerMeta.model.I18n;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,27 +16,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
-public class EducatorProfileUpdateRequest {
+public class EducatorProfileSimpleRequest {
 
-    private I18n lastNameI18n;
     private I18n firstNameI18n;
+    private I18n lastNameI18n;
     private UUID countryId;
-//    private UUID cityId;
+    private String timezone;
     private String description;
-//    private List<EducationLevel> educations;
-    private Integer hourly_rate;
-    private String photo;
-    private List<UUID> expertises;
-    private List<UUID> subjects;
-    private List<UUID> languages;
-    private List<I18n> expertiseDescriptions = Lists.newArrayList();
-
-
+    private List<String> expertiseDescription;
+    private List<EducationLevel> educationLevel;
+    private List<UUID> expertiseId;
+    private List<UUID> languageId;
+    private Integer hourlyRate;
+    private String profilePicture;
 
     @Data
     @FieldNameConstants
     public static class EducationLevel{
-        private String universityId;
-        private String degreeId;
+        private UUID universityId;
+        private UUID degreeId;
+
     }
 }

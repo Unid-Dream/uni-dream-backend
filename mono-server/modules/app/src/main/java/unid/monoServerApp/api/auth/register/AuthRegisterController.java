@@ -82,7 +82,6 @@ public class AuthRegisterController {
             emailService.requestNewUserRegistrationOtp(newResult);
             return newResult;
         });
-
         return UnifiedResponse.of(toResponse(result));
     }
 

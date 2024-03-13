@@ -70,5 +70,6 @@ public class DbUser extends Db<UserTable, UserDao> {
     public static final class Result extends UserPojo implements Serializable {
         private DbI18N.Result firstNameI18n;
         private DbI18N.Result lastNameI18n;
+
     }
 }

@@ -19,6 +19,8 @@ import unid.monoServerApp.queue.MessageProducer;
 import unid.monoServerApp.queue.model.PendingConfirmedMeetingRequestPayload;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 
+import java.time.OffsetDateTime;
+
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
@@ -77,13 +79,15 @@ public class AcceptedMeeting {
         dbEducatorCalendar.getDao().update(educatorCalendar);
 
         try {
-            educatorCalendarService.markAvailable(
-                    educatorCalendar.getEducatorProfileId(),
-                    new EducatorCalendarRequest()
-                            .setDate(educatorCalendar.getDate())
-                            .setHourStart(educatorCalendar.getHourStart())
-                            .setHourEnd(educatorCalendar.getHourEnd())
-            );
+//            OffsetDateTime startDateTime = educatorCalendar.getStartDatetime();
+//            OffsetDateTime endDateTime = educatorCalendar.getEndDatetime();
+//
+//            educatorCalendarService.markAvailable(
+//                    educatorCalendar.getEducatorProfileId(),
+//                    new EducatorCalendarRequest()
+//                            .setStartDateTimeUtc(startDateTime)
+//                            .setEndDateTimeUtc(endDateTime)
+//            );
         } catch (Exception ignored) {
         }
     }

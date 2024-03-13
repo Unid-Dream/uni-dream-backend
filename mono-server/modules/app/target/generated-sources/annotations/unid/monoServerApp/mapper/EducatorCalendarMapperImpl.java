@@ -10,11 +10,12 @@ import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
+import unid.monoServerMeta.api.EducatorCalendarTimeSlot;
 import unid.monoServerMeta.model.BookingStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-10T20:56:03+0800",
+    date = "2024-03-12T22:14:46+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -41,14 +42,13 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
     }
 
     @Override
-    public void merge(EducatorCalendarPojo data, EducatorCalendarRequest source) {
+    public void merge(EducatorCalendarPojo data, EducatorCalendarTimeSlot source) {
         if ( source == null ) {
             return;
         }
 
-        data.setDate( source.getDate() );
-        data.setHourStart( source.getHourStart() );
-        data.setHourEnd( source.getHourEnd() );
+        data.setStartDatetime( source.getStartDateTimeUtc() );
+        data.setEndDatetime( source.getEndDateTimeUtc() );
     }
 
     @Override
@@ -56,10 +56,6 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
         if ( source == null ) {
             return;
         }
-
-        data.setDate( source.getDate() );
-        data.setHourStart( source.getHourStart() );
-        data.setHourEnd( source.getHourEnd() );
     }
 
     @Override

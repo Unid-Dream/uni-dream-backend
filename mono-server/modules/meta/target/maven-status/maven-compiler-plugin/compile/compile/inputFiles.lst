@@ -15,7 +15,6 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/StudentQuestionnaireResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorCalendarRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/AuthRegisterRequest.java
-/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorProfileUpdateRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/ExpertiseResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/WritingTopicResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/model/PassionSubject.java
@@ -50,6 +49,7 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/AuthLoginResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/AcademicMajorRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/UniPageRQ.java
+/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorProfileSimpleResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/PageResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducationLevelResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/MeetingReservationPaymentRequest.java
@@ -74,6 +74,7 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/model/BaseResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorProfileRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/StudentMilestoneRequest.java
+/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorLevelResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorAvailableScheduleResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/WritingSkillAssessmentResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/StudentQuestionnaireRequest.java
@@ -117,7 +118,9 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/WritingTopic.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/AuthRegisterResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/model/PaymentMethod.java
+/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/model/ApplicationApprovalEnum.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/model/PassionMajor.java
+/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorProfileSimpleRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EducatorSessionNoteRequest.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/EcaProfileOptionResponse.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/mono-server/modules/meta/src/main/java/unid/monoServerMeta/api/SchoolIdentityRequest.java

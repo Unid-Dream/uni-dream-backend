@@ -16,7 +16,9 @@ import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
+import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.language.DbLanguage;
+import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.database.table.schoolIdentity.DbSchoolIdentity;
 import unid.monoServerApp.database.table.user.DbUser;
@@ -26,6 +28,7 @@ import unid.monoServerMeta.api.LearningHubResponse;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 import static org.jooq.impl.DSL.*;
@@ -265,7 +268,11 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
     @ToString(callSuper = true)
     // (selectively) inherited from related jOOQ generated POJO
     // expanding foreign keys
-    public static final class Result extends EducatorProfilePojo {
+    public static final class Result extends EducatorProfilePojo implements Serializable {
+        private static final long serialVersionUID = -8912227184217854156L;
+
+        private DbI18N.Result firstNameI18n;
+        private DbI18N.Result lastNameI18n;
         private DbUser.Result user;
         private DbCountry.Result country;
         private DbSchool.Result university;
@@ -273,5 +280,6 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
         private DbSchoolIdentity.Result universityIdentity;
         private List<DbLanguage.Result> languages;
         private List<DbExpertise.Result> expertises;
+        private List<DbEducatorSchool.Result> educationLevel;
     }
 }

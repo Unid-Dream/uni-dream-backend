@@ -19,13 +19,11 @@ import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 @Component
 @Slf4j
@@ -53,7 +51,15 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                         alias.asterisk(),
                         DSL.multiset(
                                 payTranQ.where(alias.PAYMENT_TRANSACTION_ID.eq(payTran.ID))
-                        ).as(Result.Fields.paymentTransaction).convertFrom(r -> r.isEmpty() ? null : r.get(0))
+                        ).as(Result.Fields.paymentTransaction).convertFrom(r -> r.isEmpty() ? null : r.get(0)),
+                        //由预定,则查询学生信息
+                        DSL.multiset(
+                                DSL.select(
+
+                                ).from(
+
+                                )
+                        ).as(Result.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0))
                 );
         return q.from(alias);
     }
@@ -95,6 +101,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         return timeslot.lt(now);
     }
 
+    @Deprecated
     public void validateMarking(
             @NotNull LocalDate date,
             @NotNull LocalTime start,
@@ -112,6 +119,24 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         }
     }
 
+
+    public void validateMarking(
+            @NotNull OffsetDateTime dateHourStart,
+            @NotNull OffsetDateTime dateHourEnd
+    ) {
+        var now = LocalDate.now(ZoneOffset.UTC);
+        var span = dateHourStart.getHour() - dateHourEnd.getHour();
+        //默认为同一天
+        if (
+                dateHourStart.toLocalDate().isBefore(now)
+                        || dateHourStart.toLocalDate().isAfter(dateHourStart.toLocalDate().plusDays(Constant.PAGINATION_MAX_SIZE_EDUCATOR_CALENDAR))
+                        || !dateHourStart.toLocalTime().isBefore(dateHourEnd.toLocalTime())
+                        || span != -1
+        ) {
+            throw Exceptions.invalidTimeslot();
+        }
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
@@ -121,5 +146,6 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
     // expanding foreign keys
     public static final class Result extends EducatorCalendarPojo implements Serializable {
         private DbStudentPaymentTransaction.Result paymentTransaction;
+        private DbStudentProfile.Result studentProfile;
     }
 }

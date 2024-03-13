@@ -214,10 +214,21 @@ public class _AuditLogEducatorProfileTable extends TableImpl<_AuditLogEducatorPr
     public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EDUCATION_ID = createField(DSL.name("education_id"), SQLDataType.UUID.getArrayDataType(), this, "");
 
     /**
-     * The column
-     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     * The column <code>public._audit_log_educator_profile.timezone</code>.
      */
-    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EDUCATION_DESCRIPTION_ID = createField(DSL.name("education_description_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+    public final TableField<_AuditLogEducatorProfileRecord, String> TIMEZONE = createField(DSL.name("timezone"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_educator_profile.expertise_description_id</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, UUID[]> EXPERTISE_DESCRIPTION_ID = createField(DSL.name("expertise_description_id"), SQLDataType.UUID.getArrayDataType(), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_educator_profile.expertise_description</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, String[]> EXPERTISE_DESCRIPTION = createField(DSL.name("expertise_description"), SQLDataType.CLOB.getArrayDataType(), this, "");
 
     private _AuditLogEducatorProfileTable(Name alias, Table<_AuditLogEducatorProfileRecord> aliased) {
         this(alias, aliased, null);

@@ -24,6 +24,9 @@ import unid.monoServerApp.database.table.schoolIdentity.DbSchoolIdentity;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.I18nMapper;
+import unid.monoServerApp.mapper.UserMapper;
+import unid.monoServerMeta.api.SchoolResponse;
+import unid.monoServerMeta.api.UserResponse;
 import unid.monoServerMeta.model.I18n;
 
 import java.util.List;
@@ -32,6 +35,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static org.jooq.impl.DSL.multiset;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -47,7 +51,7 @@ public class UserCacheService {
     private final DbSchoolIdentity dbSchoolIdentity;
     private final DbLanguage dbLanguage;
     private final DbEducationLevel dbEducationLevel;
-
+    private final UserMapper userMapper;
 
 //    @Cacheable(
 //            value = CacheTags.STUDENT_PROFILE,
@@ -60,6 +64,7 @@ public class UserCacheService {
                 .fetchOptionalInto(DbStudentProfile.Result.class);
     }
 
+    @Deprecated
     public DbStudentProfile.Result getStudentProfile(UserPojo userPojo){
 
         DbStudentProfile.Result result = dbStudentProfile.getDsl()
@@ -82,6 +87,27 @@ public class UserCacheService {
 
     }
 
+
+    public UserResponse getSimpleUser(UserPojo userPojo){
+        DbUser.Result result = dbUser.getDsl().select(
+                        USER.asterisk(),
+                        multiset(
+                                DSL.select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                        ).as(DbUser.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                        multiset(
+                                DSL.select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                        ).as(DbUser.Result.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(USER)
+                .where(USER.ID.eq(userPojo.getId()))
+                .fetchOneInto(DbUser.Result.class);
+        return userMapper.toResponse(result);
+
+    }
 
 
 

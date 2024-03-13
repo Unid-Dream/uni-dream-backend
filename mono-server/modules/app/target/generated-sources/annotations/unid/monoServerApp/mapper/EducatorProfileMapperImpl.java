@@ -13,18 +13,21 @@ import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResour
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerMeta.api.AcademicMajorResponse;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
+import unid.monoServerMeta.api.EducatorLevelResponse;
 import unid.monoServerMeta.api.EducatorProfileRequest;
 import unid.monoServerMeta.api.EducatorProfileResponse;
-import unid.monoServerMeta.api.EducatorProfileUpdateRequest;
+import unid.monoServerMeta.api.EducatorProfileSimpleRequest;
+import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
 import unid.monoServerMeta.api.ExpertiseResponse;
 import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-10T20:56:04+0800",
+    date = "2024-03-12T00:13:52+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -46,6 +49,8 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
     private EducationLevelMapper educationLevelMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private EducatorSchoolMapper educatorSchoolMapper;
 
     @Override
     public EducatorProfilePojo toPojo(EducatorProfileRequest data) {
@@ -61,12 +66,53 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
     }
 
     @Override
+    public EducatorProfileSimpleResponse toSimpleResponse(DbEducatorProfile.Result data) {
+        if ( data == null ) {
+            return null;
+        }
+
+        EducatorProfileSimpleResponse educatorProfileSimpleResponse = new EducatorProfileSimpleResponse();
+
+        educatorProfileSimpleResponse.setEducationLevel( resultListToEducatorLevelResponseList( data.getEducationLevel() ) );
+        educatorProfileSimpleResponse.setFirstNameI18n( i18nMapper.toModel( data.getFirstNameI18n() ) );
+        educatorProfileSimpleResponse.setLastNameI18n( i18nMapper.toModel( data.getLastNameI18n() ) );
+        educatorProfileSimpleResponse.setCountryId( data.getCountryId() );
+        educatorProfileSimpleResponse.setTimezone( data.getTimezone() );
+        educatorProfileSimpleResponse.setDescription( data.getDescription() );
+        educatorProfileSimpleResponse.setExpertiseDescription( stringArrayToStringList( data.getExpertiseDescription() ) );
+        educatorProfileSimpleResponse.setExpertiseId( uUIDArrayToUUIDList( data.getExpertiseId() ) );
+        educatorProfileSimpleResponse.setLanguageId( uUIDArrayToUUIDList( data.getLanguageId() ) );
+        educatorProfileSimpleResponse.setProfilePicture( data.getProfilePicture() );
+        educatorProfileSimpleResponse.setHourlyRate( data.getHourlyRate() );
+
+        return educatorProfileSimpleResponse;
+    }
+
+    @Override
     public void merge(DbEducatorProfile.Result data, EducatorProfileRequest source) {
         if ( source == null ) {
             return;
         }
 
         data.setCountryId( source.getCountryId() );
+        if ( source.getFirstNameI18n() != null ) {
+            if ( data.getFirstNameI18n() == null ) {
+                data.setFirstNameI18n( new DbI18N.Result() );
+            }
+            i18nMapper.merge( data.getFirstNameI18n(), source.getFirstNameI18n() );
+        }
+        else {
+            data.setFirstNameI18n( null );
+        }
+        if ( source.getLastNameI18n() != null ) {
+            if ( data.getLastNameI18n() == null ) {
+                data.setLastNameI18n( new DbI18N.Result() );
+            }
+            i18nMapper.merge( data.getLastNameI18n(), source.getLastNameI18n() );
+        }
+        else {
+            data.setLastNameI18n( null );
+        }
     }
 
     @Override
@@ -79,18 +125,19 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
     }
 
     @Override
-    public void merge(EducatorProfilePojo data, EducatorProfileUpdateRequest source) {
+    public void merge(EducatorProfilePojo data, EducatorProfileSimpleRequest source) {
         if ( source == null ) {
             return;
         }
 
-        data.setExpertiseId( uUIDListToUUIDArray( source.getExpertises() ) );
-        data.setAcademicMajorId( uUIDListToUUIDArray( source.getSubjects() ) );
-        data.setLanguageId( uUIDListToUUIDArray( source.getLanguages() ) );
-        data.setHourlyRate( source.getHourly_rate() );
-        data.setDescription( source.getDescription() );
-        data.setProfilePicture( source.getPhoto() );
         data.setCountryId( source.getCountryId() );
+        data.setProfilePicture( source.getProfilePicture() );
+        data.setHourlyRate( source.getHourlyRate() );
+        data.setExpertiseId( uUIDListToUUIDArray( source.getExpertiseId() ) );
+        data.setDescription( source.getDescription() );
+        data.setLanguageId( uUIDListToUUIDArray( source.getLanguageId() ) );
+        data.setTimezone( source.getTimezone() );
+        data.setExpertiseDescription( stringListToStringArray( source.getExpertiseDescription() ) );
     }
 
     @Override
@@ -116,6 +163,8 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileResponse.setLanguages( languageMapper.toResponse( data.getLanguages() ) );
         educatorProfileResponse.setExpertises( resultListToExpertiseResponseList( data.getExpertises() ) );
         educatorProfileResponse.setDescription( data.getDescription() );
+        educatorProfileResponse.setFirstNameI18n( i18nMapper.toModel( data.getFirstNameI18n() ) );
+        educatorProfileResponse.setLastNameI18n( i18nMapper.toModel( data.getLastNameI18n() ) );
 
         return educatorProfileResponse;
     }
@@ -134,6 +183,45 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         return list;
     }
 
+    protected List<EducatorLevelResponse> resultListToEducatorLevelResponseList(List<DbEducatorSchool.Result> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<EducatorLevelResponse> list1 = new ArrayList<EducatorLevelResponse>( list.size() );
+        for ( DbEducatorSchool.Result result : list ) {
+            list1.add( educatorSchoolMapper.toPojo( result ) );
+        }
+
+        return list1;
+    }
+
+    protected List<String> stringArrayToStringList(String[] stringArray) {
+        if ( stringArray == null ) {
+            return null;
+        }
+
+        List<String> list = new ArrayList<String>( stringArray.length );
+        for ( String string : stringArray ) {
+            list.add( string );
+        }
+
+        return list;
+    }
+
+    protected List<UUID> uUIDArrayToUUIDList(UUID[] uUIDArray) {
+        if ( uUIDArray == null ) {
+            return null;
+        }
+
+        List<UUID> list = new ArrayList<UUID>( uUIDArray.length );
+        for ( UUID uUID : uUIDArray ) {
+            list.add( uUID );
+        }
+
+        return list;
+    }
+
     protected UUID[] uUIDListToUUIDArray(List<UUID> list) {
         if ( list == null ) {
             return null;
@@ -147,6 +235,21 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         }
 
         return uUIDTmp;
+    }
+
+    protected String[] stringListToStringArray(List<String> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        String[] stringTmp = new String[list.size()];
+        int i = 0;
+        for ( String string : list ) {
+            stringTmp[i] = string;
+            i++;
+        }
+
+        return stringTmp;
     }
 
     protected AcademicSubjectResourcePayload resultToAcademicSubjectResourcePayload(DbAcademicSubjectResource.Result result) {

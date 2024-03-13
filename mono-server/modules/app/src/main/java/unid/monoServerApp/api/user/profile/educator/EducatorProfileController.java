@@ -99,7 +99,6 @@ public class EducatorProfileController {
     @Operation(
             summary = "Get One Educator"
     )
-    
     public @Valid UnifiedResponse<EducatorResponse> get(
             @PathVariable("educatorProfileId") UUID educatorProfileId
     ) {
@@ -145,16 +144,18 @@ public class EducatorProfileController {
             matchingSessionProfileId = true,
             skipMatchingForAdministrative = true
     )
+
+
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update One"
     )
-    public @Valid UnifiedResponse<EducatorResponse> update(
+    public @Valid UnifiedResponse<EducatorProfileSimpleResponse> update(
             @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
             @RequestBody @Valid
-            EducatorProfileUpdateRequest payload
+            EducatorProfileSimpleRequest payload
     ) {
-        var result = educatorProfileService.getCourseEducator(
+        var result = educatorProfileService.getSimpleCache(
                 educatorProfileService.update(educatorProfileId, payload)
                         .getId()
         );

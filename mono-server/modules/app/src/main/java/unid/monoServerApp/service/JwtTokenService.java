@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pwh.springStarter.service.ValidationService;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
 import unid.jooqMono.model.tables.pojos.UserPojo;
@@ -22,6 +23,7 @@ import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.mapper.JwtTokenClaimsMapper;
+import unid.monoServerMeta.api.UserResponse;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.JwtTokenClaims;
 
@@ -59,22 +61,19 @@ public class JwtTokenService {
                                 .map(EducatorProfilePojo::getId))
                         .orElse(null)
         );
-        DbStudentProfile.Result profile = userCacheService.getStudentProfile(userPojo);
-        I18n firstNameI18n;
-        if(profile.getUser().getFirstNameI18n() == null){
-            firstNameI18n = new I18n();
-            firstNameI18n.setEnglish(profile.getUser().getEmail());
-        }else{
-            firstNameI18n = i18nMapper.toModel(profile.getUser().getFirstNameI18n());
+        UserResponse simple = userCacheService.getSimpleUser(userPojo);
+        claims.setFirstNameI18n(simple.getFirstNameI18n());
+        claims.setLastNameI18n(simple.getLastNameI18n());
+        if(userPojo.getUserRole().equals(UserRoleEnum.STUDENT)){
+            userCacheService.getStudentProfileByUserId(userId).ifPresent( student -> {
+                claims.setProfilePicture(student.getProfilePicture());
+            });
+        }else if(userPojo.getUserRole().equals(UserRoleEnum.EDUCATOR)){
+            userCacheService.getEducatorProfileByUserId(userId).ifPresent( educator -> {
+                claims.setProfilePicture(educator.getProfilePicture());
+                claims.setApplicationApproval(educator.getApplicationApproval().getLiteral());
+            });
         }
-
-        claims.setFirstNameI18n(
-                firstNameI18n
-        );
-        claims.setLastNameI18n(
-                i18nMapper.toModel(profile.getUser().getLastNameI18n())
-        );
-        claims.setProfilePicture(profile.getProfilePicture());
         claims.setEmail(userPojo.getEmail());
         validationService.validate(claims);
         var token = Jwts.builder()

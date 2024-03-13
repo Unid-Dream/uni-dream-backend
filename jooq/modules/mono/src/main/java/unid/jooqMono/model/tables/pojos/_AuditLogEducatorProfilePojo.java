@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 
@@ -63,7 +64,9 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
     private UUID[]                  educationSchoolId;
     private UUID[]                  academicMajorId;
     private UUID[]                  educationId;
-    private UUID[]                  educationDescriptionId;
+    private String                  timezone;
+    private UUID[]                  expertiseDescriptionId;
+    private String[]                expertiseDescription;
 
     public _AuditLogEducatorProfilePojo() {}
 
@@ -97,10 +100,12 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.educationSchoolId = value.educationSchoolId;
         this.academicMajorId = value.academicMajorId;
         this.educationId = value.educationId;
-        this.educationDescriptionId = value.educationDescriptionId;
+        this.timezone = value.timezone;
+        this.expertiseDescriptionId = value.expertiseDescriptionId;
+        this.expertiseDescription = value.expertiseDescription;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "educationDescriptionId" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
     public _AuditLogEducatorProfilePojo(
         @Nonnull Long                    auditSeq,
         @Nonnull OffsetDateTime          auditCreatedon,
@@ -131,7 +136,9 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         @Nullable UUID[]                  educationSchoolId,
         @Nullable UUID[]                  academicMajorId,
         @Nullable UUID[]                  educationId,
-        @Nullable UUID[]                  educationDescriptionId
+        @Nullable String                  timezone,
+        @Nullable UUID[]                  expertiseDescriptionId,
+        @Nullable String[]                expertiseDescription
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -162,7 +169,9 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.educationSchoolId = educationSchoolId;
         this.academicMajorId = academicMajorId;
         this.educationId = educationId;
-        this.educationDescriptionId = educationDescriptionId;
+        this.timezone = timezone;
+        this.expertiseDescriptionId = expertiseDescriptionId;
+        this.expertiseDescription = expertiseDescription;
     }
 
     /**
@@ -658,20 +667,55 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
     }
 
     /**
+     * Getter for <code>public._audit_log_educator_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return this.timezone;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.timezone</code>.
+     */
+    public _AuditLogEducatorProfilePojo setTimezone(@Nullable String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+    /**
      * Getter for
-     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     * <code>public._audit_log_educator_profile.expertise_description_id</code>.
      */
     @Nullable
-    public UUID[] getEducationDescriptionId() {
-        return this.educationDescriptionId;
+    public UUID[] getExpertiseDescriptionId() {
+        return this.expertiseDescriptionId;
     }
 
     /**
      * Setter for
-     * <code>public._audit_log_educator_profile.education_description_id</code>.
+     * <code>public._audit_log_educator_profile.expertise_description_id</code>.
      */
-    public _AuditLogEducatorProfilePojo setEducationDescriptionId(@Nullable UUID[] educationDescriptionId) {
-        this.educationDescriptionId = educationDescriptionId;
+    public _AuditLogEducatorProfilePojo setExpertiseDescriptionId(@Nullable UUID[] expertiseDescriptionId) {
+        this.expertiseDescriptionId = expertiseDescriptionId;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_profile.expertise_description</code>.
+     */
+    @Nullable
+    public String[] getExpertiseDescription() {
+        return this.expertiseDescription;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_profile.expertise_description</code>.
+     */
+    public _AuditLogEducatorProfilePojo setExpertiseDescription(@Nullable String[] expertiseDescription) {
+        this.expertiseDescription = expertiseDescription;
         return this;
     }
 
@@ -708,7 +752,9 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         sb.append(", ").append(Arrays.toString(educationSchoolId));
         sb.append(", ").append(Arrays.toString(academicMajorId));
         sb.append(", ").append(Arrays.toString(educationId));
-        sb.append(", ").append(Arrays.toString(educationDescriptionId));
+        sb.append(", ").append(timezone);
+        sb.append(", ").append(Arrays.toString(expertiseDescriptionId));
+        sb.append(", ").append(Arrays.toString(expertiseDescription));
 
         sb.append(")");
         return sb.toString();

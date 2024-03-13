@@ -23,6 +23,8 @@ import unid.monoServerApp.queue.model.EducatorMeetingRequestPayload;
 import unid.monoServerApp.queue.model.PendingTransactionRequestPayload;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Component
@@ -119,13 +121,15 @@ public class PendingPayableMeeting {
                 educatorCalendar.setBookingStatus(BookingStatusEnum.VOID);
                 dbEducatorCalendar.getDao().update(educatorCalendar);
                 try {
-                    educatorCalendarService.markAvailable(
-                            educatorCalendar.getEducatorProfileId(),
-                            new EducatorCalendarRequest()
-                                    .setDate(educatorCalendar.getDate())
-                                    .setHourStart(educatorCalendar.getHourStart())
-                                    .setHourEnd(educatorCalendar.getHourEnd())
-                    );
+//                    OffsetDateTime startDateTime = educatorCalendar.getStartDatetime();
+//                    OffsetDateTime endDateTime = educatorCalendar.getEndDatetime();
+//
+//                    educatorCalendarService.markAvailable(
+//                            educatorCalendar.getEducatorProfileId(),
+//                            new EducatorCalendarRequest()
+//                                    .setStartDatetime(startDateTime)
+//                                    .setEndDatetime(endDateTime)
+//                    );
                 } catch (Exception ignored) {
                 }
                 break;
