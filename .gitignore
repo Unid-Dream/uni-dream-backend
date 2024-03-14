@@ -1,3 +1,8 @@
 *.iml
 .idea/
 .flattened-pom.xml
+*.lst
+*.txt
+*.jar.original
+pom.properties
+TEST-*.xml
