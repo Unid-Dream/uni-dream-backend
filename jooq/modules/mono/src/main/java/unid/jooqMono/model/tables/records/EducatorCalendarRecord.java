@@ -250,34 +250,34 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     }
 
     /**
-     * Setter for <code>public.educator_calendar.start_datetime</code>.
+     * Setter for <code>public.educator_calendar.start_time_utc</code>.
      */
-    public EducatorCalendarRecord setStartDatetime(@Nullable OffsetDateTime value) {
+    public EducatorCalendarRecord setStartTimeUtc(@Nullable OffsetDateTime value) {
         set(13, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.educator_calendar.start_datetime</code>.
+     * Getter for <code>public.educator_calendar.start_time_utc</code>.
      */
     @Nullable
-    public OffsetDateTime getStartDatetime() {
+    public OffsetDateTime getStartTimeUtc() {
         return (OffsetDateTime) get(13);
     }
 
     /**
-     * Setter for <code>public.educator_calendar.end_datetime</code>.
+     * Setter for <code>public.educator_calendar.end_time_utc</code>.
      */
-    public EducatorCalendarRecord setEndDatetime(@Nullable OffsetDateTime value) {
+    public EducatorCalendarRecord setEndTimeUtc(@Nullable OffsetDateTime value) {
         set(14, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.educator_calendar.end_datetime</code>.
+     * Getter for <code>public.educator_calendar.end_time_utc</code>.
      */
     @Nullable
-    public OffsetDateTime getEndDatetime() {
+    public OffsetDateTime getEndTimeUtc() {
         return (OffsetDateTime) get(14);
     }
 
@@ -388,13 +388,13 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     @Override
     @Nonnull
     public Field<OffsetDateTime> field14() {
-        return EducatorCalendarTable.EDUCATOR_CALENDAR.START_DATETIME;
+        return EducatorCalendarTable.EDUCATOR_CALENDAR.START_TIME_UTC;
     }
 
     @Override
     @Nonnull
     public Field<OffsetDateTime> field15() {
-        return EducatorCalendarTable.EDUCATOR_CALENDAR.END_DATETIME;
+        return EducatorCalendarTable.EDUCATOR_CALENDAR.END_TIME_UTC;
     }
 
     @Override
@@ -478,13 +478,13 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     @Override
     @Nullable
     public OffsetDateTime component14() {
-        return getStartDatetime();
+        return getStartTimeUtc();
     }
 
     @Override
     @Nullable
     public OffsetDateTime component15() {
-        return getEndDatetime();
+        return getEndTimeUtc();
     }
 
     @Override
@@ -568,13 +568,13 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     @Override
     @Nullable
     public OffsetDateTime value14() {
-        return getStartDatetime();
+        return getStartTimeUtc();
     }
 
     @Override
     @Nullable
     public OffsetDateTime value15() {
-        return getEndDatetime();
+        return getEndTimeUtc();
     }
 
     @Override
@@ -671,14 +671,14 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     @Override
     @Nonnull
     public EducatorCalendarRecord value14(@Nullable OffsetDateTime value) {
-        setStartDatetime(value);
+        setStartTimeUtc(value);
         return this;
     }
 
     @Override
     @Nonnull
     public EducatorCalendarRecord value15(@Nullable OffsetDateTime value) {
-        setEndDatetime(value);
+        setEndTimeUtc(value);
         return this;
     }
 
@@ -717,8 +717,8 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
     /**
      * Create a detached, initialised EducatorCalendarRecord
      */
-    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startDatetime", "endDatetime" })
-    public EducatorCalendarRecord(@Nonnull UUID id, @Nullable UUID educatorProfileId, @Nullable LocalDate date, @Nullable LocalTime hourStart, @Nullable LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable OffsetDateTime startDatetime, @Nullable OffsetDateTime endDatetime) {
+    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startTimeUtc", "endTimeUtc" })
+    public EducatorCalendarRecord(@Nonnull UUID id, @Nullable UUID educatorProfileId, @Nullable LocalDate date, @Nullable LocalTime hourStart, @Nullable LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable OffsetDateTime startTimeUtc, @Nullable OffsetDateTime endTimeUtc) {
         super(EducatorCalendarTable.EDUCATOR_CALENDAR);
 
         setId(id);
@@ -734,8 +734,8 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
-        setStartDatetime(startDatetime);
-        setEndDatetime(endDatetime);
+        setStartTimeUtc(startTimeUtc);
+        setEndTimeUtc(endTimeUtc);
     }
 
     /**
@@ -758,8 +758,8 @@ public class EducatorCalendarRecord extends UpdatableRecordImpl<EducatorCalendar
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
-            setStartDatetime(value.getStartDatetime());
-            setEndDatetime(value.getEndDatetime());
+            setStartTimeUtc(value.getStartTimeUtc());
+            setEndTimeUtc(value.getEndTimeUtc());
         }
     }
 }

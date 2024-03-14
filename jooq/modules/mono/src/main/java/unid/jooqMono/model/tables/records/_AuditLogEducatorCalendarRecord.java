@@ -16,8 +16,8 @@ import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
-import org.jooq.Record18;
-import org.jooq.Row18;
+import org.jooq.Record20;
+import org.jooq.Row20;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.enums.BookingStatusEnum;
@@ -37,7 +37,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogEducatorCalendarPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEducatorCalendarRecord> implements Record18<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String> {
+public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEducatorCalendarRecord> implements Record20<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, OffsetDateTime> {
 
     private static final long serialVersionUID = 1L;
 
@@ -345,20 +345,54 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
         return (String) get(17);
     }
 
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_calendar.start_datetime</code>.
+     */
+    public _AuditLogEducatorCalendarRecord setStartDatetime(@Nullable OffsetDateTime value) {
+        set(18, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_calendar.start_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getStartDatetime() {
+        return (OffsetDateTime) get(18);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_calendar.end_datetime</code>.
+     */
+    public _AuditLogEducatorCalendarRecord setEndDatetime(@Nullable OffsetDateTime value) {
+        set(19, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_calendar.end_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getEndDatetime() {
+        return (OffsetDateTime) get(19);
+    }
+
     // -------------------------------------------------------------------------
-    // Record18 type implementation
+    // Record20 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row18) super.fieldsRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row18) super.valuesRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, OffsetDateTime> valuesRow() {
+        return (Row20) super.valuesRow();
     }
 
     @Override
@@ -471,6 +505,18 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
 
     @Override
     @Nonnull
+    public Field<OffsetDateTime> field19() {
+        return _AuditLogEducatorCalendarTable._AUDIT_LOG_EDUCATOR_CALENDAR.START_DATETIME;
+    }
+
+    @Override
+    @Nonnull
+    public Field<OffsetDateTime> field20() {
+        return _AuditLogEducatorCalendarTable._AUDIT_LOG_EDUCATOR_CALENDAR.END_DATETIME;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -575,6 +621,18 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     @Nullable
     public String component18() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public OffsetDateTime component19() {
+        return getStartDatetime();
+    }
+
+    @Override
+    @Nullable
+    public OffsetDateTime component20() {
+        return getEndDatetime();
     }
 
     @Override
@@ -683,6 +741,18 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     @Nullable
     public String value18() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public OffsetDateTime value19() {
+        return getStartDatetime();
+    }
+
+    @Override
+    @Nullable
+    public OffsetDateTime value20() {
+        return getEndDatetime();
     }
 
     @Override
@@ -813,7 +883,21 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
 
     @Override
     @Nonnull
-    public _AuditLogEducatorCalendarRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable LocalDate value8, @Nullable LocalTime value9, @Nullable LocalTime value10, @Nullable BookingStatusEnum value11, @Nullable UUID value12, @Nullable String value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18) {
+    public _AuditLogEducatorCalendarRecord value19(@Nullable OffsetDateTime value) {
+        setStartDatetime(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogEducatorCalendarRecord value20(@Nullable OffsetDateTime value) {
+        setEndDatetime(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogEducatorCalendarRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable LocalDate value8, @Nullable LocalTime value9, @Nullable LocalTime value10, @Nullable BookingStatusEnum value11, @Nullable UUID value12, @Nullable String value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18, @Nullable OffsetDateTime value19, @Nullable OffsetDateTime value20) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -832,6 +916,8 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
         value16(value16);
         value17(value17);
         value18(value18);
+        value19(value19);
+        value20(value20);
         return this;
     }
 
@@ -849,8 +935,8 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
     /**
      * Create a detached, initialised _AuditLogEducatorCalendarRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogEducatorCalendarRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID educatorProfileId, @Nullable LocalDate date, @Nullable LocalTime hourStart, @Nullable LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startDatetime", "endDatetime" })
+    public _AuditLogEducatorCalendarRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID educatorProfileId, @Nullable LocalDate date, @Nullable LocalTime hourStart, @Nullable LocalTime hourEnd, @Nullable BookingStatusEnum bookingStatus, @Nullable UUID paymentTransactionId, @Nullable String meetingUrl, @Nullable String meetingId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable OffsetDateTime startDatetime, @Nullable OffsetDateTime endDatetime) {
         super(_AuditLogEducatorCalendarTable._AUDIT_LOG_EDUCATOR_CALENDAR);
 
         setAuditSeq(auditSeq);
@@ -871,6 +957,8 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setStartDatetime(startDatetime);
+        setEndDatetime(endDatetime);
     }
 
     /**
@@ -898,6 +986,8 @@ public class _AuditLogEducatorCalendarRecord extends TableRecordImpl<_AuditLogEd
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setStartDatetime(value.getStartDatetime());
+            setEndDatetime(value.getEndDatetime());
         }
     }
 }

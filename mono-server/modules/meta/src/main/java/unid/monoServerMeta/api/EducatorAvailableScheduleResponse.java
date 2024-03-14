@@ -1,5 +1,6 @@
 package unid.monoServerMeta.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
@@ -22,19 +23,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EducatorAvailableScheduleResponse {
-
     //时间槽
-    private List<EducatorCalendarTimeSlot> slots;
-    //槽状态
-    private BookingStatus status;
-    //如果是预定状态,则展示学生的相关信息
-    private List<StudentProfile> studentProfiles;
-
-    @Data
-    @FieldNameConstants
-    public static class StudentProfile{
-        private UUID studentProfileId;
-        private I18n nameI18n;
-    }
+    private List<EducatorCalendarTimeSlotResponse> slots;
 }

@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row18;
+import org.jooq.Row20;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -157,6 +157,17 @@ public class _AuditLogEducatorCalendarTable extends TableImpl<_AuditLogEducatorC
      */
     public final TableField<_AuditLogEducatorCalendarRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_educator_calendar.start_datetime</code>.
+     */
+    public final TableField<_AuditLogEducatorCalendarRecord, OffsetDateTime> START_DATETIME = createField(DSL.name("start_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_calendar.end_datetime</code>.
+     */
+    public final TableField<_AuditLogEducatorCalendarRecord, OffsetDateTime> END_DATETIME = createField(DSL.name("end_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+
     private _AuditLogEducatorCalendarTable(Name alias, Table<_AuditLogEducatorCalendarRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -235,12 +246,12 @@ public class _AuditLogEducatorCalendarTable extends TableImpl<_AuditLogEducatorC
     }
 
     // -------------------------------------------------------------------------
-    // Row18 type methods
+    // Row20 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row18) super.fieldsRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, LocalDate, LocalTime, LocalTime, BookingStatusEnum, UUID, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 }

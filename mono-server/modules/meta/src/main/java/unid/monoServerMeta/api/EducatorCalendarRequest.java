@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import unid.monoServerMeta.Pattern;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,8 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
-public class EducatorCalendarRequest {
+public class EducatorCalendarRequest implements Serializable {
 
-    private List<EducatorCalendarTimeSlot> slots;
+    private List<EducatorCalendarTimeSlotPayload> slots;
 
 }

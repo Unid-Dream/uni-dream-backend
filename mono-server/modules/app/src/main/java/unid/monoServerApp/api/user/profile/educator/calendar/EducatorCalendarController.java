@@ -35,6 +35,7 @@ import unid.monoServerMeta.api.EducatorCalendarRequestPayload;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -56,94 +57,6 @@ public class EducatorCalendarController {
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
 
-    @GetMapping("student/user/profile/educator/{profileId}/calendar")
-    @ACL(
-            authed = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Query"
-    )
-    @Hidden
-    public @Valid UnifiedResponse<PaginationResponse<EducatorCalendarResponse>> list(
-            @PathVariable("profileId") UUID profileId,
-            @Valid
-            @ParameterObject
-            PaginationRequest payload
-    ) {
-        var table = EducatorCalendarPagination.TABLE;
-        var dslContext = dbEducatorCalendar.getDsl();
-        var extraConditionOnFirstPage = table.EDUCATOR_PROFILE_ID.eq(profileId);
-        if (StringUtils.isBlank(payload.getPage())) {
-            extraConditionOnFirstPage = extraConditionOnFirstPage.and(
-                    dbEducatorCalendar.validateCondition(table)
-            );
-        }
-        var result = PaginatedQuery.init(
-                        dslContext,
-                        objectMapper,
-                        payload,
-                        RequestHolder.get().getAuthToken(),
-                        Constant.PAGINATION_MIN_SIZE,
-                        Constant.PAGINATION_MAX_SIZE_EDUCATOR_CALENDAR
-                )
-                .select(dsl -> dbEducatorCalendar.getQuery(table))
-                .conditions(EducatorCalendarPagination.conditionVisitor)
-                .extraConditions(extraConditionOnFirstPage)
-                .sortBy(
-                        EducatorCalendarPagination.orderingVisitor,
-                        sort -> {
-                            sort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.DATE,
-                                            SortOrder.ASC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSortByValues(input -> ListUtils.emptyIfNull(input).stream().map(LocalDate::parse).collect(Collectors.toList())
-                                                    )
-                                                    .whenSeeking(LocalDate::parse)
-                                                    .build()
-                                    )
-                            );
-                            sort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.HOUR_START,
-                                            SortOrder.ASC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSortByValues(input -> ListUtils.emptyIfNull(input).stream().map(LocalTime::parse).collect(Collectors.toList())
-                                                    )
-                                                    .whenSeeking(LocalTime::parse)
-                                                    .build()
-                                    )
-                            );
-                        },
-                        null,
-                        null,
-                        uniqueSort -> {
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.CREATED_ON,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(OffsetDateTime::parse)
-                                                    .build()
-                                    )
-                            );
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.ID,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(UUID::fromString)
-                                                    .build()
-                                    )
-                            );
-                        }
-                )
-                .fetch();
-        return UnifiedResponse.of(
-                PaginationResponse.asResult(result, educatorCalendarMapper.toResponse(result.getResult().into(DbEducatorCalendar.Result.class)))
-        );
-    }
 
     @GetMapping(value = {
             "educator/user/profile/educator/{profileId}/calendar/available",
@@ -159,32 +72,15 @@ public class EducatorCalendarController {
     )
     public @Valid UnifiedResponse<EducatorAvailableScheduleResponse> getAllAvailableFromNow(
             @PathVariable("profileId") UUID profileId,
-            @ParameterObject EducatorCalendarRequestPayload payload
+            @RequestParam(required = false) String startDateTimeUtc,
+            @RequestParam(required = false) String endDateTimeUtc
     ) {
-        var result = educatorCalendarService.getAllAvailableFromNow(profileId,payload.getStartDateTimeUtc(),payload.getEndDateTimeUtc());
-        var dateFormat = DateTimeFormatter.ofPattern(Pattern.DATE);
-        var timeFormat = DateTimeFormatter.ofPattern(Pattern.TIME_CALENDAR);
-//        var map = result.stream()
-//                .map(schedule -> Map.<String, Set<String>>entry(
-//                        dateFormat.format(schedule.getDate()),
-//                        new HashSet<String>() {{
-//                            add(String.format(
-//                                    "%s-%s",
-//                                    timeFormat.format(schedule.getHourStart()),
-//                                    timeFormat.format(schedule.getHourEnd())
-//                            ));
-//                        }}
-//                ))
-//                .collect(Collectors.toMap(
-//                        Map.Entry::getKey,
-//                        Map.Entry::getValue,
-//                        (a, b) -> {
-//                            a.addAll(b);
-//                            return a;
-//                        }
-//                ));
-
-        return UnifiedResponse.of(null);
+        var result = educatorCalendarService.getAllAvailableFromNow(
+                profileId,
+                OffsetDateTime.parse(startDateTimeUtc),
+                OffsetDateTime.parse(endDateTimeUtc)
+        );
+        return UnifiedResponse.of(result);
     }
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
@@ -195,22 +91,18 @@ public class EducatorCalendarController {
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Mark Educator Available Calendar"
     )
     public @Valid UnifiedResponse<Void> markAvailable(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @RequestBody @Valid
-            EducatorCalendarRequest payload) {
-        payload.getSlots().forEach(slot->{
-            dbEducatorCalendar.validateMarking(slot.getStartDateTimeUtc(), slot.getEndDateTimeUtc());
-            educatorCalendarService.markAvailable(profileId, slot);
-        });
+            @RequestBody @Valid EducatorCalendarRequest payload) {
+        payload.getSlots().forEach(slot-> educatorCalendarService.markAvailable(profileId, slot));
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("educator/user/profile/educator/{profileId}/calendar/unavailable")
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/{educatorCalendarId}/unavailable")
     @Transactional
     @ACL(
             authed = true,
@@ -224,10 +116,8 @@ public class EducatorCalendarController {
     )
     public @Valid UnifiedResponse<Void> unmarkAvailable(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @RequestBody @Valid
-            EducatorCalendarRequest payload) {
-//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-//        educatorCalendarService.unmarkAvailable(profileId, payload);
+            @PathVariable("educatorCalendarId") UUID educatorCalendarId) {
+        educatorCalendarService.unmarkAvailable(profileId, educatorCalendarId);
         return UnifiedResponse.of(null);
     }
 

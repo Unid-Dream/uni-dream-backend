@@ -7,4 +7,7 @@ public class ErrorCodeGlobal {
     public static final String ERROR_NOT_SUPPORTED = "NOT_SUPPORTED";
     public static final String ERROR_NOT_FOUND = "NOT_FOUND";
     public static final String ERROR_TIMEOUT = "TIMEOUT";
+
+
+
 }

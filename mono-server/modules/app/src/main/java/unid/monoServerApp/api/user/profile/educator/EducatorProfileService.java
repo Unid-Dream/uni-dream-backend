@@ -97,10 +97,10 @@ public class EducatorProfileService {
         return profilePojo;
     }
 
-    @CacheEvict(
-            value = CacheTags.EDUCATOR_SIMPLE_PROFILE,
-            key = "#profileId"
-    )
+//    @CacheEvict(
+//            value = CacheTags.EDUCATOR_SIMPLE_PROFILE,
+//            key = "#profileId"
+//    )
     public EducatorProfilePojo update(UUID profileId, EducatorProfileSimpleRequest payload) {
         sessionService.initDatabaseSession();
         EducatorProfilePojo pojo = dbEducatorProfile
@@ -259,7 +259,7 @@ public class EducatorProfileService {
         return response;
     }
 
-    @Cacheable(value = CacheTags.EDUCATOR_SIMPLE_PROFILE, key = "#profileId")
+//    @Cacheable(value = CacheTags.EDUCATOR_SIMPLE_PROFILE, key = "#profileId")
     public EducatorProfileSimpleResponse getSimpleCache(UUID profileId) {
         DbEducatorProfile.Result result = dbEducatorProfile.getDsl().select(
                         EDUCATOR_PROFILE.asterisk(),

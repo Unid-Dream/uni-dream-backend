@@ -99,10 +99,10 @@ public class EducatorProfileController {
     @Operation(
             summary = "Get One Educator"
     )
-    public @Valid UnifiedResponse<EducatorResponse> get(
+    public @Valid UnifiedResponse<EducatorProfileSimpleResponse> get(
             @PathVariable("educatorProfileId") UUID educatorProfileId
     ) {
-        var result = educatorProfileService.getCourseEducator(educatorProfileId);
+        var result = educatorProfileService.getSimpleCache(educatorProfileId);
         return UnifiedResponse.of(
                 result
         );

@@ -3,26 +3,23 @@ package unid.monoServerApp.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
-import unid.monoServerMeta.api.EducatorCalendarTimeSlot;
+import unid.monoServerMeta.api.EducatorCalendarTimeSlotPayload;
+import unid.monoServerMeta.api.EducatorCalendarTimeSlotResponse;
 import unid.monoServerMeta.model.BookingStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-12T22:14:46+0800",
+    date = "2024-03-14T20:52:28+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
 public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
-
-    @Autowired
-    private CommonMapper commonMapper;
 
     @Override
     public EducatorCalendarPojo toPojo(EducatorCalendarResponse data) {
@@ -42,13 +39,10 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
     }
 
     @Override
-    public void merge(EducatorCalendarPojo data, EducatorCalendarTimeSlot source) {
+    public void merge(EducatorCalendarPojo data, EducatorCalendarTimeSlotPayload source) {
         if ( source == null ) {
             return;
         }
-
-        data.setStartDatetime( source.getStartDateTimeUtc() );
-        data.setEndDatetime( source.getEndDateTimeUtc() );
     }
 
     @Override
@@ -59,31 +53,27 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
     }
 
     @Override
-    public EducatorCalendarResponse toResponse(DbEducatorCalendar.Result data) {
+    public EducatorCalendarTimeSlotResponse toResponse(DbEducatorCalendar.Result data) {
         if ( data == null ) {
             return null;
         }
 
-        EducatorCalendarResponse educatorCalendarResponse = new EducatorCalendarResponse();
+        EducatorCalendarTimeSlotResponse educatorCalendarTimeSlotResponse = new EducatorCalendarTimeSlotResponse();
 
-        educatorCalendarResponse.setCreatedOnUtc( commonMapper.toEpochMilli( data.getCreatedOn() ) );
-        educatorCalendarResponse.setUpdatedOnUtc( commonMapper.toEpochMilli( data.getUpdatedOn() ) );
-        educatorCalendarResponse.setId( data.getId() );
-        educatorCalendarResponse.setDate( data.getDate() );
-        educatorCalendarResponse.setHourStart( data.getHourStart() );
-        educatorCalendarResponse.setHourEnd( data.getHourEnd() );
-        educatorCalendarResponse.setBookingStatus( bookingStatusEnumToBookingStatus( data.getBookingStatus() ) );
+        educatorCalendarTimeSlotResponse.setStartDateTimeUtc( data.getStartTimeUtc() );
+        educatorCalendarTimeSlotResponse.setEndDateTimeUtc( data.getEndTimeUtc() );
+        educatorCalendarTimeSlotResponse.setId( data.getId() );
 
-        return educatorCalendarResponse;
+        return educatorCalendarTimeSlotResponse;
     }
 
     @Override
-    public List<EducatorCalendarResponse> toResponse(List<DbEducatorCalendar.Result> data) {
+    public List<EducatorCalendarTimeSlotResponse> toResponse(List<DbEducatorCalendar.Result> data) {
         if ( data == null ) {
             return null;
         }
 
-        List<EducatorCalendarResponse> list = new ArrayList<EducatorCalendarResponse>( data.size() );
+        List<EducatorCalendarTimeSlotResponse> list = new ArrayList<EducatorCalendarTimeSlotResponse>( data.size() );
         for ( DbEducatorCalendar.Result result : data ) {
             list.add( toResponse( result ) );
         }
@@ -121,37 +111,5 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
         }
 
         return bookingStatusEnum;
-    }
-
-    protected BookingStatus bookingStatusEnumToBookingStatus(BookingStatusEnum bookingStatusEnum) {
-        if ( bookingStatusEnum == null ) {
-            return null;
-        }
-
-        BookingStatus bookingStatus;
-
-        switch ( bookingStatusEnum ) {
-            case AVAILABLE: bookingStatus = BookingStatus.AVAILABLE;
-            break;
-            case RESERVED: bookingStatus = BookingStatus.RESERVED;
-            break;
-            case PENDING: bookingStatus = BookingStatus.PENDING;
-            break;
-            case ACCEPTED: bookingStatus = BookingStatus.ACCEPTED;
-            break;
-            case REJECTED: bookingStatus = BookingStatus.REJECTED;
-            break;
-            case CANCELLED: bookingStatus = BookingStatus.CANCELLED;
-            break;
-            case VOID: bookingStatus = BookingStatus.VOID;
-            break;
-            case FINISHED: bookingStatus = BookingStatus.FINISHED;
-            break;
-            case UNFINISHED: bookingStatus = BookingStatus.UNFINISHED;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
-        }
-
-        return bookingStatus;
     }
 }

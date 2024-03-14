@@ -28,6 +28,7 @@ public class UnifiedException extends RuntimeException {
         this(errorCode, message, httpStatus, null);
     }
 
+
     private static Optional<String> formatIfPresent(
             Object value,
             @NotBlank String prefix,

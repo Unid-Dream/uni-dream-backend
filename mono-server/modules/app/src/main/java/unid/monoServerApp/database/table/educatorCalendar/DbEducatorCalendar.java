@@ -1,5 +1,7 @@
 package unid.monoServerApp.database.table.educatorCalendar;
 
+import cn.hutool.log.StaticLog;
+import io.lettuce.core.BitFieldArgs;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.tables.EducatorCalendarTable;
 import unid.jooqMono.model.tables.daos.EducatorCalendarDao;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
@@ -20,10 +23,14 @@ import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerMeta.model.UniErrorCode;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.*;
+import java.util.UUID;
+
+import static unid.jooqMono.model.Tables.EDUCATOR_CALENDAR;
 
 @Component
 @Slf4j
@@ -51,15 +58,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                         alias.asterisk(),
                         DSL.multiset(
                                 payTranQ.where(alias.PAYMENT_TRANSACTION_ID.eq(payTran.ID))
-                        ).as(Result.Fields.paymentTransaction).convertFrom(r -> r.isEmpty() ? null : r.get(0)),
-                        //由预定,则查询学生信息
-                        DSL.multiset(
-                                DSL.select(
-
-                                ).from(
-
-                                )
-                        ).as(Result.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0))
+                        ).as(Result.Fields.paymentTransaction).convertFrom(r -> r.isEmpty() ? null : r.get(0))
                 );
         return q.from(alias);
     }
@@ -119,22 +118,97 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         }
     }
 
+    @Deprecated
+    public void validateMarking(
+            @NotNull OffsetDateTime date,
+            @NotNull LocalTime start,
+            @NotNull LocalTime end
+    ) {
+//        var now = LocalDate.now(ZoneOffset.UTC);
+//        var span = start.getHour() - end.getHour();
+//        if (
+//                date.isBefore(now)
+//                        || date.isAfter(date.plusDays(Constant.PAGINATION_MAX_SIZE_EDUCATOR_CALENDAR))
+//                        || !start.isBefore(end)
+//                        || span != -1
+//        ) {
+//            throw Exceptions.invalidTimeslot();
+//        }
+    }
+
+    public void validateUnMarking(
+            @NotNull UUID profileId,
+            @NotNull UUID educatorCalendarId
+    ){
+        //检查当前时间点是否为空闲状态,如果不是空闲，也就是查询结果为空,则认为是不空闲状态,抛出异常
+        getDsl().select()
+                .from(EDUCATOR_CALENDAR)
+                .where(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId))
+                .and(EDUCATOR_CALENDAR.ID.eq(educatorCalendarId))
+                .and(EDUCATOR_CALENDAR.BOOKING_STATUS.eq(BookingStatusEnum.AVAILABLE))
+                .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                .orElseThrow(()->{
+                    // 如果查询结果为空,则说明当前时间槽不是空闲状态,抛出异常
+                    throw Exceptions.business(
+                            UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE.code(),
+                            UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE.message()
+                    );
+                });
+    }
 
     public void validateMarking(
-            @NotNull OffsetDateTime dateHourStart,
-            @NotNull OffsetDateTime dateHourEnd
+            @NotNull UUID profileId,
+            @NotNull OffsetDateTime startDateTimeUtc,
+            @NotNull OffsetDateTime endDateTimeUtc
     ) {
-        var now = LocalDate.now(ZoneOffset.UTC);
-        var span = dateHourStart.getHour() - dateHourEnd.getHour();
-        //默认为同一天
-        if (
-                dateHourStart.toLocalDate().isBefore(now)
-                        || dateHourStart.toLocalDate().isAfter(dateHourStart.toLocalDate().plusDays(Constant.PAGINATION_MAX_SIZE_EDUCATOR_CALENDAR))
-                        || !dateHourStart.toLocalTime().isBefore(dateHourEnd.toLocalTime())
-                        || span != -1
-        ) {
-            throw Exceptions.invalidTimeslot();
+        //检查当前时间段是否存在,如果存在,则不允许设置 available
+        //时间段是否都为整点, 如果不为整点,则认为异常
+        if( startDateTimeUtc.getMinute()!=0 || startDateTimeUtc.getSecond()!=0){
+            StaticLog.error(" {}, 当前时间段开始时间非整点",startDateTimeUtc);
+            throw Exceptions.business(
+                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
+                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
         }
+        if( endDateTimeUtc.getMinute()!=0 || endDateTimeUtc.getSecond()!=0){
+            StaticLog.error("{} , 当前时间段结束时间非整点",endDateTimeUtc);
+            throw Exceptions.business(
+                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
+                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
+        }
+        //如果时间间隔小于1个小时,则认为异常
+//        var span = endDateTimeUtc.toLocalTime().getHour() - startDateTimeUtc.toLocalTime().getHour();
+//        if(span != 1){
+//            StaticLog.error("{} - {} , 当前时间段开始时间和结束时间小于一个小时",startDateTimeUtc,endDateTimeUtc);
+//            throw Exceptions.business(
+//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
+//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
+//        }
+        //如果开始时间小于当前时间,则认为异常
+//        var now = LocalDateTime.now(ZoneOffset.UTC);
+//        if(startDateTimeUtc.toLocalDateTime().isBefore(now)){
+//            StaticLog.error("{}, 预定时间段不允许早于当前时间",startDateTimeUtc);
+//            throw Exceptions.business(
+//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
+//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
+//        }
+        //当前时间段是否已经有状态
+        getDsl().select()
+                .from(EDUCATOR_CALENDAR)
+                .where(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId))
+                .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc))
+                .and(EDUCATOR_CALENDAR.END_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc))
+                .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                .ifPresentOrElse(
+                        value -> {
+                            // 如果Optional对象存在值，执行此处代码
+                            throw Exceptions.business(
+                                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
+                                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message()
+                            );
+                        },
+                        () -> {}
+                );
+
     }
 
     @EqualsAndHashCode(callSuper = true)

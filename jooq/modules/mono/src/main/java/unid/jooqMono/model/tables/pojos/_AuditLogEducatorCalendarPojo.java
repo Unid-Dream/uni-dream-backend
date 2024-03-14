@@ -53,6 +53,8 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
     private String            createdBy;
     private OffsetDateTime    updatedOn;
     private String            updatedBy;
+    private OffsetDateTime    startDatetime;
+    private OffsetDateTime    endDatetime;
 
     public _AuditLogEducatorCalendarPojo() {}
 
@@ -75,9 +77,11 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.startDatetime = value.startDatetime;
+        this.endDatetime = value.endDatetime;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startDatetime", "endDatetime" })
     public _AuditLogEducatorCalendarPojo(
         @Nonnull Long              auditSeq,
         @Nonnull OffsetDateTime    auditCreatedon,
@@ -96,7 +100,9 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         @Nullable OffsetDateTime    createdOn,
         @Nullable String            createdBy,
         @Nullable OffsetDateTime    updatedOn,
-        @Nullable String            updatedBy
+        @Nullable String            updatedBy,
+        @Nullable OffsetDateTime    startDatetime,
+        @Nullable OffsetDateTime    endDatetime
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -116,6 +122,8 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.startDatetime = startDatetime;
+        this.endDatetime = endDatetime;
     }
 
     /**
@@ -422,6 +430,40 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public._audit_log_educator_calendar.start_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getStartDatetime() {
+        return this.startDatetime;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_educator_calendar.start_datetime</code>.
+     */
+    public _AuditLogEducatorCalendarPojo setStartDatetime(@Nullable OffsetDateTime startDatetime) {
+        this.startDatetime = startDatetime;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_calendar.end_datetime</code>.
+     */
+    @Nullable
+    public OffsetDateTime getEndDatetime() {
+        return this.endDatetime;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_calendar.end_datetime</code>.
+     */
+    public _AuditLogEducatorCalendarPojo setEndDatetime(@Nullable OffsetDateTime endDatetime) {
+        this.endDatetime = endDatetime;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogEducatorCalendarPojo (");
@@ -444,6 +486,8 @@ public class _AuditLogEducatorCalendarPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(startDatetime);
+        sb.append(", ").append(endDatetime);
 
         sb.append(")");
         return sb.toString();

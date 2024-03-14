@@ -47,8 +47,8 @@ public class EducatorCalendarPojo implements Serializable {
     private String            createdBy;
     private OffsetDateTime    updatedOn;
     private String            updatedBy;
-    private OffsetDateTime    startDatetime;
-    private OffsetDateTime    endDatetime;
+    private OffsetDateTime    startTimeUtc;
+    private OffsetDateTime    endTimeUtc;
 
     public EducatorCalendarPojo() {}
 
@@ -66,11 +66,11 @@ public class EducatorCalendarPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
-        this.startDatetime = value.startDatetime;
-        this.endDatetime = value.endDatetime;
+        this.startTimeUtc = value.startTimeUtc;
+        this.endTimeUtc = value.endTimeUtc;
     }
 
-    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startDatetime", "endDatetime" })
+    @ConstructorProperties({ "id", "educatorProfileId", "date", "hourStart", "hourEnd", "bookingStatus", "paymentTransactionId", "meetingUrl", "meetingId", "createdOn", "createdBy", "updatedOn", "updatedBy", "startTimeUtc", "endTimeUtc" })
     public EducatorCalendarPojo(
         @Nonnull UUID              id,
         @Nullable UUID              educatorProfileId,
@@ -85,8 +85,8 @@ public class EducatorCalendarPojo implements Serializable {
         @Nullable String            createdBy,
         @Nullable OffsetDateTime    updatedOn,
         @Nullable String            updatedBy,
-        @Nullable OffsetDateTime    startDatetime,
-        @Nullable OffsetDateTime    endDatetime
+        @Nullable OffsetDateTime    startTimeUtc,
+        @Nullable OffsetDateTime    endTimeUtc
     ) {
         this.id = id;
         this.educatorProfileId = educatorProfileId;
@@ -101,8 +101,8 @@ public class EducatorCalendarPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
-        this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
+        this.startTimeUtc = startTimeUtc;
+        this.endTimeUtc = endTimeUtc;
     }
 
     /**
@@ -314,34 +314,34 @@ public class EducatorCalendarPojo implements Serializable {
     }
 
     /**
-     * Getter for <code>public.educator_calendar.start_datetime</code>.
+     * Getter for <code>public.educator_calendar.start_time_utc</code>.
      */
     @Nullable
-    public OffsetDateTime getStartDatetime() {
-        return this.startDatetime;
+    public OffsetDateTime getStartTimeUtc() {
+        return this.startTimeUtc;
     }
 
     /**
-     * Setter for <code>public.educator_calendar.start_datetime</code>.
+     * Setter for <code>public.educator_calendar.start_time_utc</code>.
      */
-    public EducatorCalendarPojo setStartDatetime(@Nullable OffsetDateTime startDatetime) {
-        this.startDatetime = startDatetime;
+    public EducatorCalendarPojo setStartTimeUtc(@Nullable OffsetDateTime startTimeUtc) {
+        this.startTimeUtc = startTimeUtc;
         return this;
     }
 
     /**
-     * Getter for <code>public.educator_calendar.end_datetime</code>.
+     * Getter for <code>public.educator_calendar.end_time_utc</code>.
      */
     @Nullable
-    public OffsetDateTime getEndDatetime() {
-        return this.endDatetime;
+    public OffsetDateTime getEndTimeUtc() {
+        return this.endTimeUtc;
     }
 
     /**
-     * Setter for <code>public.educator_calendar.end_datetime</code>.
+     * Setter for <code>public.educator_calendar.end_time_utc</code>.
      */
-    public EducatorCalendarPojo setEndDatetime(@Nullable OffsetDateTime endDatetime) {
-        this.endDatetime = endDatetime;
+    public EducatorCalendarPojo setEndTimeUtc(@Nullable OffsetDateTime endTimeUtc) {
+        this.endTimeUtc = endTimeUtc;
         return this;
     }
 
@@ -362,8 +362,8 @@ public class EducatorCalendarPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
-        sb.append(", ").append(startDatetime);
-        sb.append(", ").append(endDatetime);
+        sb.append(", ").append(startTimeUtc);
+        sb.append(", ").append(endTimeUtc);
 
         sb.append(")");
         return sb.toString();

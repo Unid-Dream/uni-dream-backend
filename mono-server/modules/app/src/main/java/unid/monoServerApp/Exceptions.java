@@ -29,6 +29,15 @@ public class Exceptions {
         );
     }
 
+    public static UnifiedException business(Integer code, String message) {
+        throw new UnifiedException(
+                String.valueOf(code),
+                message,
+                HttpStatus.BAD_REQUEST.value()
+        );
+    }
+
+
     public static UnifiedException invalidTimeslot(String... message) {
         throw new UnifiedException(
                 ErrorCodeGlobal.ERROR_INVALID_INPUT,

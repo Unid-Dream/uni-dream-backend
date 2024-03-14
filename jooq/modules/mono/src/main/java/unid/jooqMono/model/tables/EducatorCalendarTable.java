@@ -129,14 +129,14 @@ public class EducatorCalendarTable extends TableImpl<EducatorCalendarRecord> {
     public final TableField<EducatorCalendarRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>public.educator_calendar.start_datetime</code>.
+     * The column <code>public.educator_calendar.start_time_utc</code>.
      */
-    public final TableField<EducatorCalendarRecord, OffsetDateTime> START_DATETIME = createField(DSL.name("start_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+    public final TableField<EducatorCalendarRecord, OffsetDateTime> START_TIME_UTC = createField(DSL.name("start_time_utc"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     /**
-     * The column <code>public.educator_calendar.end_datetime</code>.
+     * The column <code>public.educator_calendar.end_time_utc</code>.
      */
-    public final TableField<EducatorCalendarRecord, OffsetDateTime> END_DATETIME = createField(DSL.name("end_datetime"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+    public final TableField<EducatorCalendarRecord, OffsetDateTime> END_TIME_UTC = createField(DSL.name("end_time_utc"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     private EducatorCalendarTable(Name alias, Table<EducatorCalendarRecord> aliased) {
         this(alias, aliased, null);
