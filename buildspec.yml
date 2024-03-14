@@ -3,14 +3,14 @@ version: 0.2
 env:
   variables:
     MAVEN_OPTS: '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
-    PROJECT_ROOT: 'mono-server' # 定义项目根目录变量
-    MODULE_PATH: 'modules/app' # 定义模块路径变量
+    PROJECT_ROOT: 'uni-dream-backend' # 定义项目根目录变量
+    MODULE_PATH: 'mono-server/modules/app' # 定义模块路径变量
     JAR_FILE: 'monoserver-app-20230926.0.jar' # 定义JAR文件名变量
 
 phases:
   install:
     runtime-versions:
-      java: corretto11
+      java: corretto17
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."

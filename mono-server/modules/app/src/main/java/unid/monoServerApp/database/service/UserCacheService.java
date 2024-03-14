@@ -127,10 +127,10 @@ public class UserCacheService {
     }
 
 
-    @Cacheable(
-            value = CacheTags.EDUCATOR_PROFILE,
-            key = "#userId"
-    )
+//    @Cacheable(
+//            value = CacheTags.EDUCATOR_PROFILE,
+//            key = "#userId"
+//    )
     public Optional<DbEducatorProfile.Result> getEducatorProfileByUserId(UUID userId) {
         log.info("LaLaLaLaLa...");
         // 查询educator信息
