@@ -20,7 +20,7 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
-      - mvn verify --batch-mode -DskipTests # 在项目根目录执行Maven构建并跳过单元测试
+      - mvn install --batch-mode -DskipTests # 在项目根目录执行Maven构建并跳过单元测试
       - echo Building the Docker image...
       - docker build -t uni-dream-backend:latest -f $PROJECT_ROOT/mono-server/Dockerfile . # 使用mono-server中的Dockerfile构建镜像
       - docker tag uni-dream-backend:latest 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
