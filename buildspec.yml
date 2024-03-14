@@ -22,7 +22,7 @@ phases:
       - echo Build started on `date`
       - cd deps-main && mvn install && cd ..
       - cd jooq && mvn install && cd ..
-      - echo Building the Docker image...
+#      - echo Building the Docker image...
       - pwd # 打印当前工作目录
       - ls -l # 打印当前目录下的文件和目录
       - cd mono-server && docker build -t uni-dream-backend:latest -f Dockerfile . # 使用mono-server中的Dockerfile构建镜像
