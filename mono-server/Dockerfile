@@ -1,4 +1,8 @@
-FROM openjdk:11
-ARG JAR_FILE=*.jar
-COPY ${JAR_FILE} app.jar
-CMD ["java","-jar", "app.jar"]
+# 基于OpenJDK构建Spring Boot应用的Docker镜像
+FROM openjdk:11-jre-slim
+
+# 将目标jar包复制到容器中
+COPY ./modules/app/target/app.jar /app.jar
+
+# 指定容器启动时执行的命令
+ENTRYPOINT ["java","-jar","/app.jar"]
