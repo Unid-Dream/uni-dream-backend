@@ -20,7 +20,6 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
-      - cd deps && mvn install
       - cd deps-main && mvn install
       - mvn install --batch-mode -DskipTests # 在项目根目录执行Maven构建并跳过单元测试
       - echo Building the Docker image...
