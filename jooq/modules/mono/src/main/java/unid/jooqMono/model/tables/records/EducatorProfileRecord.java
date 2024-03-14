@@ -18,6 +18,7 @@ import org.jooq.Record1;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 
@@ -474,6 +475,22 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
         return (String[]) get(26);
     }
 
+    /**
+     * Setter for <code>public.educator_profile.gender</code>.
+     */
+    public EducatorProfileRecord setGender(@Nullable GenderEnum value) {
+        set(27, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.educator_profile.gender</code>.
+     */
+    @Nullable
+    public GenderEnum getGender() {
+        return (GenderEnum) get(27);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -498,8 +515,8 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
     /**
      * Create a detached, initialised EducatorProfileRecord
      */
-    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
-    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable String timezone, @Nullable UUID[] expertiseDescriptionId, @Nullable String[] expertiseDescription) {
+    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription", "gender" })
+    public EducatorProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable String timezone, @Nullable UUID[] expertiseDescriptionId, @Nullable String[] expertiseDescription, @Nullable GenderEnum gender) {
         super(EducatorProfileTable.EDUCATOR_PROFILE);
 
         setId(id);
@@ -529,6 +546,7 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
         setTimezone(timezone);
         setExpertiseDescriptionId(expertiseDescriptionId);
         setExpertiseDescription(expertiseDescription);
+        setGender(gender);
     }
 
     /**
@@ -565,6 +583,7 @@ public class EducatorProfileRecord extends UpdatableRecordImpl<EducatorProfileRe
             setTimezone(value.getTimezone());
             setExpertiseDescriptionId(value.getExpertiseDescriptionId());
             setExpertiseDescription(value.getExpertiseDescription());
+            setGender(value.getGender());
         }
     }
 }

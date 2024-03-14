@@ -1,9 +1,37 @@
 version: 0.2
 
+env:
+  variables:
+    MAVEN_OPTS: '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+    PROJECT_ROOT: 'mono-server' # 定义项目根目录变量
+    MODULE_PATH: 'modules/app' # 定义模块路径变量
+    JAR_FILE: 'monoserver-app-20230926.0.jar' # 定义JAR文件名变量
+
 phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS DEFAULT REGION | docker login --username Aws --password-stdin $AWS ACCOUNT ID.dkr.ecr.$AWS DEFAULT REGION.amazonaws.co
   build:
     commands:
-      - mvn install -pl deps-main -am
-      - mvn install -pl deps -am
-      - mvn install -pl jooq -am
-      - mvn install -pl mono-server -am
+      - echo Entered the build phase...
+      - echo Build started on `date`
+      - cd $PROJECT_ROOT && mvn verify --batch-mode -DskipTests # 在项目根目录执行Maven构建并跳过单元测试
+      - echo Building the Docker image...
+      - docker build -t uni-dream-backend:latest -f $PROJECT_ROOT/mono-server/Dockerfile . # 使用mono-server中的Dockerfile构建镜像
+      - docker tag uni-dream-backend:latest 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
+      - echo Pushing the Docker image...
+      - docker push 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
+  post_build:
+    commands:
+      - echo "Writing image definitions file...
+      - printf [{"name":"%s" "imageUri":"%s"}]' uni-dream-backend $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/uni-dream-backend:latest > $CODEBUILD_SRC_DIR/imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json # 指定构建产物的路径
+cache:
+  paths:
+    - '/root/.m2/**/*'

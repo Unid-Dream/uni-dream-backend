@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
 import unid.monoServerMeta.model.ApplicationApprovalEnum;
+import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 import java.io.Serializable;
@@ -29,6 +30,10 @@ public class EducatorProfileSimpleRequest {
     private List<UUID> languageId;
     private Integer hourlyRate;
     private String profilePicture;
+
+    private String countryCode;
+    private String phoneNumber;
+    private Gender gender;
 
     @Data
     @FieldNameConstants

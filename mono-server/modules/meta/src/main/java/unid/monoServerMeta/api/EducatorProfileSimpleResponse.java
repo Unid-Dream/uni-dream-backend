@@ -2,6 +2,7 @@ package unid.monoServerMeta.api;
 
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
+import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 import java.io.Serializable;
@@ -22,6 +23,11 @@ public class EducatorProfileSimpleResponse implements Serializable {
     private List<UUID> languageId;
     private String profilePicture;
     private Integer hourlyRate;
+
+    private String phoneCountryCode;
+    private String phone;
+    private Gender gender;
+    private String email;
 
 
 }

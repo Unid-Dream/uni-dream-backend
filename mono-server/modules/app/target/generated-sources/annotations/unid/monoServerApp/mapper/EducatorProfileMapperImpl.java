@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
@@ -23,11 +24,12 @@ import unid.monoServerMeta.api.EducatorProfileResponse;
 import unid.monoServerMeta.api.EducatorProfileSimpleRequest;
 import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
 import unid.monoServerMeta.api.ExpertiseResponse;
+import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-14T20:47:48+0800",
+    date = "2024-03-14T23:21:05+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -76,6 +78,9 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileSimpleResponse.setEducationLevel( resultListToEducatorLevelResponseList( data.getEducationLevel() ) );
         educatorProfileSimpleResponse.setFirstNameI18n( i18nMapper.toModel( data.getFirstNameI18n() ) );
         educatorProfileSimpleResponse.setLastNameI18n( i18nMapper.toModel( data.getLastNameI18n() ) );
+        educatorProfileSimpleResponse.setPhoneCountryCode( data.getPhoneCountryCode() );
+        educatorProfileSimpleResponse.setPhone( data.getPhone() );
+        educatorProfileSimpleResponse.setEmail( data.getEmail() );
         educatorProfileSimpleResponse.setCountryId( data.getCountryId() );
         educatorProfileSimpleResponse.setTimezone( data.getTimezone() );
         educatorProfileSimpleResponse.setDescription( data.getDescription() );
@@ -84,6 +89,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileSimpleResponse.setLanguageId( uUIDArrayToUUIDList( data.getLanguageId() ) );
         educatorProfileSimpleResponse.setProfilePicture( data.getProfilePicture() );
         educatorProfileSimpleResponse.setHourlyRate( data.getHourlyRate() );
+        educatorProfileSimpleResponse.setGender( genderEnumToGender( data.getGender() ) );
 
         return educatorProfileSimpleResponse;
     }
@@ -138,6 +144,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         data.setLanguageId( uUIDListToUUIDArray( source.getLanguageId() ) );
         data.setTimezone( source.getTimezone() );
         data.setExpertiseDescription( stringListToStringArray( source.getExpertiseDescription() ) );
+        data.setGender( genderToGenderEnum( source.getGender() ) );
     }
 
     @Override
@@ -222,6 +229,26 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         return list;
     }
 
+    protected Gender genderEnumToGender(GenderEnum genderEnum) {
+        if ( genderEnum == null ) {
+            return null;
+        }
+
+        Gender gender;
+
+        switch ( genderEnum ) {
+            case MALE: gender = Gender.MALE;
+            break;
+            case FEMALE: gender = Gender.FEMALE;
+            break;
+            case SECRET: gender = Gender.SECRET;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + genderEnum );
+        }
+
+        return gender;
+    }
+
     protected UUID[] uUIDListToUUIDArray(List<UUID> list) {
         if ( list == null ) {
             return null;
@@ -250,6 +277,26 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         }
 
         return stringTmp;
+    }
+
+    protected GenderEnum genderToGenderEnum(Gender gender) {
+        if ( gender == null ) {
+            return null;
+        }
+
+        GenderEnum genderEnum;
+
+        switch ( gender ) {
+            case MALE: genderEnum = GenderEnum.MALE;
+            break;
+            case FEMALE: genderEnum = GenderEnum.FEMALE;
+            break;
+            case SECRET: genderEnum = GenderEnum.SECRET;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + gender );
+        }
+
+        return genderEnum;
     }
 
     protected AcademicSubjectResourcePayload resultToAcademicSubjectResourcePayload(DbAcademicSubjectResource.Result result) {

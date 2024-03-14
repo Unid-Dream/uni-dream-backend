@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 
 
 /**
@@ -62,6 +63,7 @@ public class EducatorProfilePojo implements Serializable {
     private String                  timezone;
     private UUID[]                  expertiseDescriptionId;
     private String[]                expertiseDescription;
+    private GenderEnum              gender;
 
     public EducatorProfilePojo() {}
 
@@ -93,9 +95,10 @@ public class EducatorProfilePojo implements Serializable {
         this.timezone = value.timezone;
         this.expertiseDescriptionId = value.expertiseDescriptionId;
         this.expertiseDescription = value.expertiseDescription;
+        this.gender = value.gender;
     }
 
-    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
+    @ConstructorProperties({ "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription", "gender" })
     public EducatorProfilePojo(
         @Nonnull UUID                    id,
         @Nonnull UUID                    userId,
@@ -123,7 +126,8 @@ public class EducatorProfilePojo implements Serializable {
         @Nullable UUID[]                  educationId,
         @Nullable String                  timezone,
         @Nullable UUID[]                  expertiseDescriptionId,
-        @Nullable String[]                expertiseDescription
+        @Nullable String[]                expertiseDescription,
+        @Nullable GenderEnum              gender
     ) {
         this.id = id;
         this.userId = userId;
@@ -152,6 +156,7 @@ public class EducatorProfilePojo implements Serializable {
         this.timezone = timezone;
         this.expertiseDescriptionId = expertiseDescriptionId;
         this.expertiseDescription = expertiseDescription;
+        this.gender = gender;
     }
 
     /**
@@ -590,6 +595,22 @@ public class EducatorProfilePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.educator_profile.gender</code>.
+     */
+    @Nullable
+    public GenderEnum getGender() {
+        return this.gender;
+    }
+
+    /**
+     * Setter for <code>public.educator_profile.gender</code>.
+     */
+    public EducatorProfilePojo setGender(@Nullable GenderEnum gender) {
+        this.gender = gender;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("EducatorProfilePojo (");
@@ -621,6 +642,7 @@ public class EducatorProfilePojo implements Serializable {
         sb.append(", ").append(timezone);
         sb.append(", ").append(Arrays.toString(expertiseDescriptionId));
         sb.append(", ").append(Arrays.toString(expertiseDescription));
+        sb.append(", ").append(gender);
 
         sb.append(")");
         return sb.toString();

@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables._AuditLogEducatorProfileTable;
 import unid.jooqMono.model.tables.pojos._AuditLogEducatorProfilePojo;
 
@@ -582,6 +583,22 @@ public class _AuditLogEducatorProfileRecord extends TableRecordImpl<_AuditLogEdu
         return (String[]) get(31);
     }
 
+    /**
+     * Setter for <code>public._audit_log_educator_profile.gender</code>.
+     */
+    public _AuditLogEducatorProfileRecord setGender(@Nullable GenderEnum value) {
+        set(32, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_educator_profile.gender</code>.
+     */
+    @Nullable
+    public GenderEnum getGender() {
+        return (GenderEnum) get(32);
+    }
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -596,8 +613,8 @@ public class _AuditLogEducatorProfileRecord extends TableRecordImpl<_AuditLogEdu
     /**
      * Create a detached, initialised _AuditLogEducatorProfileRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
-    public _AuditLogEducatorProfileRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable String timezone, @Nullable UUID[] expertiseDescriptionId, @Nullable String[] expertiseDescription) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription", "gender" })
+    public _AuditLogEducatorProfileRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID userId, @Nonnull ApplicationApprovalEnum applicationApproval, @Nullable String microsoftId, @Nullable String microsoftEmail, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable Integer hourlyRate, @Nullable UUID universityId, @Nullable UUID universityEducationLevelId, @Nullable UUID universityIdentityId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] expertiseId, @Nullable String description, @Nullable UUID[] languageId, @Nullable UUID cityId, @Nullable UUID[] educationSchoolId, @Nullable UUID[] academicMajorId, @Nullable UUID[] educationId, @Nullable String timezone, @Nullable UUID[] expertiseDescriptionId, @Nullable String[] expertiseDescription, @Nullable GenderEnum gender) {
         super(_AuditLogEducatorProfileTable._AUDIT_LOG_EDUCATOR_PROFILE);
 
         setAuditSeq(auditSeq);
@@ -632,6 +649,7 @@ public class _AuditLogEducatorProfileRecord extends TableRecordImpl<_AuditLogEdu
         setTimezone(timezone);
         setExpertiseDescriptionId(expertiseDescriptionId);
         setExpertiseDescription(expertiseDescription);
+        setGender(gender);
     }
 
     /**
@@ -673,6 +691,7 @@ public class _AuditLogEducatorProfileRecord extends TableRecordImpl<_AuditLogEdu
             setTimezone(value.getTimezone());
             setExpertiseDescriptionId(value.getExpertiseDescriptionId());
             setExpertiseDescription(value.getExpertiseDescription());
+            setGender(value.getGender());
         }
     }
 }

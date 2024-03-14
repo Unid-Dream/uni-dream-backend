@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 
 
 /**
@@ -67,6 +68,7 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
     private String                  timezone;
     private UUID[]                  expertiseDescriptionId;
     private String[]                expertiseDescription;
+    private GenderEnum              gender;
 
     public _AuditLogEducatorProfilePojo() {}
 
@@ -103,9 +105,10 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.timezone = value.timezone;
         this.expertiseDescriptionId = value.expertiseDescriptionId;
         this.expertiseDescription = value.expertiseDescription;
+        this.gender = value.gender;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "applicationApproval", "microsoftId", "microsoftEmail", "countryId", "profilePicture", "phoneCountryCode", "phone", "hourlyRate", "universityId", "universityEducationLevelId", "universityIdentityId", "createdOn", "createdBy", "updatedOn", "updatedBy", "expertiseId", "description", "languageId", "cityId", "educationSchoolId", "academicMajorId", "educationId", "timezone", "expertiseDescriptionId", "expertiseDescription", "gender" })
     public _AuditLogEducatorProfilePojo(
         @Nonnull Long                    auditSeq,
         @Nonnull OffsetDateTime          auditCreatedon,
@@ -138,7 +141,8 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         @Nullable UUID[]                  educationId,
         @Nullable String                  timezone,
         @Nullable UUID[]                  expertiseDescriptionId,
-        @Nullable String[]                expertiseDescription
+        @Nullable String[]                expertiseDescription,
+        @Nullable GenderEnum              gender
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -172,6 +176,7 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         this.timezone = timezone;
         this.expertiseDescriptionId = expertiseDescriptionId;
         this.expertiseDescription = expertiseDescription;
+        this.gender = gender;
     }
 
     /**
@@ -719,6 +724,22 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_educator_profile.gender</code>.
+     */
+    @Nullable
+    public GenderEnum getGender() {
+        return this.gender;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_educator_profile.gender</code>.
+     */
+    public _AuditLogEducatorProfilePojo setGender(@Nullable GenderEnum gender) {
+        this.gender = gender;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogEducatorProfilePojo (");
@@ -755,6 +776,7 @@ public class _AuditLogEducatorProfilePojo implements Serializable {
         sb.append(", ").append(timezone);
         sb.append(", ").append(Arrays.toString(expertiseDescriptionId));
         sb.append(", ").append(Arrays.toString(expertiseDescription));
+        sb.append(", ").append(gender);
 
         sb.append(")");
         return sb.toString();

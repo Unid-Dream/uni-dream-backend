@@ -35,4 +35,5 @@ public class JwtTokenClaims implements Serializable {
     private String email;
     private String profilePicture;
     private String applicationApproval;
+    private String timezone;
 }

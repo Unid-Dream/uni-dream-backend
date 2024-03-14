@@ -15,7 +15,7 @@ import unid.monoServerMeta.model.BookingStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-14T20:52:28+0800",
+    date = "2024-03-14T23:21:05+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component

@@ -144,8 +144,6 @@ public class EducatorProfileController {
             matchingSessionProfileId = true,
             skipMatchingForAdministrative = true
     )
-
-
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update One"

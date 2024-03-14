@@ -71,6 +71,7 @@ public class JwtTokenService {
         }else if(userPojo.getUserRole().equals(UserRoleEnum.EDUCATOR)){
             userCacheService.getEducatorProfileByUserId(userId).ifPresent( educator -> {
                 claims.setProfilePicture(educator.getProfilePicture());
+                claims.setTimezone(educator.getTimezone());
                 claims.setApplicationApproval(educator.getApplicationApproval().getLiteral());
             });
         }

@@ -123,7 +123,8 @@ public class EducatorProfileService {
         dbEducatorSchool.getDsl().deleteFrom(table)
                 .where(table.EDUCATOR_PROFILE_ID.eq(profileId))
                 .execute();
-        dbEducatorSchool.getDao().insert(new EducatorSchoolPojo().setEducatorProfileId(profileId)
+        dbEducatorSchool.getDao().insert(new EducatorSchoolPojo()
+                .setEducatorProfileId(profileId)
                 .setDegreeId(educationLevel.getDegreeId())
                 .setUniversityId(educationLevel.getUniversityId()));
     }
@@ -263,6 +264,7 @@ public class EducatorProfileService {
     public EducatorProfileSimpleResponse getSimpleCache(UUID profileId) {
         DbEducatorProfile.Result result = dbEducatorProfile.getDsl().select(
                         EDUCATOR_PROFILE.asterisk(),
+                        USER.asterisk(),
                         multiset(
                                 select(
                                         EDUCATOR_SCHOOL.UNIVERSITY_ID.as(EducatorSchoolPojo.Columns.universityId),
@@ -281,8 +283,8 @@ public class EducatorProfileService {
                                         .from(I18N,USER)
                                         .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(EDUCATOR_PROFILE.USER_ID)))
                         ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
-                ).from(EDUCATOR_PROFILE)
-                .where(EDUCATOR_PROFILE.ID.eq(profileId))
+                ).from(EDUCATOR_PROFILE,USER)
+                .where(EDUCATOR_PROFILE.ID.eq(profileId).and(EDUCATOR_PROFILE.USER_ID.eq(USER.ID)))
                 .fetchOneInto(DbEducatorProfile.Result.class);
         return educatorProfileMapper.toSimpleResponse(result);
     }

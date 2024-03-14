@@ -16,6 +16,7 @@ import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
 
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.records.EducatorProfileRecord;
@@ -528,5 +529,22 @@ public class EducatorProfileDao extends DAOImpl<EducatorProfileRecord, EducatorP
     @Nonnull
     public List<EducatorProfilePojo> fetchByExpertiseDescription(String[]... values) {
         return fetch(EducatorProfileTable.EDUCATOR_PROFILE.EXPERTISE_DESCRIPTION, values);
+    }
+
+    /**
+     * Fetch records that have <code>gender BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchRangeOfGender(GenderEnum lowerInclusive, GenderEnum upperInclusive) {
+        return fetchRange(EducatorProfileTable.EDUCATOR_PROFILE.GENDER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>gender IN (values)</code>
+     */
+    @Nonnull
+    public List<EducatorProfilePojo> fetchByGender(GenderEnum... values) {
+        return fetch(EducatorProfileTable.EDUCATOR_PROFILE.GENDER, values);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.daos.EducatorProfileDao;
@@ -25,6 +26,7 @@ import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerMeta.api.EducatorResponse;
 import unid.monoServerMeta.api.EventEducatorProfileResponse;
 import unid.monoServerMeta.api.LearningHubResponse;
+import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.constraints.NotNull;
@@ -273,7 +275,9 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
 
         private DbI18N.Result firstNameI18n;
         private DbI18N.Result lastNameI18n;
+        private String email;
         private DbUser.Result user;
+
         private DbCountry.Result country;
         private DbSchool.Result university;
         private DbEducationLevel.Result universityEducationLevel;

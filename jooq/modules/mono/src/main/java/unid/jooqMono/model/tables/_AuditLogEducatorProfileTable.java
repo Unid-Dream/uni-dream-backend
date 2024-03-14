@@ -25,6 +25,7 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
+import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.records._AuditLogEducatorProfileRecord;
 
 
@@ -229,6 +230,11 @@ public class _AuditLogEducatorProfileTable extends TableImpl<_AuditLogEducatorPr
      * <code>public._audit_log_educator_profile.expertise_description</code>.
      */
     public final TableField<_AuditLogEducatorProfileRecord, String[]> EXPERTISE_DESCRIPTION = createField(DSL.name("expertise_description"), SQLDataType.CLOB.getArrayDataType(), this, "");
+
+    /**
+     * The column <code>public._audit_log_educator_profile.gender</code>.
+     */
+    public final TableField<_AuditLogEducatorProfileRecord, GenderEnum> GENDER = createField(DSL.name("gender"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.GenderEnum.class), this, "");
 
     private _AuditLogEducatorProfileTable(Name alias, Table<_AuditLogEducatorProfileRecord> aliased) {
         this(alias, aliased, null);
