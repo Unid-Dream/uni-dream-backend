@@ -11,10 +11,10 @@
     <version>20230926.0</version>
 
     <modules>
-        <module>jooq</module>
-        <module>deps</module>
-        <module>mono-server</module>
-        <module>deps-main</module>
+<!--        <module>jooq</module>-->
+<!--        <module>deps</module>-->
+<!--        <module>mono-server</module>-->
+<!--        <module>deps-main</module>-->
     </modules>
 
 
