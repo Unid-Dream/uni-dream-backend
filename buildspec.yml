@@ -23,7 +23,7 @@ phases:
       - cd deps-main && mvn install && cd ..
       - pwd # 打印当前工作目录
       - ls -l # 打印当前目录下的文件和目录
-      - cd deps && mvn install && cd ..
+      - cd jooq && mvn install && cd ..
 #      - echo Building the Docker image...
       - pwd # 打印当前工作目录
       - ls -l # 打印当前目录下的文件和目录
