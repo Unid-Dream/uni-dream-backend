@@ -31,7 +31,7 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
   post_build:
     commands:
-      - echo "Writing image definitions file...
+      - echo Writing image definitions file...
       - printf '[{"name":"%s","imageUri":"%s"}]' uni-dream-backend $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/uni-dream-backend:latest > $CODEBUILD_SRC_DIR/imagedefinitions.json
 artifacts:
   files:
