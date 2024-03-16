@@ -47,7 +47,7 @@
         <pwh.version.maven-compiler>3.10.1</pwh.version.maven-compiler>
     </properties>
 
-    <repositories>
+<!--     <repositories>
         <repository>
             <id>powerhouse_gitlab_maven</id>
             <url>https://gitlab.com/api/v4/groups/11823988/-/packages/maven</url>
@@ -63,7 +63,7 @@
             <id>powerhouse_gitlab_maven</id>
             <url>https://gitlab.com/api/v4/projects/45959920/packages/maven</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement> -->
 
     <dependencies>
         <dependency>
