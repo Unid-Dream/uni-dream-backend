@@ -26,13 +26,13 @@ phases:
       - cd ..
       - mvn clean package -Dmaven.test.skip=true
       - cd mono-server && docker build -t uni-dream-backend:latest -f Dockerfile . # 使用mono-server中的Dockerfile构建镜像
-      - docker tag uni-dream-backend:latest 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
+      - docker tag uni-dream-backend:latest $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
       - echo Pushing the Docker image...
-      - docker push 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/uni-dream-backend:latest
   post_build:
     commands:
       - echo "Writing image definitions file...
-      - printf [{"name":"%s" "imageUri":"%s"}]' uni-dream-backend $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/uni-dream-backend:latest > $CODEBUILD_SRC_DIR/imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' uni-dream-backend $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/uni-dream-backend:latest > $CODEBUILD_SRC_DIR/imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json # 指定构建产物的路径
