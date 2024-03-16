@@ -13,7 +13,7 @@ import unid.monoServerMeta.api.LanguageResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-15T01:03:58+0800",
+    date = "2024-03-16T23:25:51+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component

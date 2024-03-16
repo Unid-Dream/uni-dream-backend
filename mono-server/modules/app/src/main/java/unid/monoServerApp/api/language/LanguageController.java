@@ -128,11 +128,8 @@ public class LanguageController {
     @Operation(
             summary = "Get List"
     )
-    public @Valid UnifiedResponse<List<I18n>> list() {
-        var result = languageService.list();
-        return UnifiedResponse.of(
-                result
-        );
+    public @Valid UnifiedResponse<List<TagResponse>> list() {
+        return this.tags();
     }
 
     @GetMapping("/educator/language/tags")

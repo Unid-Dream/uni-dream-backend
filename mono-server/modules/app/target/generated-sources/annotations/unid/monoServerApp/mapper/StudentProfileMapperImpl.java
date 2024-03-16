@@ -19,7 +19,7 @@ import unid.monoServerMeta.model.Gender;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-15T01:03:57+0800",
+    date = "2024-03-16T23:25:52+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -95,6 +95,7 @@ public class StudentProfileMapperImpl implements StudentProfileMapper {
             studentProfilePojo.setPreferredOtherUniversityId( Arrays.copyOf( preferredOtherUniversityId, preferredOtherUniversityId.length ) );
         }
         studentProfilePojo.setSecondarySchoolGraduationYear( data.getSecondarySchoolGraduationYear() );
+        studentProfilePojo.setTimezone( data.getTimezone() );
 
         return studentProfilePojo;
     }
@@ -130,6 +131,7 @@ public class StudentProfileMapperImpl implements StudentProfileMapper {
             studentProfilePojo.setPreferredOtherUniversityId( Arrays.copyOf( preferredOtherUniversityId, preferredOtherUniversityId.length ) );
         }
         studentProfilePojo.setSecondarySchoolGraduationYear( data.getSecondarySchoolGraduationYear() );
+        studentProfilePojo.setTimezone( data.getTimezone() );
 
         return studentProfilePojo;
     }
@@ -158,6 +160,7 @@ public class StudentProfileMapperImpl implements StudentProfileMapper {
             studentProfilePojo.setPreferredOtherUniversityId( Arrays.copyOf( preferredOtherUniversityId, preferredOtherUniversityId.length ) );
         }
         studentProfilePojo.setSecondarySchoolGraduationYear( data.getSecondarySchoolGraduationYear() );
+        studentProfilePojo.setTimezone( data.getTimezone() );
 
         return studentProfilePojo;
     }
@@ -187,6 +190,7 @@ public class StudentProfileMapperImpl implements StudentProfileMapper {
             target.setPreferredOtherUniversityId( null );
         }
         target.setSecondarySchoolGraduationYear( source.getSecondarySchoolGraduationYear() );
+        target.setTimezone( source.getTimezone() );
     }
 
     @Override
@@ -223,6 +227,7 @@ public class StudentProfileMapperImpl implements StudentProfileMapper {
         studentProfileResponse.setPreferredUniversity_2( schoolMapper.toResponse( data.getPreferredUniversity_2() ) );
         studentProfileResponse.setPreferredUniversity_3( schoolMapper.toResponse( data.getPreferredUniversity_3() ) );
         studentProfileResponse.setStudentProfileSchoolReports( resultListToStudentProfileSchoolReportPayloadList( data.getStudentProfileSchoolReports() ) );
+        studentProfileResponse.setTimezone( data.getTimezone() );
 
         return studentProfileResponse;
     }

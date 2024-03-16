@@ -78,7 +78,6 @@ import unid.jooqMono.model.tables.TagTable;
 import unid.jooqMono.model.tables.TaggingTable;
 import unid.jooqMono.model.tables.UserNotificationTable;
 import unid.jooqMono.model.tables.UserTable;
-import unid.jooqMono.model.tables.ViewLearningHubTable;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables._AuditLogAcademicMajorSubjectMapTable;
 import unid.jooqMono.model.tables._AuditLogAcademicMajorTable;
@@ -767,11 +766,6 @@ public class Tables {
      * The table <code>public.user_notification</code>.
      */
     public static final UserNotificationTable USER_NOTIFICATION = UserNotificationTable.USER_NOTIFICATION;
-
-    /**
-     * The table <code>public.view_learning_hub</code>.
-     */
-    public static final ViewLearningHubTable VIEW_LEARNING_HUB = ViewLearningHubTable.VIEW_LEARNING_HUB;
 
     /**
      * The table <code>public.writing_topic</code>.

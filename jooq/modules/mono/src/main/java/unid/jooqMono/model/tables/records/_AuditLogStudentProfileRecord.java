@@ -470,6 +470,23 @@ public class _AuditLogStudentProfileRecord extends TableRecordImpl<_AuditLogStud
         return (String) get(24);
     }
 
+    /**
+     * Setter for <code>public._audit_log_student_profile.timezone</code>.
+     */
+    public _AuditLogStudentProfileRecord setTimezone(@Nullable String value) {
+        set(25, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_student_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return (String) get(25);
+    }
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -484,8 +501,8 @@ public class _AuditLogStudentProfileRecord extends TableRecordImpl<_AuditLogStud
     /**
      * Create a detached, initialised _AuditLogStudentProfileRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear" })
-    public _AuditLogStudentProfileRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID userId, @Nullable LocalDate dateOfBirth, @Nullable GenderEnum gender, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable UUID secondarySchoolId, @Nullable UUID secondarySchoolEducationLevelId, @Nullable UUID secondarySchoolCurriculumId, @Nullable UUID preferredUniversity_1Id, @Nullable UUID preferredUniversity_2Id, @Nullable UUID preferredUniversity_3Id, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] preferredOtherUniversityId, @Nullable String secondarySchoolGraduationYear) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear", "timezone" })
+    public _AuditLogStudentProfileRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID userId, @Nullable LocalDate dateOfBirth, @Nullable GenderEnum gender, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable UUID secondarySchoolId, @Nullable UUID secondarySchoolEducationLevelId, @Nullable UUID secondarySchoolCurriculumId, @Nullable UUID preferredUniversity_1Id, @Nullable UUID preferredUniversity_2Id, @Nullable UUID preferredUniversity_3Id, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] preferredOtherUniversityId, @Nullable String secondarySchoolGraduationYear, @Nullable String timezone) {
         super(_AuditLogStudentProfileTable._AUDIT_LOG_STUDENT_PROFILE);
 
         setAuditSeq(auditSeq);
@@ -513,6 +530,7 @@ public class _AuditLogStudentProfileRecord extends TableRecordImpl<_AuditLogStud
         setUpdatedBy(updatedBy);
         setPreferredOtherUniversityId(preferredOtherUniversityId);
         setSecondarySchoolGraduationYear(secondarySchoolGraduationYear);
+        setTimezone(timezone);
     }
 
     /**
@@ -547,6 +565,7 @@ public class _AuditLogStudentProfileRecord extends TableRecordImpl<_AuditLogStud
             setUpdatedBy(value.getUpdatedBy());
             setPreferredOtherUniversityId(value.getPreferredOtherUniversityId());
             setSecondarySchoolGraduationYear(value.getSecondarySchoolGraduationYear());
+            setTimezone(value.getTimezone());
         }
     }
 }

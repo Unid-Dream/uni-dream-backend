@@ -45,6 +45,7 @@ import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.PageUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.UniErrorCode;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
@@ -110,23 +111,32 @@ public class EducatorProfileService {
                 .orElseThrow(Exceptions::unknownError);
         updateUser(pojo.getUserId(), payload);
         educatorProfileMapper.merge(pojo, payload);
-        payload.getEducationLevel().forEach(obj->{
-            insertOrUpdateSchoolLevel(profileId,obj);
-        });
+        insertOrUpdateSchoolLevel(profileId,payload.getEducationLevel());
         dbEducatorProfile.getDao().update(pojo);
         return pojo;
     }
 
 
-    private void insertOrUpdateSchoolLevel(UUID profileId,EducatorProfileSimpleRequest.EducationLevel educationLevel){
+    private void insertOrUpdateSchoolLevel(UUID educatorProfileId,List<EducatorProfileSimpleRequest.EducationLevel> educationLevels){
         var table = dbEducatorSchool.getTable();
         dbEducatorSchool.getDsl().deleteFrom(table)
-                .where(table.EDUCATOR_PROFILE_ID.eq(profileId))
+                .where(table.EDUCATOR_PROFILE_ID.eq(educatorProfileId))
                 .execute();
-        dbEducatorSchool.getDao().insert(new EducatorSchoolPojo()
-                .setEducatorProfileId(profileId)
-                .setDegreeId(educationLevel.getDegreeId())
-                .setUniversityId(educationLevel.getUniversityId()));
+        educationLevels.forEach(educationLevel -> {
+            Optional.ofNullable(educationLevel.getDegreeId()).orElseThrow(
+                    ()->Exceptions.client(UniErrorCode.Client.EDUCATOR_UPDATE_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID)
+            );
+            Optional.ofNullable(educationLevel.getUniversityId()).orElseThrow(
+                    ()->Exceptions.client(UniErrorCode.Client.EDUCATOR_UPDATE_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID)
+            );
+            EducatorSchoolPojo created = new EducatorSchoolPojo()
+                    .setEducatorProfileId(educatorProfileId)
+                    .setDegreeId(educationLevel.getDegreeId())
+                    .setUniversityId(educationLevel.getUniversityId());
+            dbEducatorSchool.getDao().insert(created);
+            StaticLog.info("创建educator曾就读学校：{}",JSONUtil.toJsonStr(created));
+        });
+
     }
 
 
@@ -267,8 +277,7 @@ public class EducatorProfileService {
                         USER.asterisk(),
                         multiset(
                                 select(
-                                        EDUCATOR_SCHOOL.UNIVERSITY_ID.as(EducatorSchoolPojo.Columns.universityId),
-                                        EDUCATOR_SCHOOL.DEGREE_ID.as(EducatorSchoolPojo.Columns.degreeId)
+                                            EDUCATOR_SCHOOL.asterisk()
                                         )
                                         .from(EDUCATOR_SCHOOL)
                                         .where(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))

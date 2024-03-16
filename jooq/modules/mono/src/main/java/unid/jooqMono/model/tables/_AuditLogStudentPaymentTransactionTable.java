@@ -26,6 +26,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -214,9 +215,21 @@ public class _AuditLogStudentPaymentTransactionTable extends TableImpl<_AuditLog
 
     /**
      * The column
-     * <code>public._audit_log_student_payment_transaction.transaction_time_at</code>.
+     * <code>public._audit_log_student_payment_transaction.transaction_submit_time</code>.
      */
-    public final TableField<_AuditLogStudentPaymentTransactionRecord, LocalDateTime> TRANSACTION_TIME_AT = createField(DSL.name("transaction_time_at"), SQLDataType.LOCALDATETIME(6), this, "");
+    public final TableField<_AuditLogStudentPaymentTransactionRecord, LocalDateTime> TRANSACTION_SUBMIT_TIME = createField(DSL.name("transaction_submit_time"), SQLDataType.LOCALDATETIME(6), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_student_payment_transaction.process_status</code>.
+     */
+    public final TableField<_AuditLogStudentPaymentTransactionRecord, BookingStatusEnum> PROCESS_STATUS = createField(DSL.name("process_status"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.BookingStatusEnum.class), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_student_payment_transaction.reject_reason</code>.
+     */
+    public final TableField<_AuditLogStudentPaymentTransactionRecord, String> REJECT_REASON = createField(DSL.name("reject_reason"), SQLDataType.CLOB, this, "");
 
     private _AuditLogStudentPaymentTransactionTable(Name alias, Table<_AuditLogStudentPaymentTransactionRecord> aliased) {
         this(alias, aliased, null);

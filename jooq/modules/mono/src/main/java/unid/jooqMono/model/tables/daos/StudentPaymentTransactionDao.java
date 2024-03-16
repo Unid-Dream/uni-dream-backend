@@ -17,6 +17,7 @@ import javax.annotation.processing.Generated;
 import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
 
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -409,19 +410,53 @@ public class StudentPaymentTransactionDao extends DAOImpl<StudentPaymentTransact
     }
 
     /**
-     * Fetch records that have <code>transaction_time_at BETWEEN lowerInclusive
-     * AND upperInclusive</code>
+     * Fetch records that have <code>transaction_submit_time BETWEEN
+     * lowerInclusive AND upperInclusive</code>
      */
     @Nonnull
-    public List<StudentPaymentTransactionPojo> fetchRangeOfTransactionTimeAt(LocalDateTime lowerInclusive, LocalDateTime upperInclusive) {
-        return fetchRange(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_TIME_AT, lowerInclusive, upperInclusive);
+    public List<StudentPaymentTransactionPojo> fetchRangeOfTransactionSubmitTime(LocalDateTime lowerInclusive, LocalDateTime upperInclusive) {
+        return fetchRange(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SUBMIT_TIME, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>transaction_time_at IN (values)</code>
+     * Fetch records that have <code>transaction_submit_time IN (values)</code>
      */
     @Nonnull
-    public List<StudentPaymentTransactionPojo> fetchByTransactionTimeAt(LocalDateTime... values) {
-        return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_TIME_AT, values);
+    public List<StudentPaymentTransactionPojo> fetchByTransactionSubmitTime(LocalDateTime... values) {
+        return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SUBMIT_TIME, values);
+    }
+
+    /**
+     * Fetch records that have <code>process_status BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchRangeOfProcessStatus(BookingStatusEnum lowerInclusive, BookingStatusEnum upperInclusive) {
+        return fetchRange(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>process_status IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchByProcessStatus(BookingStatusEnum... values) {
+        return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS, values);
+    }
+
+    /**
+     * Fetch records that have <code>reject_reason BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchRangeOfRejectReason(String lowerInclusive, String upperInclusive) {
+        return fetchRange(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.REJECT_REASON, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>reject_reason IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchByRejectReason(String... values) {
+        return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.REJECT_REASON, values);
     }
 }

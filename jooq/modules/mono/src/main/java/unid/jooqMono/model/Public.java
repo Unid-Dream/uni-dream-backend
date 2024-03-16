@@ -87,7 +87,6 @@ import unid.jooqMono.model.tables.TagTable;
 import unid.jooqMono.model.tables.TaggingTable;
 import unid.jooqMono.model.tables.UserNotificationTable;
 import unid.jooqMono.model.tables.UserTable;
-import unid.jooqMono.model.tables.ViewLearningHubTable;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables._AuditLogAcademicMajorSubjectMapTable;
 import unid.jooqMono.model.tables._AuditLogAcademicMajorTable;
@@ -785,11 +784,6 @@ public class Public extends SchemaImpl {
     public final UserNotificationTable USER_NOTIFICATION = UserNotificationTable.USER_NOTIFICATION;
 
     /**
-     * The table <code>public.view_learning_hub</code>.
-     */
-    public final ViewLearningHubTable VIEW_LEARNING_HUB = ViewLearningHubTable.VIEW_LEARNING_HUB;
-
-    /**
      * The table <code>public.writing_topic</code>.
      */
     public final WritingTopicTable WRITING_TOPIC = WritingTopicTable.WRITING_TOPIC;
@@ -993,7 +987,6 @@ public class Public extends SchemaImpl {
             TaggingTable.TAGGING,
             UserTable.USER,
             UserNotificationTable.USER_NOTIFICATION,
-            ViewLearningHubTable.VIEW_LEARNING_HUB,
             WritingTopicTable.WRITING_TOPIC
         );
     }

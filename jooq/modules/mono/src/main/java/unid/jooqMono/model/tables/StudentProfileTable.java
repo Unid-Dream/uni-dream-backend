@@ -17,7 +17,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row20;
+import org.jooq.Row21;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -165,6 +165,11 @@ public class StudentProfileTable extends TableImpl<StudentProfileRecord> {
      * <code>public.student_profile.secondary_school_graduation_year</code>.
      */
     public final TableField<StudentProfileRecord, String> SECONDARY_SCHOOL_GRADUATION_YEAR = createField(DSL.name("secondary_school_graduation_year"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>public.student_profile.timezone</code>.
+     */
+    public final TableField<StudentProfileRecord, String> TIMEZONE = createField(DSL.name("timezone"), SQLDataType.VARCHAR(255), this, "");
 
     private StudentProfileTable(Name alias, Table<StudentProfileRecord> aliased) {
         this(alias, aliased, null);
@@ -319,12 +324,12 @@ public class StudentProfileTable extends TableImpl<StudentProfileRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row20 type methods
+    // Row21 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row21<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String, String> fieldsRow() {
+        return (Row21) super.fieldsRow();
     }
 }

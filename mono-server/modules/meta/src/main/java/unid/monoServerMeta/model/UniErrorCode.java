@@ -137,6 +137,10 @@ public enum UniErrorCode{
         EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE(10601,"Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE"),
         SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE(10602,"Business.当前时间段不是空闲状态,不可更改"),
 
+        EDUCATOR_NOT_EXIST(10603,"Business.当前Educator不存在"),
+        EDUCATOR_HOURLY_RATE_IS_NULL(10604,"Business.当前Educator, HourlyRate为空"),
+        EDUCATOR_CALENDAR_NOT_EXIST(10605,"Business.当前Educator Calendar不存在"),
+
         ;
 
 
@@ -233,6 +237,10 @@ public enum UniErrorCode{
 //        TOKEN_PROCESS_FAILED(108, "token处理失败：{}", "Client.TOKEN_PROCESS_FAILED"),
         // ---------------------------------- EDUCATOR_CALENDAR -----------------------------------------------
         EDUCATOR_CALENDAR_TIME_SLOT_INVALID(109, "Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID"),
+        EDUCATOR_CAN_NOT_REJECT(110,"Client.EDUCATOR_CAN_NOT_REJECT"),
+        EDUCATOR_CAN_NOT_ACCEPT(111,"Client.EDUCATOR_CAN_NOT_ACCEPT"),
+        STUDENT_PAYMENT_TRANSACTION_NOT_EXIST(112,"Client.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST"),
+        EDUCATOR_UPDATE_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID(113,"Client.EDUCATOR_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID"),
 
         ;
 

@@ -66,4 +66,6 @@ public class StudentProfileRequest {
 //    @Nullable
 //    @Valid
 //    private List<StudentProfilePredicatedGradeRequest> predicatedGrades;
+
+    private String timezone;
 }

@@ -129,13 +129,6 @@ public class StudentProfileService {
         dbStudentProfile.getDao().update(existingRecord);
         //更新firstName & lastName
         updateUser(userId, payload);
-//        insertOrUpdateSchoolReports(
-//                existingRecord.getId(),
-//                Optional.ofNullable(payload.getStudentProfileSchoolReports())
-//                        .orElse(new ArrayList<>())
-//        );
-        //existingRecord.getProfilePicture()
-
         return existingRecord;
     }
 

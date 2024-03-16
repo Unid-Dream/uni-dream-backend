@@ -417,4 +417,21 @@ public class StudentProfileDao extends DAOImpl<StudentProfileRecord, StudentProf
     public List<StudentProfilePojo> fetchBySecondarySchoolGraduationYear(String... values) {
         return fetch(StudentProfileTable.STUDENT_PROFILE.SECONDARY_SCHOOL_GRADUATION_YEAR, values);
     }
+
+    /**
+     * Fetch records that have <code>timezone BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentProfilePojo> fetchRangeOfTimezone(String lowerInclusive, String upperInclusive) {
+        return fetchRange(StudentProfileTable.STUDENT_PROFILE.TIMEZONE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>timezone IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentProfilePojo> fetchByTimezone(String... values) {
+        return fetch(StudentProfileTable.STUDENT_PROFILE.TIMEZONE, values);
+    }
 }

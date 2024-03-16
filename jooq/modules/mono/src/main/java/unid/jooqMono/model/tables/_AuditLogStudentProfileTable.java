@@ -196,6 +196,11 @@ public class _AuditLogStudentProfileTable extends TableImpl<_AuditLogStudentProf
      */
     public final TableField<_AuditLogStudentProfileRecord, String> SECONDARY_SCHOOL_GRADUATION_YEAR = createField(DSL.name("secondary_school_graduation_year"), SQLDataType.VARCHAR(100), this, "");
 
+    /**
+     * The column <code>public._audit_log_student_profile.timezone</code>.
+     */
+    public final TableField<_AuditLogStudentProfileRecord, String> TIMEZONE = createField(DSL.name("timezone"), SQLDataType.VARCHAR(255), this, "");
+
     private _AuditLogStudentProfileTable(Name alias, Table<_AuditLogStudentProfileRecord> aliased) {
         this(alias, aliased, null);
     }

@@ -17,8 +17,8 @@ import javax.validation.constraints.Size;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record20;
-import org.jooq.Row20;
+import org.jooq.Record21;
+import org.jooq.Row21;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.enums.GenderEnum;
@@ -38,7 +38,7 @@ import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileRecord> implements Record20<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String> {
+public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileRecord> implements Record21<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -372,6 +372,23 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
         return (String) get(19);
     }
 
+    /**
+     * Setter for <code>public.student_profile.timezone</code>.
+     */
+    public StudentProfileRecord setTimezone(@Nullable String value) {
+        set(20, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.student_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return (String) get(20);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -383,19 +400,19 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
     }
 
     // -------------------------------------------------------------------------
-    // Record20 type implementation
+    // Record21 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row21<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String, String> fieldsRow() {
+        return (Row21) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row20<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String> valuesRow() {
-        return (Row20) super.valuesRow();
+    public Row21<UUID, UUID, LocalDate, GenderEnum, UUID, String, String, String, UUID, UUID, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, UUID[], String, String> valuesRow() {
+        return (Row21) super.valuesRow();
     }
 
     @Override
@@ -520,6 +537,12 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
 
     @Override
     @Nonnull
+    public Field<String> field21() {
+        return StudentProfileTable.STUDENT_PROFILE.TIMEZONE;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -636,6 +659,12 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
     @Nullable
     public String component20() {
         return getSecondarySchoolGraduationYear();
+    }
+
+    @Override
+    @Nullable
+    public String component21() {
+        return getTimezone();
     }
 
     @Override
@@ -756,6 +785,12 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
     @Nullable
     public String value20() {
         return getSecondarySchoolGraduationYear();
+    }
+
+    @Override
+    @Nullable
+    public String value21() {
+        return getTimezone();
     }
 
     @Override
@@ -900,7 +935,14 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
 
     @Override
     @Nonnull
-    public StudentProfileRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nullable LocalDate value3, @Nullable GenderEnum value4, @Nullable UUID value5, @Nullable String value6, @Nullable String value7, @Nullable String value8, @Nullable UUID value9, @Nullable UUID value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable UUID value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18, @Nullable UUID[] value19, @Nullable String value20) {
+    public StudentProfileRecord value21(@Nullable String value) {
+        setTimezone(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public StudentProfileRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nullable LocalDate value3, @Nullable GenderEnum value4, @Nullable UUID value5, @Nullable String value6, @Nullable String value7, @Nullable String value8, @Nullable UUID value9, @Nullable UUID value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable UUID value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18, @Nullable UUID[] value19, @Nullable String value20, @Nullable String value21) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -921,6 +963,7 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
         value18(value18);
         value19(value19);
         value20(value20);
+        value21(value21);
         return this;
     }
 
@@ -938,8 +981,8 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
     /**
      * Create a detached, initialised StudentProfileRecord
      */
-    @ConstructorProperties({ "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear" })
-    public StudentProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nullable LocalDate dateOfBirth, @Nullable GenderEnum gender, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable UUID secondarySchoolId, @Nullable UUID secondarySchoolEducationLevelId, @Nullable UUID secondarySchoolCurriculumId, @Nullable UUID preferredUniversity_1Id, @Nullable UUID preferredUniversity_2Id, @Nullable UUID preferredUniversity_3Id, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] preferredOtherUniversityId, @Nullable String secondarySchoolGraduationYear) {
+    @ConstructorProperties({ "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear", "timezone" })
+    public StudentProfileRecord(@Nonnull UUID id, @Nonnull UUID userId, @Nullable LocalDate dateOfBirth, @Nullable GenderEnum gender, @Nullable UUID countryId, @Nullable String profilePicture, @Nullable String phoneCountryCode, @Nullable String phone, @Nullable UUID secondarySchoolId, @Nullable UUID secondarySchoolEducationLevelId, @Nullable UUID secondarySchoolCurriculumId, @Nullable UUID preferredUniversity_1Id, @Nullable UUID preferredUniversity_2Id, @Nullable UUID preferredUniversity_3Id, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable UUID[] preferredOtherUniversityId, @Nullable String secondarySchoolGraduationYear, @Nullable String timezone) {
         super(StudentProfileTable.STUDENT_PROFILE);
 
         setId(id);
@@ -962,6 +1005,7 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
         setUpdatedBy(updatedBy);
         setPreferredOtherUniversityId(preferredOtherUniversityId);
         setSecondarySchoolGraduationYear(secondarySchoolGraduationYear);
+        setTimezone(timezone);
     }
 
     /**
@@ -991,6 +1035,7 @@ public class StudentProfileRecord extends UpdatableRecordImpl<StudentProfileReco
             setUpdatedBy(value.getUpdatedBy());
             setPreferredOtherUniversityId(value.getPreferredOtherUniversityId());
             setSecondarySchoolGraduationYear(value.getSecondarySchoolGraduationYear());
+            setTimezone(value.getTimezone());
         }
     }
 }

@@ -26,12 +26,11 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/user/profile/educator/{profileId}/calendar/{calendarId}/comment")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Educator Session Comment")
 @Slf4j
-@Hidden
 public class EducatorSessionCommentController {
     private final EducatorSessionCommentService educatorSessionCommentService;
     private final EducatorCalendarMapper educatorCalendarMapper;
@@ -41,51 +40,42 @@ public class EducatorSessionCommentController {
     private final DbEducatorSessionNoteMap dbEducatorSessionNoteMap;
     private final EducatorSessionNoteMapper educatorSessionNoteMapper;
 
-    @GetMapping
+    @GetMapping("educator/user/profile/educator/calendar/comment")
     @ACL(
             authed = true,
-            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT, UserRoleEnum.EDUCATOR},
-            matchingSessionProfileId = true,
-            educatorProfileApproved = true,
-            skipMatchingForAdministrative = true
+            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT, UserRoleEnum.EDUCATOR}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "List Comments"
     )
     @SneakyThrows
-    public @Valid UnifiedResponse< List<EducatorSessionCommentResponse>> listComments(
-            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @PathVariable("calendarId") UUID calendarId
+    public @Valid UnifiedResponse<List<EducatorSessionNoteCommentResponse>> listComments(
+            @RequestParam UUID calendarId
     ) {
-        var result = educatorSessionCommentService.getComments(calendarId);
-        log.info("Result: {}", objectMapper.writeValueAsString(result));
-        var resp = educatorSessionNoteMapper.toCommentResponse(result);
-        log.info("Response: {}", objectMapper.writeValueAsString(resp));
-        return UnifiedResponse.of(resp);
+        var list = educatorSessionCommentService.getComments(calendarId);
+        return UnifiedResponse.of(list);
     }
-//
-//    @PutMapping("{commentId}")
-//    @Transactional
-//    @ACL(
-//            authed = true,
-//            allowedRoles = {UserRoleEnum.EDUCATOR},
-//            matchingSessionProfileId = true,
-//            educatorProfileApproved = true
-//    )
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @Operation(
-//            summary = "Make Comments"
-//    )
-//    public @Valid UnifiedResponse<Void> markAvailable(
-//            @PathVariable("calendarId") UUID calendarId,
-//            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-//            @PathVariable("commentId") UUID commentId,
-//            @RequestBody @Valid
-//            EducatorSessionCommentRequest payload
-//    ) {
-//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-//        educatorSessionCommentService.markAvailable(profileId, payload);
-//        return UnifiedResponse.of(null);
-//    }
+
+    @PutMapping("educator/user/profile/educator/{profileId}/calendar/comment/{calendarId}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.EDUCATOR},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Make Comments"
+    )
+    public @Valid UnifiedResponse<List<EducatorSessionNoteCommentResponse>> markAvailable(
+            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
+            @PathVariable("calendarId") UUID calendarId,
+            @RequestBody @Valid
+            EducatorSessionCommentRequest request
+    ) {
+        educatorSessionCommentService.makeComments(calendarId,profileId, request);
+        return UnifiedResponse.of(educatorSessionCommentService.getComments(calendarId));
+    }
 }

@@ -8,7 +8,9 @@ import pwh.coreStarter.type.NamedEnum;
 @Getter
 public enum PaymentMethod implements NamedEnum {
     COD_ALIPAY_HK("COD_ALIPAY_HK"),
-    COD_ALIPAY_CN("COD_ALIPAY_CN");
+    COD_ALIPAY_CN("COD_ALIPAY_CN"),
+    AISA_PAY_ALIPAY("AISA_PAY_ALIPAY"),
+    ;
     private final String value;
 
     @Override

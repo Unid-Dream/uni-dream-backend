@@ -14,7 +14,7 @@ import unid.monoServerMeta.model.TransactionItem;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-15T01:03:58+0800",
+    date = "2024-03-16T23:25:51+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -70,6 +70,8 @@ public class EnumMapperImpl implements EnumMapper {
             case COD_ALIPAY_HK: paymentMethod = PaymentMethod.COD_ALIPAY_HK;
             break;
             case COD_ALIPAY_CN: paymentMethod = PaymentMethod.COD_ALIPAY_CN;
+            break;
+            case AISA_PAY_ALIPAY: paymentMethod = PaymentMethod.AISA_PAY_ALIPAY;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + data );
         }

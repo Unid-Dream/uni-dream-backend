@@ -15,12 +15,10 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
-import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record21;
-import org.jooq.Row21;
 import org.jooq.impl.UpdatableRecordImpl;
 
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -41,7 +39,7 @@ import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<StudentPaymentTransactionRecord> implements Record21<UUID, UUID, BigDecimal, CurrencyEnum, StudentTransactionItemEnum, UUID, UUID, PaymentMethodEnum, PaymentStatusEnum, String, String, String, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, String, LocalDateTime> {
+public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<StudentPaymentTransactionRecord> {
 
     private static final long serialVersionUID = 1L;
 
@@ -394,20 +392,54 @@ public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<Student
 
     /**
      * Setter for
-     * <code>public.student_payment_transaction.transaction_time_at</code>.
+     * <code>public.student_payment_transaction.transaction_submit_time</code>.
      */
-    public StudentPaymentTransactionRecord setTransactionTimeAt(@Nullable LocalDateTime value) {
+    public StudentPaymentTransactionRecord setTransactionSubmitTime(@Nullable LocalDateTime value) {
         set(20, value);
         return this;
     }
 
     /**
      * Getter for
-     * <code>public.student_payment_transaction.transaction_time_at</code>.
+     * <code>public.student_payment_transaction.transaction_submit_time</code>.
      */
     @Nullable
-    public LocalDateTime getTransactionTimeAt() {
+    public LocalDateTime getTransactionSubmitTime() {
         return (LocalDateTime) get(20);
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_payment_transaction.process_status</code>.
+     */
+    public StudentPaymentTransactionRecord setProcessStatus(@Nullable BookingStatusEnum value) {
+        set(21, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public.student_payment_transaction.process_status</code>.
+     */
+    @Nullable
+    public BookingStatusEnum getProcessStatus() {
+        return (BookingStatusEnum) get(21);
+    }
+
+    /**
+     * Setter for <code>public.student_payment_transaction.reject_reason</code>.
+     */
+    public StudentPaymentTransactionRecord setRejectReason(@Nullable String value) {
+        set(22, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.student_payment_transaction.reject_reason</code>.
+     */
+    @Nullable
+    public String getRejectReason() {
+        return (String) get(22);
     }
 
     // -------------------------------------------------------------------------
@@ -418,574 +450,6 @@ public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<Student
     @Nonnull
     public Record1<UUID> key() {
         return (Record1) super.key();
-    }
-
-    // -------------------------------------------------------------------------
-    // Record21 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row21<UUID, UUID, BigDecimal, CurrencyEnum, StudentTransactionItemEnum, UUID, UUID, PaymentMethodEnum, PaymentStatusEnum, String, String, String, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, String, LocalDateTime> fieldsRow() {
-        return (Row21) super.fieldsRow();
-    }
-
-    @Override
-    @Nonnull
-    public Row21<UUID, UUID, BigDecimal, CurrencyEnum, StudentTransactionItemEnum, UUID, UUID, PaymentMethodEnum, PaymentStatusEnum, String, String, String, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, String, LocalDateTime> valuesRow() {
-        return (Row21) super.valuesRow();
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field1() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field2() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<BigDecimal> field3() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT;
-    }
-
-    @Override
-    @Nonnull
-    public Field<CurrencyEnum> field4() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_CURRENCY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<StudentTransactionItemEnum> field5() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field6() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field7() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_PERSONNEL_REF_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<PaymentMethodEnum> field8() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.PAYMENT_METHOD;
-    }
-
-    @Override
-    @Nonnull
-    public Field<PaymentStatusEnum> field9() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field10() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_ORDER_REF;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field11() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_OUT_TRADE_NO;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field12() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_REF_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field13() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_TRANSACTION_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field14() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_WALLET;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field15() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_EXPIRY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field16() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.COD_PAYMENT_URL;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field17() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.CREATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field18() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.CREATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field19() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.UPDATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field20() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.UPDATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<LocalDateTime> field21() {
-        return StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_TIME_AT;
-    }
-
-    @Override
-    @Nonnull
-    public UUID component1() {
-        return getId();
-    }
-
-    @Override
-    @Nonnull
-    public UUID component2() {
-        return getStudentProfileId();
-    }
-
-    @Override
-    @Nonnull
-    public BigDecimal component3() {
-        return getTransactionAmount();
-    }
-
-    @Override
-    @Nonnull
-    public CurrencyEnum component4() {
-        return getTransactionCurrency();
-    }
-
-    @Override
-    @Nonnull
-    public StudentTransactionItemEnum component5() {
-        return getTransactionItem();
-    }
-
-    @Override
-    @Nullable
-    public UUID component6() {
-        return getTransactionItemRefId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component7() {
-        return getTransactionPersonnelRefId();
-    }
-
-    @Override
-    @Nullable
-    public PaymentMethodEnum component8() {
-        return getPaymentMethod();
-    }
-
-    @Override
-    @Nonnull
-    public PaymentStatusEnum component9() {
-        return getPaymentStatus();
-    }
-
-    @Override
-    @Nullable
-    public String component10() {
-        return getCodOrderRef();
-    }
-
-    @Override
-    @Nullable
-    public String component11() {
-        return getCodOutTradeNo();
-    }
-
-    @Override
-    @Nullable
-    public String component12() {
-        return getCodRefId();
-    }
-
-    @Override
-    @Nullable
-    public String component13() {
-        return getCodTransactionId();
-    }
-
-    @Override
-    @Nullable
-    public String component14() {
-        return getCodWallet();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component15() {
-        return getCodExpiry();
-    }
-
-    @Override
-    @Nullable
-    public String component16() {
-        return getCodPaymentUrl();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component17() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component18() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component19() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component20() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nullable
-    public LocalDateTime component21() {
-        return getTransactionTimeAt();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value1() {
-        return getId();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value2() {
-        return getStudentProfileId();
-    }
-
-    @Override
-    @Nonnull
-    public BigDecimal value3() {
-        return getTransactionAmount();
-    }
-
-    @Override
-    @Nonnull
-    public CurrencyEnum value4() {
-        return getTransactionCurrency();
-    }
-
-    @Override
-    @Nonnull
-    public StudentTransactionItemEnum value5() {
-        return getTransactionItem();
-    }
-
-    @Override
-    @Nullable
-    public UUID value6() {
-        return getTransactionItemRefId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value7() {
-        return getTransactionPersonnelRefId();
-    }
-
-    @Override
-    @Nullable
-    public PaymentMethodEnum value8() {
-        return getPaymentMethod();
-    }
-
-    @Override
-    @Nonnull
-    public PaymentStatusEnum value9() {
-        return getPaymentStatus();
-    }
-
-    @Override
-    @Nullable
-    public String value10() {
-        return getCodOrderRef();
-    }
-
-    @Override
-    @Nullable
-    public String value11() {
-        return getCodOutTradeNo();
-    }
-
-    @Override
-    @Nullable
-    public String value12() {
-        return getCodRefId();
-    }
-
-    @Override
-    @Nullable
-    public String value13() {
-        return getCodTransactionId();
-    }
-
-    @Override
-    @Nullable
-    public String value14() {
-        return getCodWallet();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value15() {
-        return getCodExpiry();
-    }
-
-    @Override
-    @Nullable
-    public String value16() {
-        return getCodPaymentUrl();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value17() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value18() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value19() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value20() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nullable
-    public LocalDateTime value21() {
-        return getTransactionTimeAt();
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value1(@Nonnull UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value2(@Nonnull UUID value) {
-        setStudentProfileId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value3(@Nonnull BigDecimal value) {
-        setTransactionAmount(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value4(@Nonnull CurrencyEnum value) {
-        setTransactionCurrency(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value5(@Nonnull StudentTransactionItemEnum value) {
-        setTransactionItem(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value6(@Nullable UUID value) {
-        setTransactionItemRefId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value7(@Nullable UUID value) {
-        setTransactionPersonnelRefId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value8(@Nullable PaymentMethodEnum value) {
-        setPaymentMethod(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value9(@Nonnull PaymentStatusEnum value) {
-        setPaymentStatus(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value10(@Nullable String value) {
-        setCodOrderRef(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value11(@Nullable String value) {
-        setCodOutTradeNo(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value12(@Nullable String value) {
-        setCodRefId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value13(@Nullable String value) {
-        setCodTransactionId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value14(@Nullable String value) {
-        setCodWallet(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value15(@Nullable OffsetDateTime value) {
-        setCodExpiry(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value16(@Nullable String value) {
-        setCodPaymentUrl(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value17(@Nullable OffsetDateTime value) {
-        setCreatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value18(@Nullable String value) {
-        setCreatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value19(@Nullable OffsetDateTime value) {
-        setUpdatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value20(@Nullable String value) {
-        setUpdatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord value21(@Nullable LocalDateTime value) {
-        setTransactionTimeAt(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public StudentPaymentTransactionRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull BigDecimal value3, @Nonnull CurrencyEnum value4, @Nonnull StudentTransactionItemEnum value5, @Nullable UUID value6, @Nullable UUID value7, @Nullable PaymentMethodEnum value8, @Nonnull PaymentStatusEnum value9, @Nullable String value10, @Nullable String value11, @Nullable String value12, @Nullable String value13, @Nullable String value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18, @Nullable OffsetDateTime value19, @Nullable String value20, @Nullable LocalDateTime value21) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        value5(value5);
-        value6(value6);
-        value7(value7);
-        value8(value8);
-        value9(value9);
-        value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
-        value15(value15);
-        value16(value16);
-        value17(value17);
-        value18(value18);
-        value19(value19);
-        value20(value20);
-        value21(value21);
-        return this;
     }
 
     // -------------------------------------------------------------------------
@@ -1002,8 +466,8 @@ public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<Student
     /**
      * Create a detached, initialised StudentPaymentTransactionRecord
      */
-    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionTimeAt" })
-    public StudentPaymentTransactionRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionTimeAt) {
+    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
+    public StudentPaymentTransactionRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionSubmitTime, @Nullable BookingStatusEnum processStatus, @Nullable String rejectReason) {
         super(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION);
 
         setId(id);
@@ -1026,7 +490,9 @@ public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<Student
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
-        setTransactionTimeAt(transactionTimeAt);
+        setTransactionSubmitTime(transactionSubmitTime);
+        setProcessStatus(processStatus);
+        setRejectReason(rejectReason);
     }
 
     /**
@@ -1056,7 +522,9 @@ public class StudentPaymentTransactionRecord extends UpdatableRecordImpl<Student
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
-            setTransactionTimeAt(value.getTransactionTimeAt());
+            setTransactionSubmitTime(value.getTransactionSubmitTime());
+            setProcessStatus(value.getProcessStatus());
+            setRejectReason(value.getRejectReason());
         }
     }
 }

@@ -1,48 +1,30 @@
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pwh.springWebStarter.response.UnifiedResponse;
 import unid.monoServerApp.SpringApp;
-import unid.monoServerApp.api.user.profile.educator.calendar.EducatorCalendarController;
 import unid.monoServerApp.api.user.profile.educator.calendar.EducatorCalendarService;
 import unid.monoServerMeta.api.EducatorAvailableScheduleResponse;
-import unid.monoServerMeta.api.EducatorCalendarRequest;
-import unid.monoServerMeta.api.EducatorCalendarTimeSlotPayload;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 测试老师设置 空闲的日历
  */
 @SpringBootTest(classes = SpringApp.class)
 @AutoConfigureMockMvc
-public class EducatorMarkAvailableCalendarTest extends BaseTest{
+public class EducatorCalendarTest extends BaseTest{
 
     @Autowired
     private MockMvc mockMvc;
@@ -67,17 +49,17 @@ public class EducatorMarkAvailableCalendarTest extends BaseTest{
     public void testMarkAvailableTimeslot() {
         UUID educatorProfileId = UUID.fromString("b927721e-d2bf-4bf2-ac59-ab1d9aa5cbb2");
 
-        EducatorCalendarRequest request = new EducatorCalendarRequest();
-        EducatorCalendarTimeSlotPayload slot = new EducatorCalendarTimeSlotPayload();
-
-        slot.setStartDateTimeUtc("2023-03-15T10:00:00Z");
-        slot.setEndDateTimeUtc("2023-03-15T11:00:00Z");
-
-        List<EducatorCalendarTimeSlotPayload> slots = CollUtil.newArrayList(slot);
-        request.setSlots(slots);
-
-
-        educatorCalendarService.markAvailable(educatorProfileId,slot);
+//        EducatorCalendarTimeSlotPayload request = new EducatorCalendarRequest();
+//        EducatorCalendarTimeSlotPayload slot = new EducatorCalendarTimeSlotPayload();
+//
+//        slot.setStartDateTimeUtc("2023-03-15T10:00:00Z");
+//        slot.setEndDateTimeUtc("2023-03-15T11:00:00Z");
+//
+//        List<EducatorCalendarTimeSlotPayload> slots = CollUtil.newArrayList(slot);
+//        request.setSlots(slots);
+//
+//
+//        educatorCalendarService.markAvailable(educatorProfileId,slot);
     }
 
     @Test
@@ -108,5 +90,14 @@ public class EducatorMarkAvailableCalendarTest extends BaseTest{
         StaticLog.info("老师移除空闲时间槽后的时间");
     }
 
+
+    @Test
+    public void testGetEducatorCalendarTimeSlot(){
+        UUID educatorProfileId = UUID.fromString("b927721e-d2bf-4bf2-ac59-ab1d9aa5cbb2");
+        OffsetDateTime startTimeUtc = OffsetDateTime.parse("2022-03-10T10:00:00Z");
+        OffsetDateTime endTimeUtc = OffsetDateTime.parse("2024-03-20T10:00:00Z");
+
+//        educatorCalendarService.getPendingTimeSlots(educatorProfileId,startTimeUtc,endTimeUtc);
+    }
 
 }

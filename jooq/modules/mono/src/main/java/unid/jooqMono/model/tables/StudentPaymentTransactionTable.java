@@ -18,7 +18,6 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row21;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -30,6 +29,7 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Keys;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -179,9 +179,20 @@ public class StudentPaymentTransactionTable extends TableImpl<StudentPaymentTran
 
     /**
      * The column
-     * <code>public.student_payment_transaction.transaction_time_at</code>.
+     * <code>public.student_payment_transaction.transaction_submit_time</code>.
      */
-    public final TableField<StudentPaymentTransactionRecord, LocalDateTime> TRANSACTION_TIME_AT = createField(DSL.name("transaction_time_at"), SQLDataType.LOCALDATETIME(6), this, "");
+    public final TableField<StudentPaymentTransactionRecord, LocalDateTime> TRANSACTION_SUBMIT_TIME = createField(DSL.name("transaction_submit_time"), SQLDataType.LOCALDATETIME(6), this, "");
+
+    /**
+     * The column
+     * <code>public.student_payment_transaction.process_status</code>.
+     */
+    public final TableField<StudentPaymentTransactionRecord, BookingStatusEnum> PROCESS_STATUS = createField(DSL.name("process_status"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.BookingStatusEnum.class), this, "");
+
+    /**
+     * The column <code>public.student_payment_transaction.reject_reason</code>.
+     */
+    public final TableField<StudentPaymentTransactionRecord, String> REJECT_REASON = createField(DSL.name("reject_reason"), SQLDataType.CLOB, this, "");
 
     private StudentPaymentTransactionTable(Name alias, Table<StudentPaymentTransactionRecord> aliased) {
         this(alias, aliased, null);
@@ -273,15 +284,5 @@ public class StudentPaymentTransactionTable extends TableImpl<StudentPaymentTran
     @Nonnull
     public StudentPaymentTransactionTable rename(Name name) {
         return new StudentPaymentTransactionTable(name, null);
-    }
-
-    // -------------------------------------------------------------------------
-    // Row21 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row21<UUID, UUID, BigDecimal, CurrencyEnum, StudentTransactionItemEnum, UUID, UUID, PaymentMethodEnum, PaymentStatusEnum, String, String, String, String, String, OffsetDateTime, String, OffsetDateTime, String, OffsetDateTime, String, LocalDateTime> fieldsRow() {
-        return (Row21) super.fieldsRow();
     }
 }

@@ -61,6 +61,7 @@ public class _AuditLogStudentProfilePojo implements Serializable {
     private String         updatedBy;
     private UUID[]         preferredOtherUniversityId;
     private String         secondarySchoolGraduationYear;
+    private String         timezone;
 
     public _AuditLogStudentProfilePojo() {}
 
@@ -90,9 +91,10 @@ public class _AuditLogStudentProfilePojo implements Serializable {
         this.updatedBy = value.updatedBy;
         this.preferredOtherUniversityId = value.preferredOtherUniversityId;
         this.secondarySchoolGraduationYear = value.secondarySchoolGraduationYear;
+        this.timezone = value.timezone;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "userId", "dateOfBirth", "gender", "countryId", "profilePicture", "phoneCountryCode", "phone", "secondarySchoolId", "secondarySchoolEducationLevelId", "secondarySchoolCurriculumId", "preferredUniversity_1Id", "preferredUniversity_2Id", "preferredUniversity_3Id", "createdOn", "createdBy", "updatedOn", "updatedBy", "preferredOtherUniversityId", "secondarySchoolGraduationYear", "timezone" })
     public _AuditLogStudentProfilePojo(
         @Nonnull Long           auditSeq,
         @Nonnull OffsetDateTime auditCreatedon,
@@ -118,7 +120,8 @@ public class _AuditLogStudentProfilePojo implements Serializable {
         @Nullable OffsetDateTime updatedOn,
         @Nullable String         updatedBy,
         @Nullable UUID[]         preferredOtherUniversityId,
-        @Nullable String         secondarySchoolGraduationYear
+        @Nullable String         secondarySchoolGraduationYear,
+        @Nullable String         timezone
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -145,6 +148,7 @@ public class _AuditLogStudentProfilePojo implements Serializable {
         this.updatedBy = updatedBy;
         this.preferredOtherUniversityId = preferredOtherUniversityId;
         this.secondarySchoolGraduationYear = secondarySchoolGraduationYear;
+        this.timezone = timezone;
     }
 
     /**
@@ -579,6 +583,23 @@ public class _AuditLogStudentProfilePojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_student_profile.timezone</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTimezone() {
+        return this.timezone;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_student_profile.timezone</code>.
+     */
+    public _AuditLogStudentProfilePojo setTimezone(@Nullable String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogStudentProfilePojo (");
@@ -608,6 +629,7 @@ public class _AuditLogStudentProfilePojo implements Serializable {
         sb.append(", ").append(updatedBy);
         sb.append(", ").append(Arrays.toString(preferredOtherUniversityId));
         sb.append(", ").append(secondarySchoolGraduationYear);
+        sb.append(", ").append(timezone);
 
         sb.append(")");
         return sb.toString();

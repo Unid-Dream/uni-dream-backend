@@ -25,6 +25,13 @@ import java.util.List;
 @Validated
 public class EducatorCalendarRequest implements Serializable {
 
-    private List<EducatorCalendarTimeSlotPayload> slots;
+    private List<TimeSlotPayload> slots;
 
+
+    @Data
+    @FieldNameConstants
+    public static class TimeSlotPayload {
+        private String startDateTimeUtc;
+        private String endDateTimeUtc;
+    }
 }

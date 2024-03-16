@@ -97,7 +97,6 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/WritingTopicRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/_AuditLogStudentSessionSurveyQuestionRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/StudentSessionSurveyQuestionPojo.java
-/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/ViewLearningHubRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/SchoolRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/EventPojo.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/_AuditLogStudentSessionSurveyAnswerTable.java
@@ -257,7 +256,6 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/SchoolIdentityRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/_AuditLogStudentSessionSurveyQuestionPojo.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/PassionSubjectVideoRecord.java
-/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/ViewLearningHubPojo.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/_AuditLogUserPojo.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/enums/QuestionnaireAnswerTypeEnum.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/StudentProfileQuestionnaireMapTable.java
@@ -382,7 +380,6 @@
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/StudentQuestionnaireAnswerTable.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/records/_AuditLogCountryRecord.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/daos/PassionSubjectAnswerDao.java
-/Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/ViewLearningHubTable.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/EducationLevelTable.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/enums/CurrencyEnum.java
 /Users/apple/Documents/project/uni_d/pwh/uni-dream-backend/jooq/modules/mono/src/main/java/unid/jooqMono/model/tables/pojos/_AuditLogSchoolIdentityPojo.java

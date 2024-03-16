@@ -3,10 +3,7 @@ package unid.monoServerApp.mapper;
 import org.mapstruct.*;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
-import unid.monoServerMeta.api.EducatorCalendarRequest;
-import unid.monoServerMeta.api.EducatorCalendarResponse;
-import unid.monoServerMeta.api.EducatorCalendarTimeSlotPayload;
-import unid.monoServerMeta.api.EducatorCalendarTimeSlotResponse;
+import unid.monoServerMeta.api.*;
 
 import java.util.List;
 
@@ -14,14 +11,17 @@ import java.util.List;
         componentModel = "spring",
         uses = {
                 CommonMapper.class,
-                StudentProfileMapper.class
+                StudentProfileMapper.class,
+                CountryMapper.class,
+                SchoolMapper.class,
+                EducationLevelMapper.class
         }
 )
 public interface EducatorCalendarMapper {
 
     EducatorCalendarPojo toPojo(EducatorCalendarResponse data);
 
-    void merge(@MappingTarget EducatorCalendarPojo data, EducatorCalendarTimeSlotPayload source);
+    void merge(@MappingTarget EducatorCalendarPojo data, EducatorCalendarRequest.TimeSlotPayload source);
 
     void merge(@MappingTarget DbEducatorCalendar.Result data, EducatorCalendarRequest source);
 
@@ -49,6 +49,21 @@ public interface EducatorCalendarMapper {
     @InheritConfiguration
     EducatorCalendarTimeSlotResponse toResponse(DbEducatorCalendar.Result data);
 
+    @Mappings({
+            @Mapping(source = DbEducatorCalendar.Result.Columns.startTimeUtc, target = EducatorCalendarTimeSlotResponse.Fields.startDateTimeUtc),
+            @Mapping(source = DbEducatorCalendar.Result.Columns.endTimeUtc, target = EducatorCalendarTimeSlotResponse.Fields.endDateTimeUtc),
+    })
+    @InheritConfiguration
+    EducatorCalendarTimeSlotResponse toAvailableTimeSlotResponse(EducatorCalendarPojo data);
+
+    @Mappings({
+            @Mapping(source = DbEducatorCalendar.Result.Columns.startTimeUtc, target = EducatorCalendarTimeSlotResponse.Fields.startDateTimeUtc),
+            @Mapping(source = DbEducatorCalendar.Result.Columns.endTimeUtc, target = EducatorCalendarTimeSlotResponse.Fields.endDateTimeUtc),
+    })
+    @InheritConfiguration
+    EducatorCalendarSimpleResponse.TimeSlotPayload toSimpleResponse(DbEducatorCalendar.Result data);
+
+    List<EducatorCalendarSimpleResponse.TimeSlotPayload> toSimpleResponse(List<DbEducatorCalendar.Result> data);
 
     List<EducatorCalendarTimeSlotResponse> toResponse(List<DbEducatorCalendar.Result> data);
 }

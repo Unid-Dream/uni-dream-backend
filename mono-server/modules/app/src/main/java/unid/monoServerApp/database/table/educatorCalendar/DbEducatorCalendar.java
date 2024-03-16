@@ -18,19 +18,24 @@ import unid.jooqMono.model.tables.EducatorCalendarTable;
 import unid.jooqMono.model.tables.daos.EducatorCalendarDao;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.Constant;
+import unid.monoServerApp.ErrorCode;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerMeta.api.EducatorCalendarRejectRequest;
 import unid.monoServerMeta.model.UniErrorCode;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.*;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static unid.jooqMono.model.Tables.EDUCATOR_CALENDAR;
+import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 
 @Component
 @Slf4j
@@ -149,12 +154,37 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .fetchOptionalInto(DbEducatorCalendar.Result.class)
                 .orElseThrow(()->{
                     // 如果查询结果为空,则说明当前时间槽不是空闲状态,抛出异常
-                    throw Exceptions.business(
-                            UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE.code(),
-                            UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE.message()
-                    );
+                    throw Exceptions.business(UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE);
                 });
     }
+
+    public void validateRejectStudentSession(
+            @NotNull UUID educatorProfileId,
+            @NotNull EducatorCalendarRejectRequest request
+    ){
+        getDsl().selectCount()
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .leftJoin(STUDENT_PAYMENT_TRANSACTION).on(EDUCATOR_CALENDAR.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
+                .where(EDUCATOR_CALENDAR.ID.eq(request.getEducatorCalendarId()).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(educatorProfileId)))
+                .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.AVAILABLE))
+                .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.in(
+                        request.getSessions().stream().map(
+                                EducatorCalendarRejectRequest.RejectSession::getStudentProfileId
+                        ).collect(Collectors.toList())
+                )).fetchOptionalInto(Integer.class)
+                .ifPresent(value->{
+                    if(value != request.getSessions().size()){
+                        //如果不相等,则当前提交拒绝异常
+                        throw Exceptions.client(
+                                UniErrorCode.Client.EDUCATOR_CAN_NOT_REJECT
+                        );
+
+                    }
+                });
+    }
+
+
+
 
     public void validateMarking(
             @NotNull UUID profileId,
@@ -165,15 +195,11 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         //时间段是否都为整点, 如果不为整点,则认为异常
         if( startDateTimeUtc.getMinute()!=0 || startDateTimeUtc.getSecond()!=0){
             StaticLog.error(" {}, 当前时间段开始时间非整点",startDateTimeUtc);
-            throw Exceptions.business(
-                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
-                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
+            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
         }
         if( endDateTimeUtc.getMinute()!=0 || endDateTimeUtc.getSecond()!=0){
             StaticLog.error("{} , 当前时间段结束时间非整点",endDateTimeUtc);
-            throw Exceptions.business(
-                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
-                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
+            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
         }
         //如果时间间隔小于1个小时,则认为异常
 //        var span = endDateTimeUtc.toLocalTime().getHour() - startDateTimeUtc.toLocalTime().getHour();
@@ -201,10 +227,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .ifPresentOrElse(
                         value -> {
                             // 如果Optional对象存在值，执行此处代码
-                            throw Exceptions.business(
-                                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
-                                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message()
-                            );
+                            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
                         },
                         () -> {}
                 );
@@ -220,6 +243,6 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
     // expanding foreign keys
     public static final class Result extends EducatorCalendarPojo implements Serializable {
         private DbStudentPaymentTransaction.Result paymentTransaction;
-        private DbStudentProfile.Result studentProfile;
+        private List<DbStudentProfile.Result> studentProfiles;
     }
 }

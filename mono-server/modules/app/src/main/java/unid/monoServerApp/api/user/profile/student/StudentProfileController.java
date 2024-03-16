@@ -37,11 +37,11 @@ public class StudentProfileController {
     private final StudentProfileMapper studentProfileMapper;
     private final TagAppendService tagAppendService;
 
-    @GetMapping("student/user/{userId}/profile/student")
+    @GetMapping(value = {"student/user/{userId}/profile/student","educator/user/{userId}/profile/student"})
     @ACL(
             authed = true,
             matchingSessionUserId = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = {UserRoleEnum.STUDENT,UserRoleEnum.EDUCATOR}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(

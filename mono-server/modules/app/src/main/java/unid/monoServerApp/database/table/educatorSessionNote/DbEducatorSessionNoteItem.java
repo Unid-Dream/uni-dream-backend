@@ -58,5 +58,6 @@ public class DbEducatorSessionNoteItem extends Db<EducatorSessionNoteItemTable, 
     // expanding foreign keys
     public static final class Result extends EducatorSessionNoteItemPojo {
         private DbI18N.Result titleI18n;
+        private String comment;
     }
 }

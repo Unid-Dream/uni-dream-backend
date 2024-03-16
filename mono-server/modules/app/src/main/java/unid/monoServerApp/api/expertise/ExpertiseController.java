@@ -127,11 +127,8 @@ public class ExpertiseController {
     @Operation(
             summary = "Get List"
     )
-    public @Valid UnifiedResponse<List<I18n>> list() {
-        var result = expertiseService.list();
-        return UnifiedResponse.of(
-                result
-        );
+    public @Valid UnifiedResponse<List<TagResponse>> list() {
+        return this.tags();
     }
 
     @GetMapping("/educator/expertise/tags")

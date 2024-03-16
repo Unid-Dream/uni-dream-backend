@@ -42,6 +42,14 @@ public class AuthRegisterController {
     private final Properties properties;
     private final JwtTokenService jwtTokenService;
 
+    @GetMapping("health/check")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Check Health"
+    )
+    public UnifiedResponse<String> check(){
+        return UnifiedResponse.of("success");
+    }
     private void checkRegistration(AuthRegisterRequest payload) {
         var existDbRecord = authRegisterService.getExistRecordFromDb(payload);
         if (existDbRecord.isPresent()) {

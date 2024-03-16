@@ -29,8 +29,8 @@ public class TransactionService {
                         USER.LAST_NAME_I18N_ID,
                         USER.FIST_NAME_I18N_ID,
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(TransactionResponse.Fields.serviceType),
-                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_TIME_AT.as(TransactionResponse.Fields.requestSubmissionTime),
-                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_TIME_AT.as(TransactionResponse.Fields.requestTime),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SUBMIT_TIME.as(TransactionResponse.Fields.requestSubmissionTime),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SUBMIT_TIME.as(TransactionResponse.Fields.requestTime),
                         STUDENT_PAYMENT_TRANSACTION.PAYMENT_METHOD.as(TransactionResponse.Fields.paymentMethod),
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT.as(TransactionResponse.Fields.amount),
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_CURRENCY.as(TransactionResponse.Fields.unit))

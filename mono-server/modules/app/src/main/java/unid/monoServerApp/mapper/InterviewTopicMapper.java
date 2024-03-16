@@ -62,7 +62,7 @@ public interface InterviewTopicMapper {
                 .setTransactionCurrency(CurrencyEnum.USD)
                 .setTransactionItem(StudentTransactionItemEnum.INTERVIEW)
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
-                .setTransactionTimeAt(TimeZoneUtils.getHongKongLocalDateTime(LocalDateTime.now()))
+                .setTransactionSubmitTime(TimeZoneUtils.getHongKongLocalDateTime(LocalDateTime.now()))
                 .setPaymentMethod(PaymentMethodEnum.COD_ALIPAY_CN);
     }
 

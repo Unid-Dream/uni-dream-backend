@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import org.jooq.impl.TableRecordImpl;
 
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -500,20 +501,56 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
 
     /**
      * Setter for
-     * <code>public._audit_log_student_payment_transaction.transaction_time_at</code>.
+     * <code>public._audit_log_student_payment_transaction.transaction_submit_time</code>.
      */
-    public _AuditLogStudentPaymentTransactionRecord setTransactionTimeAt(@Nullable LocalDateTime value) {
+    public _AuditLogStudentPaymentTransactionRecord setTransactionSubmitTime(@Nullable LocalDateTime value) {
         set(25, value);
         return this;
     }
 
     /**
      * Getter for
-     * <code>public._audit_log_student_payment_transaction.transaction_time_at</code>.
+     * <code>public._audit_log_student_payment_transaction.transaction_submit_time</code>.
      */
     @Nullable
-    public LocalDateTime getTransactionTimeAt() {
+    public LocalDateTime getTransactionSubmitTime() {
         return (LocalDateTime) get(25);
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_student_payment_transaction.process_status</code>.
+     */
+    public _AuditLogStudentPaymentTransactionRecord setProcessStatus(@Nullable BookingStatusEnum value) {
+        set(26, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_payment_transaction.process_status</code>.
+     */
+    @Nullable
+    public BookingStatusEnum getProcessStatus() {
+        return (BookingStatusEnum) get(26);
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_student_payment_transaction.reject_reason</code>.
+     */
+    public _AuditLogStudentPaymentTransactionRecord setRejectReason(@Nullable String value) {
+        set(27, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_payment_transaction.reject_reason</code>.
+     */
+    @Nullable
+    public String getRejectReason() {
+        return (String) get(27);
     }
 
     // -------------------------------------------------------------------------
@@ -530,8 +567,8 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
     /**
      * Create a detached, initialised _AuditLogStudentPaymentTransactionRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionTimeAt" })
-    public _AuditLogStudentPaymentTransactionRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionTimeAt) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
+    public _AuditLogStudentPaymentTransactionRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionSubmitTime, @Nullable BookingStatusEnum processStatus, @Nullable String rejectReason) {
         super(_AuditLogStudentPaymentTransactionTable._AUDIT_LOG_STUDENT_PAYMENT_TRANSACTION);
 
         setAuditSeq(auditSeq);
@@ -559,7 +596,9 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
-        setTransactionTimeAt(transactionTimeAt);
+        setTransactionSubmitTime(transactionSubmitTime);
+        setProcessStatus(processStatus);
+        setRejectReason(rejectReason);
     }
 
     /**
@@ -594,7 +633,9 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
-            setTransactionTimeAt(value.getTransactionTimeAt());
+            setTransactionSubmitTime(value.getTransactionSubmitTime());
+            setProcessStatus(value.getProcessStatus());
+            setRejectReason(value.getRejectReason());
         }
     }
 }

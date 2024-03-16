@@ -77,4 +77,6 @@ public class StudentProfileResponse extends BaseResponse {
     @Nullable
     @Valid
     private List<StudentProfileSchoolReportPayload> studentProfileSchoolReports;
+
+    private String timezone;
 }

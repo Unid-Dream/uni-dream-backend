@@ -59,7 +59,7 @@ public interface WritingTopicMapper {
                 .setTransactionCurrency(CurrencyEnum.USD)
                 .setTransactionItem(StudentTransactionItemEnum.WRITING)
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
-                .setTransactionTimeAt(LocalDateTime.now())
+                .setTransactionSubmitTime(LocalDateTime.now())
                 .setPaymentMethod(PaymentMethodEnum.COD_ALIPAY_CN);
     }
 

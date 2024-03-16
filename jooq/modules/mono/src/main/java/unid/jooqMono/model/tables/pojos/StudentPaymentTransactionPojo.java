@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.PaymentMethodEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
@@ -58,7 +59,9 @@ public class StudentPaymentTransactionPojo implements Serializable {
     private String                     createdBy;
     private OffsetDateTime             updatedOn;
     private String                     updatedBy;
-    private LocalDateTime              transactionTimeAt;
+    private LocalDateTime              transactionSubmitTime;
+    private BookingStatusEnum          processStatus;
+    private String                     rejectReason;
 
     public StudentPaymentTransactionPojo() {}
 
@@ -83,10 +86,12 @@ public class StudentPaymentTransactionPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
-        this.transactionTimeAt = value.transactionTimeAt;
+        this.transactionSubmitTime = value.transactionSubmitTime;
+        this.processStatus = value.processStatus;
+        this.rejectReason = value.rejectReason;
     }
 
-    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionTimeAt" })
+    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
     public StudentPaymentTransactionPojo(
         @Nonnull UUID                       id,
         @Nonnull UUID                       studentProfileId,
@@ -108,7 +113,9 @@ public class StudentPaymentTransactionPojo implements Serializable {
         @Nullable String                     createdBy,
         @Nullable OffsetDateTime             updatedOn,
         @Nullable String                     updatedBy,
-        @Nullable LocalDateTime              transactionTimeAt
+        @Nullable LocalDateTime              transactionSubmitTime,
+        @Nullable BookingStatusEnum          processStatus,
+        @Nullable String                     rejectReason
     ) {
         this.id = id;
         this.studentProfileId = studentProfileId;
@@ -130,7 +137,9 @@ public class StudentPaymentTransactionPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
-        this.transactionTimeAt = transactionTimeAt;
+        this.transactionSubmitTime = transactionSubmitTime;
+        this.processStatus = processStatus;
+        this.rejectReason = rejectReason;
     }
 
     /**
@@ -482,19 +491,53 @@ public class StudentPaymentTransactionPojo implements Serializable {
 
     /**
      * Getter for
-     * <code>public.student_payment_transaction.transaction_time_at</code>.
+     * <code>public.student_payment_transaction.transaction_submit_time</code>.
      */
     @Nullable
-    public LocalDateTime getTransactionTimeAt() {
-        return this.transactionTimeAt;
+    public LocalDateTime getTransactionSubmitTime() {
+        return this.transactionSubmitTime;
     }
 
     /**
      * Setter for
-     * <code>public.student_payment_transaction.transaction_time_at</code>.
+     * <code>public.student_payment_transaction.transaction_submit_time</code>.
      */
-    public StudentPaymentTransactionPojo setTransactionTimeAt(@Nullable LocalDateTime transactionTimeAt) {
-        this.transactionTimeAt = transactionTimeAt;
+    public StudentPaymentTransactionPojo setTransactionSubmitTime(@Nullable LocalDateTime transactionSubmitTime) {
+        this.transactionSubmitTime = transactionSubmitTime;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public.student_payment_transaction.process_status</code>.
+     */
+    @Nullable
+    public BookingStatusEnum getProcessStatus() {
+        return this.processStatus;
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_payment_transaction.process_status</code>.
+     */
+    public StudentPaymentTransactionPojo setProcessStatus(@Nullable BookingStatusEnum processStatus) {
+        this.processStatus = processStatus;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.student_payment_transaction.reject_reason</code>.
+     */
+    @Nullable
+    public String getRejectReason() {
+        return this.rejectReason;
+    }
+
+    /**
+     * Setter for <code>public.student_payment_transaction.reject_reason</code>.
+     */
+    public StudentPaymentTransactionPojo setRejectReason(@Nullable String rejectReason) {
+        this.rejectReason = rejectReason;
         return this;
     }
 
@@ -522,7 +565,9 @@ public class StudentPaymentTransactionPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
-        sb.append(", ").append(transactionTimeAt);
+        sb.append(", ").append(transactionSubmitTime);
+        sb.append(", ").append(processStatus);
+        sb.append(", ").append(rejectReason);
 
         sb.append(")");
         return sb.toString();

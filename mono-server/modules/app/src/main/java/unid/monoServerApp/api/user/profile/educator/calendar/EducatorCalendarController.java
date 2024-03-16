@@ -1,48 +1,25 @@
 package unid.monoServerApp.api.user.profile.educator.calendar;//package unid.monoServerApp.api.country;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.SortOrder;
+import org.apache.commons.compress.utils.Lists;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pwh.coreRsqlJooq.jooq.PaginatedQuery;
-import pwh.coreRsqlJooq.jooq.PaginatedQuerySorting;
-import pwh.coreRsqlJooq.model.PaginationRequest;
-import pwh.coreRsqlJooq.model.PaginationResponse;
-import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
-import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
-import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
-import unid.monoServerApp.http.RequestHolder;
-import unid.monoServerApp.mapper.EducatorCalendarMapper;
-import unid.monoServerApp.service.EmailService;
-import unid.monoServerMeta.Pattern;
-import unid.monoServerMeta.api.EducatorAvailableScheduleResponse;
-import unid.monoServerMeta.api.EducatorCalendarRequest;
-import unid.monoServerMeta.api.EducatorCalendarRequestPayload;
-import unid.monoServerMeta.api.EducatorCalendarResponse;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api")
@@ -52,15 +29,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EducatorCalendarController {
     private final EducatorCalendarService educatorCalendarService;
-    private final EducatorCalendarMapper educatorCalendarMapper;
-    private final DbEducatorCalendar dbEducatorCalendar;
-    private final ObjectMapper objectMapper;
-    private final EmailService emailService;
 
 
     @GetMapping(value = {
-            "educator/user/profile/educator/{profileId}/calendar/available",
-            "student/user/profile/educator/{profileId}/calendar/available"
+            "educator/user/profile/educator/{educatorProfileId}/calendar/available",
+            "student/user/profile/educator/{educatorProfileId}/calendar/available"
     })
     @ACL(
             authed = true,
@@ -70,17 +43,52 @@ public class EducatorCalendarController {
     @Operation(
             summary = "Get Educator All Available Calendar"
     )
-    public @Valid UnifiedResponse<EducatorAvailableScheduleResponse> getAllAvailableFromNow(
-            @PathVariable("profileId") UUID profileId,
-            @RequestParam(required = false) String startDateTimeUtc,
-            @RequestParam(required = false) String endDateTimeUtc
+    public @Valid UnifiedResponse<EducatorCalendarSimpleResponse> getAllAvailableFromNow(
+            @PathVariable("educatorProfileId") UUID profileId,
+            @ParameterObject @Validated EducatorCalendarRequest.TimeSlotPayload request
     ) {
-        var result = educatorCalendarService.getAllAvailableFromNow(
-                profileId,
-                OffsetDateTime.parse(startDateTimeUtc),
-                OffsetDateTime.parse(endDateTimeUtc)
+        var result = educatorCalendarService.getAvailableTimeSlots(
+                profileId,request
         );
         return UnifiedResponse.of(result);
+    }
+
+
+    @GetMapping("educator/user/profile/educator/{educatorProfileId}/calendar")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.EDUCATOR},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Booking Calendar"
+    )
+    public @Valid UnifiedResponse<EducatorCalendarSimpleResponse> getAcceptTimeSlot(
+            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @ParameterObject @Valid EducatorCalendarRequest.TimeSlotPayload payload) {
+        return UnifiedResponse.of(educatorCalendarService.getAcceptTimeSlot(educatorProfileId,payload));
+    }
+
+
+    @PostMapping("student/user/profile/educator/calendar/{studentProfileId}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.STUDENT},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create Educator Calendar Payment Transaction"
+    )
+    public @Valid UnifiedResponse<StudentPaymentTransactionResponse> bookEducatorCalendar(
+            @PathVariable("studentProfileId") @ACL.ProfileId UUID studentProfileId,
+            @RequestBody StudentBookingEducatorCalendarRequest request) {
+        return UnifiedResponse.of(educatorCalendarService.bookEducatorCalendar(studentProfileId, request));
     }
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
@@ -95,11 +103,15 @@ public class EducatorCalendarController {
     @Operation(
             summary = "Mark Educator Available Calendar"
     )
-    public @Valid UnifiedResponse<Void> markAvailable(
+    public @Valid UnifiedResponse<EducatorAvailableScheduleResponse> markAvailable(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid EducatorCalendarRequest payload) {
-        payload.getSlots().forEach(slot-> educatorCalendarService.markAvailable(profileId, slot));
-        return UnifiedResponse.of(null);
+        List<EducatorCalendarTimeSlotResponse> slots = Lists.newArrayList();
+        payload.getSlots().forEach(slot -> slots.add(educatorCalendarService.markAvailable(profileId, slot)));
+        //查询所有的时间槽
+        EducatorAvailableScheduleResponse response = new EducatorAvailableScheduleResponse();
+        response.setSlots(slots);
+        return UnifiedResponse.of(response);
     }
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/{educatorCalendarId}/unavailable")
@@ -121,7 +133,7 @@ public class EducatorCalendarController {
         return UnifiedResponse.of(null);
     }
 
-    @PutMapping("educator/user/profile/educator/{profileId}/calendar/reserve/accept")
+    @PutMapping("educator/user/profile/educator/{educatorProfileId}/calendar/reserve/accept")
     @Transactional
     @ACL(
             authed = true,
@@ -134,12 +146,9 @@ public class EducatorCalendarController {
             summary = "Educator Accept Calendar Reservation"
     )
     public @Valid UnifiedResponse<Void> accept(
-            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @RequestBody @Valid
-            EducatorCalendarRequest payload) {
-//        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-//        var result = educatorCalendarService.acceptOrDenyBooking(profileId, payload, true);
-//        emailService.requestStudentBookingAccepted(result);
+            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @RequestBody @Valid EducatorCalendarRejectRequest request) {
+        educatorCalendarService.acceptOrDenyBooking(educatorProfileId,request,true);
         return UnifiedResponse.of(null);
     }
 
@@ -158,9 +167,9 @@ public class EducatorCalendarController {
     public @Valid UnifiedResponse<Void> deny(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
-            EducatorCalendarRequest payload) {
+            EducatorCalendarRejectRequest request) {
 //        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
-//        educatorCalendarService.acceptOrDenyBooking(profileId, payload, false);
+        educatorCalendarService.acceptOrDenyBooking(profileId, request, false);
         return UnifiedResponse.of(null);
     }
 }
