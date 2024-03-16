@@ -21,8 +21,8 @@ phases:
       - echo Entered the build phase...
       - echo Build started on `date`
       - cd deps-main && mvn install
-      - cd ../deps && mvn install
       - cd ../jooq && mvn install
+      - cd ../deps && mvn install
       - cd ..
       - mvn clean package -Dmaven.test.skip=true
       - cd mono-server && docker build -t uni-dream-backend:latest -f Dockerfile . # 使用mono-server中的Dockerfile构建镜像
