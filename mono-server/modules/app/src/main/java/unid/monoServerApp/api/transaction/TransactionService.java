@@ -2,19 +2,15 @@ package unid.monoServerApp.api.transaction;
 
 
 import cn.hutool.log.StaticLog;
-import com.asiapay.secure.PaydollarSecureUtil;
+//import com.asiapay.secure.PaydollarSecureUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import unid.jooqMono.model.enums.BookingStatusEnum;
-import unid.jooqMono.model.tables.pojos.UserPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
-import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
@@ -23,7 +19,6 @@ import unid.monoServerMeta.model.UniErrorCode;
 import java.util.UUID;
 
 import static unid.jooqMono.model.Tables.*;
-import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -100,12 +95,12 @@ public class TransactionService {
         payload.setPaymentType("N");
         payload.setCurrCode("334");
         payload.setMerchantId("88163035");
-        try{
-            payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
-        }catch (Exception e){
-            StaticLog.error(" 创建AsiaPay SecureHash 异常",e);
-            throw Exceptions.external(UniErrorCode.External.FAIL_TO_PAY_ON_ALIPAY);
-        }
+//        try{
+//            payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
+//        }catch (Exception e){
+//            StaticLog.error(" 创建AsiaPay SecureHash 异常",e);
+//            throw Exceptions.external(UniErrorCode.External.FAIL_TO_PAY_ON_ALIPAY);
+//        }
         response.setAsiaPayPayload(payload);
         return response;
 

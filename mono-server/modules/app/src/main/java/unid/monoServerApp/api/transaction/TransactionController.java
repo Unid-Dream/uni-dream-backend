@@ -58,7 +58,7 @@ public class TransactionController {
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Student Payment Order"
+            summary = "Student Payment Confirm"
     )
     public @Valid UnifiedResponse<PaymentTransactionResponse> payment(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
