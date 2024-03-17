@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import unid.jooqMono.model.enums.*;
 import unid.jooqMono.model.tables.daos.StudentPaymentTransactionDao;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
@@ -23,6 +24,7 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.mapper.EducatorCalendarMapper;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
+import unid.monoServerApp.queue.model.EmailRequestPayload;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.UniErrorCode;
@@ -30,10 +32,7 @@ import unid.monoServerMeta.model.UniErrorCode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static unid.jooqMono.model.Tables.*;
 import static unid.monoServerMeta.model.UniErrorCode.Client.EDUCATOR_CAN_NOT_ACCEPT;
@@ -207,12 +206,35 @@ public class EducatorCalendarService {
             studentPaymentTransactionPojo.setProcessStatus(BookingStatusEnum.ACCEPTED);
             dbStudentPaymentTransaction.getDao().update(studentPaymentTransactionPojo);
             //将EducatorCalendar的状态改为Accept
-            //给student 发送educator accept 的消息并且提供支付链接
+            //给student 发送educator accept email
 
 
         });
 
+    }
 
+
+    private void sendAcceptStudentSessionEmail(){
+//        var template = freeMarkerConfigurer
+//                .getConfiguration()
+//                .getTemplate(getTemplatePath("NewUserRegistrationOtp_en"));
+//        var html = FreeMarkerTemplateUtils.processTemplateIntoString(
+//                template,
+//                Map.of(
+//                        "otp", payload.getOtp()
+//                )
+//        );
+//        emailService.sendEmail(
+//                "Verify Your E-mail",
+//                payload.getMessage().getContent(),
+//                payload.getMessage().getRecipients().toArray(new String[]{})
+//        );
+//        messageProducer.sendEmailRequest(EmailRequestPayload.builder()
+//                .category(EmailRequestPayload.Category.VERIFY_EMAIL)
+//                .subject("Verify Your E-mail")
+//                .content(html)
+//                .recipients(Arrays.asList(payload.getEmail()))
+//                .build());
     }
 
 

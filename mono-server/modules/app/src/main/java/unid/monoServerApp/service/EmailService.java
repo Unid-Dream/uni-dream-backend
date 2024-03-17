@@ -26,6 +26,7 @@ import unid.monoServerMeta.Pattern;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -71,12 +72,17 @@ public class EmailService {
                         "otp", payload.getOtp()
                 )
         );
-        messageProducer.sendEmailRequest(EmailRequestPayload.builder()
-                .category(EmailRequestPayload.Category.VERIFY_EMAIL)
-                .subject("Verify Your E-mail")
-                .content(html)
-                .recipients(Arrays.asList(payload.getEmail()))
-                .build());
+        sendEmail(
+                "Verify Your E-mail",
+                html,
+                Collections.singletonList(payload.getEmail()).toArray(new String[]{})
+        );
+//        messageProducer.sendEmailRequest(EmailRequestPayload.builder()
+//                .category(EmailRequestPayload.Category.VERIFY_EMAIL)
+//                .subject("Verify Your E-mail")
+//                .content(html)
+//                .recipients(Arrays.asList(payload.getEmail()))
+//                .build());
     }
 
 //    @SneakyThrows
