@@ -246,7 +246,6 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
     public static final class Result extends EducatorCalendarPojo implements Serializable {
         private DbStudentPaymentTransaction.Result paymentTransaction;
         private List<DbStudentProfile.Result> studentProfiles;
-
         private List<DbEducatorSessionNoteItem.Result> comments;
         private DbEducatorProfile.Result educatorProfile;
     }

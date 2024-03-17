@@ -297,7 +297,27 @@ public class EducatorCalendarService {
         return new EducatorCalendarSimpleResponse().setSlots(list);
     }
 
-    public void writeStudentSessionComment(UUID educatorProfileId, UUID educatorCalendarId) {
-    }
+    public ConsultationSessionResponse getConsultationSession(UUID profileId, UUID calendarId) {
+        DbEducatorCalendar.Result data = dbEducatorCalendar.getDsl()
+                .select(
+                        EDUCATOR_CALENDAR.BOOKING_STATUS,
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID,
+                                                STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS,
+                                                STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS
+                                        )
+                                        .from(STUDENT_PAYMENT_TRANSACTION)
+                                        .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
+                        ).as(DbEducatorCalendar.Result.Fields.paymentTransaction).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbStudentPaymentTransaction.Result.class))
+                )
+                .from(EDUCATOR_CALENDAR)
+                .where(EDUCATOR_CALENDAR.ID.eq(calendarId).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId)))
+                .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_NOT_EXIST));
+        return educatorCalendarMapper.toSessionResponse(data);
 
+
+
+    }
 }

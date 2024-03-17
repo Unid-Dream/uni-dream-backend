@@ -5,23 +5,27 @@ import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.school.DbSchool;
+import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerMeta.api.ConsultationSessionResponse;
 import unid.monoServerMeta.api.EducatorCalendarRequest;
 import unid.monoServerMeta.api.EducatorCalendarResponse;
 import unid.monoServerMeta.api.EducatorCalendarSimpleResponse;
 import unid.monoServerMeta.api.EducatorCalendarTimeSlotResponse;
 import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.PaymentStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-17T12:42:51+0800",
+    date = "2024-03-17T19:06:22+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -130,6 +134,20 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
         }
 
         return list;
+    }
+
+    @Override
+    public ConsultationSessionResponse toSessionResponse(DbEducatorCalendar.Result data) {
+        if ( data == null ) {
+            return null;
+        }
+
+        ConsultationSessionResponse consultationSessionResponse = new ConsultationSessionResponse();
+
+        consultationSessionResponse.setPaymentTransaction( resultToTransactionResponse( data.getPaymentTransaction() ) );
+        consultationSessionResponse.setBookingStatus( bookingStatusEnumToBookingStatus( data.getBookingStatus() ) );
+
+        return consultationSessionResponse;
     }
 
     protected BookingStatusEnum bookingStatusToBookingStatusEnum(BookingStatus bookingStatus) {
@@ -245,5 +263,71 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
         }
 
         return list1;
+    }
+
+    protected PaymentStatus paymentStatusEnumToPaymentStatus(PaymentStatusEnum paymentStatusEnum) {
+        if ( paymentStatusEnum == null ) {
+            return null;
+        }
+
+        PaymentStatus paymentStatus;
+
+        switch ( paymentStatusEnum ) {
+            case PENDING: paymentStatus = PaymentStatus.PENDING;
+            break;
+            case PAID: paymentStatus = PaymentStatus.PAID;
+            break;
+            case EXPIRED: paymentStatus = PaymentStatus.EXPIRED;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + paymentStatusEnum );
+        }
+
+        return paymentStatus;
+    }
+
+    protected BookingStatus bookingStatusEnumToBookingStatus(BookingStatusEnum bookingStatusEnum) {
+        if ( bookingStatusEnum == null ) {
+            return null;
+        }
+
+        BookingStatus bookingStatus;
+
+        switch ( bookingStatusEnum ) {
+            case AVAILABLE: bookingStatus = BookingStatus.AVAILABLE;
+            break;
+            case RESERVED: bookingStatus = BookingStatus.RESERVED;
+            break;
+            case PENDING: bookingStatus = BookingStatus.PENDING;
+            break;
+            case ACCEPTED: bookingStatus = BookingStatus.ACCEPTED;
+            break;
+            case REJECTED: bookingStatus = BookingStatus.REJECTED;
+            break;
+            case CANCELLED: bookingStatus = BookingStatus.CANCELLED;
+            break;
+            case VOID: bookingStatus = BookingStatus.VOID;
+            break;
+            case FINISHED: bookingStatus = BookingStatus.FINISHED;
+            break;
+            case UNFINISHED: bookingStatus = BookingStatus.UNFINISHED;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
+        }
+
+        return bookingStatus;
+    }
+
+    protected ConsultationSessionResponse.TransactionResponse resultToTransactionResponse(DbStudentPaymentTransaction.Result result) {
+        if ( result == null ) {
+            return null;
+        }
+
+        ConsultationSessionResponse.TransactionResponse transactionResponse = new ConsultationSessionResponse.TransactionResponse();
+
+        transactionResponse.setStudentProfileId( result.getStudentProfileId() );
+        transactionResponse.setPaymentStatus( paymentStatusEnumToPaymentStatus( result.getPaymentStatus() ) );
+        transactionResponse.setProcessStatus( bookingStatusEnumToBookingStatus( result.getProcessStatus() ) );
+
+        return transactionResponse;
     }
 }

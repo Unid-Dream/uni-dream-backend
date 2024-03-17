@@ -172,4 +172,24 @@ public class EducatorCalendarController {
         educatorCalendarService.acceptOrDenyBooking(profileId, request, false);
         return UnifiedResponse.of(null);
     }
+
+
+    @GetMapping("educator/user/profile/educator/{profileId}/calendar/{calendarId}/session/status")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.EDUCATOR},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Educator Query Consultation Session Status"
+    )
+    public @Valid UnifiedResponse<ConsultationSessionResponse> getConsultationSessionStatus(
+            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
+            @PathVariable("calendarId") UUID calendarId) {
+        ConsultationSessionResponse response = educatorCalendarService.getConsultationSession(profileId, calendarId);
+        return UnifiedResponse.of(response);
+    }
 }

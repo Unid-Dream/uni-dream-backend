@@ -14,7 +14,8 @@ import java.util.List;
                 StudentProfileMapper.class,
                 CountryMapper.class,
                 SchoolMapper.class,
-                EducationLevelMapper.class
+                EducationLevelMapper.class,
+                StudentPaymentTransactionMapper.class
         }
 )
 public interface EducatorCalendarMapper {
@@ -66,4 +67,7 @@ public interface EducatorCalendarMapper {
     List<EducatorCalendarSimpleResponse.TimeSlotPayload> toSimpleResponse(List<DbEducatorCalendar.Result> data);
 
     List<EducatorCalendarTimeSlotResponse> toResponse(List<DbEducatorCalendar.Result> data);
+
+
+    ConsultationSessionResponse toSessionResponse(DbEducatorCalendar.Result data);
 }
