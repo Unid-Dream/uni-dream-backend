@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @FieldNameConstants
 public class EducatorProfileSimpleResponse implements Serializable {
+    private UUID id;
     private I18n firstNameI18n;
     private I18n lastNameI18n;
     private UUID countryId;

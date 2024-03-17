@@ -141,6 +141,9 @@ public enum UniErrorCode{
         EDUCATOR_HOURLY_RATE_IS_NULL(10604,"Business.当前Educator, HourlyRate为空"),
         EDUCATOR_CALENDAR_NOT_EXIST(10605,"Business.当前Educator Calendar不存在"),
 
+        // ---------------------------------- STUDENT -----------------------------------------------
+        STUDENT_PAYMENT_TRANSACTION_NOT_EXIST(10705,"Business.当前交易不存在"),
+
         ;
 
 

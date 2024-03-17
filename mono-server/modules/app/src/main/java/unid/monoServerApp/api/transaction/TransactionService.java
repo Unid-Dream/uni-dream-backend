@@ -14,6 +14,7 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.UniErrorCode;
 
 import java.util.UUID;
 
@@ -75,6 +76,18 @@ public class TransactionService {
 //                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.FINISHED)))
 
 
+
+
+    }
+
+    public void payment(UUID profileId, UUID transactionId) {
+        //查询当前学生是否有这个订单
+        DbStudentPaymentTransaction.Result transaction = dbStudentPaymentTransaction.getDsl().select()
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId)))
+                .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
+        //组装 AsiaPay Frontend需要的参数,以及创建
 
 
     }

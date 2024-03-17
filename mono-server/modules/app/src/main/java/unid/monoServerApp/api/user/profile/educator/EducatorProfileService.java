@@ -248,11 +248,6 @@ public class EducatorProfileService {
                 .limit(pageSize)
                 .fetchInto(DbEducatorProfile.Result.class);
         StaticLog.info(" query educator page size : {}", list.size());
-//        for (EducatorResponse obj : list) {
-//            I18n descriptionI18n = new I18n();
-//            descriptionI18n.setEnglish(obj.getDescription());
-//            obj.setDescriptionI18n(descriptionI18n);
-//        }
         return new UniPageResponse<>(totalRecords, pageNumber, pageSize, totalPages, educatorProfileMapper.toSimpleResponse(list));
     }
 

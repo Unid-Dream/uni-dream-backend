@@ -70,7 +70,7 @@ public class AuthRegisterController {
         }
     }
 
-    @PostMapping("student/auth/register")
+    @PostMapping(value={"student/auth/register","educator/auth/register"})
     @Transactional
     @ACL(
             noAuthed = true
@@ -93,7 +93,7 @@ public class AuthRegisterController {
         return UnifiedResponse.of(toResponse(result));
     }
 
-    @PutMapping("student/auth/register")
+    @PutMapping(value = {"student/auth/register","educator/auth/register"})
     @Transactional
     @ACL(
             noAuthed = true
@@ -129,7 +129,7 @@ public class AuthRegisterController {
         );
     }
 
-    @PutMapping("student/auth/register/{refId}")
+    @PutMapping(value = {"student/auth/register/{refId}","educator/auth/register/{refId}"})
     @Transactional
     @ACL(
             noAuthed = true

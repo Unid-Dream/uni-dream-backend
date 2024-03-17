@@ -63,7 +63,7 @@ public class TransactionController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @PathVariable("transactionId") @ACL.ProfileId UUID transactionId
     ) {
-//        var result = transactionService.payment();
+        transactionService.payment(profileId,transactionId);
         return UnifiedResponse.of(
                 null
         );
