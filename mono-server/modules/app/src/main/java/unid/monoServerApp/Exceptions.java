@@ -38,6 +38,14 @@ public class Exceptions {
         );
     }
 
+    public static UnifiedException external(UniErrorCode.External error) {
+        throw new UnifiedException(
+                String.valueOf(error.code()),
+                error.message(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+    }
+
     public static UnifiedException client(UniErrorCode.Client error) {
         throw new UnifiedException(
                 String.valueOf(error.code()),

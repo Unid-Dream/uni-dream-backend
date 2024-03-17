@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
+import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.api.UserResponse;
 
@@ -59,13 +60,12 @@ public class TransactionController {
     @Operation(
             summary = "Student Payment Order"
     )
-    public @Valid UnifiedResponse<TransactionResponse> payment(
+    public @Valid UnifiedResponse<PaymentTransactionResponse> payment(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @PathVariable("transactionId") @ACL.ProfileId UUID transactionId
     ) {
-        transactionService.payment(profileId,transactionId);
         return UnifiedResponse.of(
-                null
+                transactionService.payment(profileId,transactionId)
         );
     }
 

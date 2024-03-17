@@ -18,5 +18,6 @@ public class PaymentTransactionResponse {
         private String currCode;
         private String amount;
         private String paymentType;
+        private String secureHash;
     }
 }
