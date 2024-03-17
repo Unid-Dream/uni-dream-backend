@@ -184,7 +184,7 @@ public class SchoolController {
         );
     }
 
-    @GetMapping("educator/school/tags")
+    @GetMapping(value = {"educator/school/tags","student/school/tags"})
     @ACL(
             authed = true
     )

@@ -39,13 +39,33 @@ public class TransactionController {
     @Operation(
             summary = "Get One"
     )
-    
     public @Valid UnifiedResponse<TransactionResponse> get(
             @PathVariable("id") UUID id
     ) {
         var result = transactionService.get(id);
         return UnifiedResponse.of(
                 result
+        );
+    }
+
+
+    @PostMapping("student/{profileId}/transaction/{transactionId}/payment")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT,
+            matchingSessionProfileId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Student Payment Order"
+    )
+    public @Valid UnifiedResponse<TransactionResponse> payment(
+            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
+            @PathVariable("transactionId") @ACL.ProfileId UUID transactionId
+    ) {
+//        var result = transactionService.payment();
+        return UnifiedResponse.of(
+                null
         );
     }
 

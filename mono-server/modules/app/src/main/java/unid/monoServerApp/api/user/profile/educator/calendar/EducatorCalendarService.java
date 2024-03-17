@@ -215,26 +215,7 @@ public class EducatorCalendarService {
 
     }
 
-    //预定educator时间槽
-    public StudentPaymentTransactionResponse bookEducatorCalendar(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
-        //创建支付订单
-        //查询educator收费
-        EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
-        Optional.ofNullable(educatorProfilePojo).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_NOT_EXIST));
-        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_HOURLY_RATE_IS_NULL));
 
-        StudentPaymentTransactionPojo studentPaymentTransactionPojo = new StudentPaymentTransactionPojo()
-                .setTransactionItemRefId(request.getEducatorCalendarId())
-                .setStudentProfileId(studentProfileId)
-                .setTransactionAmount(new BigDecimal(educatorProfilePojo.getHourlyRate()))
-                .setTransactionItem(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)
-                .setTransactionCurrency(CurrencyEnum.HKD)
-                .setPaymentStatus(PaymentStatusEnum.PENDING)
-                .setProcessStatus(BookingStatusEnum.PENDING)
-                .setTransactionSubmitTime(LocalDateTime.now());
-        dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
-        return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
-    }
 
     public EducatorCalendarSimpleResponse getAcceptTimeSlot(UUID educatorProfileId, EducatorCalendarRequest.TimeSlotPayload payload) {
         //根据时间范围查询, 状态为"Accept"的时间槽

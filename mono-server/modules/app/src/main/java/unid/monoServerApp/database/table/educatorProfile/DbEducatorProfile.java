@@ -7,8 +7,8 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.Tables;
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
-import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.daos.EducatorProfileDao;
@@ -24,9 +24,6 @@ import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.database.table.schoolIdentity.DbSchoolIdentity;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerMeta.api.EducatorResponse;
-import unid.monoServerMeta.api.EventEducatorProfileResponse;
-import unid.monoServerMeta.api.LearningHubResponse;
-import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.constraints.NotNull;
@@ -67,6 +64,32 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
         this.dbLanguage = dbLanguage;
         this.dbExpertise = dbExpertise;
     }
+
+    public SelectConditionStep<Record> getSimpleQuery(){
+        return this.getDsl().select(
+                Tables.EDUCATOR_PROFILE.asterisk(),
+                USER.asterisk(),
+                multiset(
+                        select(
+                                EDUCATOR_SCHOOL.asterisk()
+                        )
+                                .from(EDUCATOR_SCHOOL)
+                                .where(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID.eq(Tables.EDUCATOR_PROFILE.ID))
+                ).as(DbEducatorProfile.Result.Fields.educationLevel).convertFrom(r -> r.isEmpty() ? null : r.into(DbEducatorSchool.Result.class)),
+                multiset(
+                        select()
+                                .from(I18N,USER)
+                                .where(I18N.ID.eq(USER.LAST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
+                ).as(DbEducatorProfile.Result.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                multiset(
+                        select()
+                                .from(I18N,USER)
+                                .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
+                ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+        ).from(Tables.EDUCATOR_PROFILE,USER).where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID));
+    }
+
+
 
     @Override
     public SelectJoinStep<Record> getQuery(EducatorProfileTable alias) {
@@ -125,7 +148,7 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
         return q.from(alias);
     }
 
-    public @NotNull SelectConditionStep<?> getQueryEducatorProfileCnt(){
+    public @NotNull SelectConditionStep<?> getSimpleCnt(){
         return dsl.selectCount()
                 .from(USER,EDUCATOR_PROFILE)
                 .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));

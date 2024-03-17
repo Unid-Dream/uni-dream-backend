@@ -8,19 +8,29 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.CurrencyEnum;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.StudentTransactionItemEnum;
+import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
+import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
+import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.learningHub.DbLearningHub;
-import unid.monoServerMeta.api.EducatorResponse;
-import unid.monoServerMeta.api.LearningHubResponse;
-import unid.monoServerMeta.api.StudentScheduleResponse;
-import unid.monoServerMeta.api.UserResponse;
+import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.UniErrorCode;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.multiset;
@@ -34,6 +44,8 @@ public class StudentScheduleService {
     private final DSLContext dslContext;
     private final DbEducatorProfile dbEducatorProfile;
     private final DbLearningHub dbLearningHub;
+    private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
+    private final StudentPaymentTransactionMapper studentPaymentTransactionMapper;
 
     public JSONObject page(UUID profileId,
                            LocalDate startDate,
@@ -76,6 +88,7 @@ public class StudentScheduleService {
 
 
        List<StudentScheduleResponse> list = dslContext.select(
+                STUDENT_PAYMENT_TRANSACTION.ID.as(StudentScheduleResponse.Fields.transactionId),
                 STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.as(StudentScheduleResponse.Fields.id),
                 STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT,
                 STUDENT_PAYMENT_TRANSACTION.TRANSACTION_CURRENCY,
@@ -117,5 +130,26 @@ public class StudentScheduleService {
                     .set("totalPages", totalPages)
                     .set("pageSize", pageSize)
                     .set("result", list);
+    }
+
+    //预定educator时间槽
+    public StudentPaymentTransactionResponse create(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
+        //创建支付订单
+        //查询educator收费
+        EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
+        Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.Business.EDUCATOR_NOT_EXIST));
+        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_HOURLY_RATE_IS_NULL));
+
+        StudentPaymentTransactionPojo studentPaymentTransactionPojo = new StudentPaymentTransactionPojo()
+                .setTransactionItemRefId(request.getEducatorCalendarId())
+                .setStudentProfileId(studentProfileId)
+                .setTransactionAmount(new BigDecimal(educatorProfilePojo.getHourlyRate()))
+                .setTransactionItem(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)
+                .setTransactionCurrency(CurrencyEnum.HKD)
+                .setPaymentStatus(PaymentStatusEnum.PENDING)
+                .setProcessStatus(BookingStatusEnum.PENDING)
+                .setTransactionSubmitTime(LocalDateTime.now());
+        dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
+        return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
     }
 }

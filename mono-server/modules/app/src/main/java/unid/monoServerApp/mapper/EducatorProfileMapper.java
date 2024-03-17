@@ -41,6 +41,17 @@ public interface EducatorProfileMapper {
 
 
     @Mappings({
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.educationLevel, source = DbEducatorProfile.Result.Fields.educationLevel),
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.firstNameI18n, source = DbEducatorProfile.Result.Fields.firstNameI18n),
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.lastNameI18n, source = DbEducatorProfile.Result.Fields.lastNameI18n),
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.phoneCountryCode, source = EducatorProfilePojo.Columns.phoneCountryCode),
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.phone, source = EducatorProfilePojo.Columns.phone),
+            @Mapping(target = EducatorProfileSimpleResponse.Fields.email, source = DbEducatorProfile.Result.Fields.email),
+    })
+    List<EducatorProfileSimpleResponse> toSimpleResponse(List<DbEducatorProfile.Result> data);
+
+
+    @Mappings({
             @Mapping(target = EducatorProfileRequest.Fields.languages, ignore = true),
             @Mapping(target = EducatorProfileRequest.Fields.expertises, ignore = true)
     })

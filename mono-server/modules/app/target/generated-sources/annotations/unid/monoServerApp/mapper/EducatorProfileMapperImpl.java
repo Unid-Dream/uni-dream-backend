@@ -29,7 +29,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-17T12:42:51+0800",
+    date = "2024-03-17T22:22:36+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -92,6 +92,20 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileSimpleResponse.setGender( genderEnumToGender( data.getGender() ) );
 
         return educatorProfileSimpleResponse;
+    }
+
+    @Override
+    public List<EducatorProfileSimpleResponse> toSimpleResponse(List<DbEducatorProfile.Result> data) {
+        if ( data == null ) {
+            return null;
+        }
+
+        List<EducatorProfileSimpleResponse> list = new ArrayList<EducatorProfileSimpleResponse>( data.size() );
+        for ( DbEducatorProfile.Result result : data ) {
+            list.add( toSimpleResponse( result ) );
+        }
+
+        return list;
     }
 
     @Override

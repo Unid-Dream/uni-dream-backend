@@ -2,6 +2,7 @@ package unid.monoServerApp.api.user.profile.student.schedule;//package unid.mono
 
 import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pwh.coreRsqlJooq.jooq.PaginatedQuery;
@@ -30,6 +32,8 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentScheduleMapper;
+import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
+import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
 import unid.monoServerMeta.api.StudentScheduleResponse;
 
 import javax.validation.Valid;
@@ -133,6 +137,23 @@ public class StudentScheduleController {
 //        );
 //    }
 
+    @PostMapping("student/user/profile/educator/calendar/{studentProfileId}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.STUDENT},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create Educator Calendar Payment Transaction"
+    )
+    public @Valid UnifiedResponse<StudentPaymentTransactionResponse> bookEducatorCalendar(
+            @PathVariable("studentProfileId") @ACL.ProfileId UUID studentProfileId,
+            @RequestBody StudentBookingEducatorCalendarRequest request) {
+        return UnifiedResponse.of(studentScheduleService.create(studentProfileId, request));
+    }
 
     @GetMapping("student/user/profile/student/{profileId}/schedule")
     @ACL(
@@ -162,6 +183,7 @@ public class StudentScheduleController {
     @Operation(
             summary = "Query Student Session History"
     )
+    @Hidden
     public @Valid UnifiedResponse<JSONObject> getStudentSessionHistory(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId) {
         return UnifiedResponse.of(null);

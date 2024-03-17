@@ -196,7 +196,7 @@ public class EducatorProfileService {
     }
 
 
-    public UniPageResponse<EducatorResponse> page(Integer pageNumber,
+    public UniPageResponse<EducatorProfileSimpleResponse> page(Integer pageNumber,
                                                   Integer pageSize,
                                                   List<String> schoolQuery,
                                                   List<String> subjectQuery,
@@ -229,31 +229,31 @@ public class EducatorProfileService {
                 .where(I18N.ENGLISH.in(languageQuery).or(I18N.CHINESE_SIMPLIFIED.in(languageQuery)).or(I18N.CHINESE_TRADITIONAL.in(languageQuery))).fetchInto(UUID.class);
 
         Integer totalRecords = dbEducatorProfile
-                .getQueryEducatorProfileCnt()
-                .and(schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
-                .and(subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
-                .and(expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
-                .and(languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
+                .getSimpleCnt()
+                .and(schoolQuery == null || schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
+                .and(subjectQuery == null || subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
+                .and(expertiseQuery == null || expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
+                .and(languageQuery == null || languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
                 .fetchOptionalInto(Integer.class).orElse(0);
 
         // 计算总页数
         int totalPages = (totalRecords + pageSize - 1) / pageSize;
-        List<EducatorResponse> list = dbEducatorProfile
-                .getQueryEducatorProfile()
-                .and(schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
-                .and(subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
-                .and(expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
-                .and(languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
+        List<DbEducatorProfile.Result> list = dbEducatorProfile
+                .getSimpleQuery()
+                .and(schoolQuery == null || schoolQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(schoolCondition))
+                .and(subjectQuery == null || subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
+                .and(expertiseQuery == null || expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
+                .and(languageQuery == null || languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
                 .offset((pageNumber - 1) * pageSize)
                 .limit(pageSize)
-                .fetchInto(EducatorResponse.class);
+                .fetchInto(DbEducatorProfile.Result.class);
         StaticLog.info(" query educator page size : {}", list.size());
-        for (EducatorResponse obj : list) {
-            I18n descriptionI18n = new I18n();
-            descriptionI18n.setEnglish(obj.getDescription());
-            obj.setDescriptionI18n(descriptionI18n);
-        }
-        return new UniPageResponse<>(totalRecords, pageNumber, pageSize, totalPages, list);
+//        for (EducatorResponse obj : list) {
+//            I18n descriptionI18n = new I18n();
+//            descriptionI18n.setEnglish(obj.getDescription());
+//            obj.setDescriptionI18n(descriptionI18n);
+//        }
+        return new UniPageResponse<>(totalRecords, pageNumber, pageSize, totalPages, educatorProfileMapper.toSimpleResponse(list));
     }
 
 

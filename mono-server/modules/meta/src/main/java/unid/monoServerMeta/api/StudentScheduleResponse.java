@@ -29,6 +29,9 @@ import java.util.UUID;
 public class StudentScheduleResponse extends BaseResponse {
     @NotNull
     private UUID id;
+    @NotNull
+    private UUID transactionId;
+
     private I18n titleI18n;
     @NotNull
     private BigDecimal transactionAmount;

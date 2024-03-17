@@ -68,7 +68,7 @@ public class EducatorProfileController {
     @Operation(
             summary = "Query Page"
     )
-    public @Valid UnifiedResponse<UniPageResponse<EducatorResponse>> page(
+    public @Valid UnifiedResponse<UniPageResponse<EducatorProfileSimpleResponse>> page(
             @RequestParam Integer pageSize,
             @RequestParam Integer pageNumber,
             @RequestParam(required = false) List<String> schools,

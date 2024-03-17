@@ -73,23 +73,7 @@ public class EducatorCalendarController {
     }
 
 
-    @PostMapping("student/user/profile/educator/calendar/{studentProfileId}")
-    @Transactional
-    @ACL(
-            authed = true,
-            allowedRoles = {UserRoleEnum.STUDENT},
-            matchingSessionProfileId = true,
-            educatorProfileApproved = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Create Educator Calendar Payment Transaction"
-    )
-    public @Valid UnifiedResponse<StudentPaymentTransactionResponse> bookEducatorCalendar(
-            @PathVariable("studentProfileId") @ACL.ProfileId UUID studentProfileId,
-            @RequestBody StudentBookingEducatorCalendarRequest request) {
-        return UnifiedResponse.of(educatorCalendarService.bookEducatorCalendar(studentProfileId, request));
-    }
+
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
     @Transactional
