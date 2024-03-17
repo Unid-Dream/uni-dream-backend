@@ -31,21 +31,17 @@ import java.util.UUID;
 public class StudentQuestionnaireController {
     private final StudentQuestionnaireService studentQuestionnaireService;
 
-    @GetMapping("student/studentMilestone/{studentProfileId}")
+    @GetMapping(value = {"student/studentMilestone/{studentProfileId}","educator/studentMilestone/{studentProfileId}"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT,
-            matchingSessionProfileId = true
+            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR }
     )
-    @Parameters({
-        @Parameter(name = "unidtoken", in = ParameterIn.HEADER, required = true),
-    })
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"
     )
     public @Valid UnifiedResponse<StudentMilestoneResponse> query(
-            @PathVariable @ACL.ProfileId  UUID studentProfileId
+            @PathVariable UUID studentProfileId
     ){
         return UnifiedResponse.of(studentQuestionnaireService.query(studentProfileId));
     }
