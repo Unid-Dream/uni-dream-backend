@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
- * 测试老师设置 空闲的日历
+ * Booking Educator Calendar Unit Test
  */
 @SpringBootTest(classes = SpringApp.class)
 @AutoConfigureMockMvc
@@ -32,11 +32,6 @@ public class EducatorCalendarTest extends BaseTest{
     @InjectMocks
     private EducatorCalendarService educatorCalendarService;
 
-    @BeforeEach
-    public void setup() {
-        //添加Mock注解初始化
-        MockitoAnnotations.openMocks(this);
-    }
 
 
 

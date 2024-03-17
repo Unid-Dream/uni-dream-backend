@@ -167,9 +167,12 @@ public class StudentScheduleController {
     )
     public @Valid UnifiedResponse<JSONObject> list(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return UnifiedResponse.of(studentScheduleService.page(profileId,startDate,endDate,1,10));
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+        OffsetDateTime startTimeUtc = OffsetDateTime.parse(startDate);
+        OffsetDateTime endTimeUtc = OffsetDateTime.parse(endDate);
+
+        return UnifiedResponse.of(studentScheduleService.page(profileId,startTimeUtc.toLocalDate(),endTimeUtc.toLocalDate(),1,10));
     }
 
 
