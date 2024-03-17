@@ -129,7 +129,7 @@ public class StudentProfileController {
         );
         var response = studentProfileMapper.toResponse(result);
         studentProfileService.fill(result,response);
-        tagAppendService.refresh(result);
+//        tagAppendService.refresh(result);
         return UnifiedResponse.of(response);
     }
 
