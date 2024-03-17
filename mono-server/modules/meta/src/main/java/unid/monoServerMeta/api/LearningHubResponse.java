@@ -30,7 +30,7 @@ public class LearningHubResponse {
     private OffsetDateTime endDate;
     private BigDecimal price;
     private String posterImage;
-    private EducatorResponse educator;
+    private EducatorProfileSimpleResponse educator;
     private UUID educatorProfileId;
     private UUID academicMajorId;
     private String eventType;

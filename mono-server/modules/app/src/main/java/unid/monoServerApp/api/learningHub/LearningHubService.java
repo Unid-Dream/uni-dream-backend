@@ -20,10 +20,7 @@ import unid.monoServerApp.api.user.profile.educator.EducatorProfileService;
 import unid.monoServerApp.config.Transaction;
 import unid.monoServerApp.database.table.learningHub.DbLearningHub;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
-import unid.monoServerMeta.api.AcademicMajorI18nResponse;
-import unid.monoServerMeta.api.EducatorResponse;
-import unid.monoServerMeta.api.EventEducatorProfileResponse;
-import unid.monoServerMeta.api.LearningHubResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.TransactionItem;
 
@@ -56,7 +53,7 @@ public class LearningHubService {
                 .offset((pageNumber - 1) * pageSize)
                 .fetchInto(LearningHubResponse.class);
         for(LearningHubResponse hub : list){
-            EducatorResponse educator = educatorProfileService.getCourseEducator(hub.getEducatorProfileId());
+            EducatorProfileSimpleResponse educator = educatorProfileService.getSimpleCache(hub.getEducatorProfileId());
             AcademicMajorI18nResponse major = academicMajorService.getOneBy(hub.getAcademicMajorId());
             hub.setEducator(educator);
             hub.setAcademic(major);
@@ -78,7 +75,7 @@ public class LearningHubService {
                 .fetchOptional().orElseThrow(()-> Exceptions.notFound("Learning Hub Not Found"))
                 .into(LearningHubResponse.class);
         result.setAcademic(academicMajorService.getOneBy(result.getAcademicMajorId()));
-        result.setEducator(educatorProfileService.getCourseEducator(result.getEducatorProfileId()));
+        result.setEducator(educatorProfileService.getSimpleCache(result.getEducatorProfileId()));
         return result;
     }
 
