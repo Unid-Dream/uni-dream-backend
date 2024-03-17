@@ -95,3 +95,6 @@ unid:
 
 server:
   forward-headers-strategy: framework
+
+asiapay:
+  merchantId: 88163035

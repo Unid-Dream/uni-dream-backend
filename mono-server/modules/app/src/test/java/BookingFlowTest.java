@@ -15,7 +15,7 @@ public class BookingFlowTest {
     //正常流程
     @Test
     public void success(){
-        //1.
+        //1. educator
 
     }
 }
