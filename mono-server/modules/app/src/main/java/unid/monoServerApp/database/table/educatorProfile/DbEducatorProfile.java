@@ -67,8 +67,8 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
 
     public SelectConditionStep<Record> getSimpleQuery(){
         return this.getDsl().select(
-                Tables.EDUCATOR_PROFILE.asterisk(),
-                USER.asterisk(),
+                EDUCATOR_PROFILE.asterisk(),
+                USER.EMAIL,
                 multiset(
                         select(
                                 EDUCATOR_SCHOOL.asterisk()
