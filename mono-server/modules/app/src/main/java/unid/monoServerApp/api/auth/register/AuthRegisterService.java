@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pwh.springStarter.service.ValidationService;
 import unid.jooqMono.model.enums.UserRoleEnum;
+import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
 import unid.jooqMono.model.tables.pojos.UserPojo;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.cache.auth.register.NewRegisterUser;
 import unid.monoServerApp.cache.auth.register.NewRegisterUserRepository;
+import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.UserMapper;
@@ -33,6 +35,7 @@ public class AuthRegisterService {
     private final ValidationService validationService;
     private final Properties properties;
     private final DbStudentProfile dbStudentProfile;
+    private final DbEducatorProfile dbEducatorProfile;
 
     Optional<UserPojo> getExistRecordFromDb(@NotNull AuthRegisterRequest payload) {
         var userTable = dbUser.getTable();
@@ -89,6 +92,10 @@ public class AuthRegisterService {
         if(user.getUserRole().equals(UserRoleEnum.STUDENT)){
             dbStudentProfile.getDao().insert(
                     new StudentProfilePojo().setUserId(user.getId())
+            );
+        }else if (user.getUserRole().equals(UserRoleEnum.EDUCATOR)){
+            dbEducatorProfile.getDao().insert(
+                    new EducatorProfilePojo().setUserId(user.getId())
             );
         }
         log.info("Inserted User: {}", user);

@@ -136,7 +136,7 @@ public class EducatorProfileController {
         return UnifiedResponse.of(response);
     }
 
-    @PutMapping("/educator/user/{educatorProfileId}/profile/educator")
+    @PutMapping("educator/user/{educatorProfileId}/profile/educator")
     @Transactional
     @ACL(
             authed = true,

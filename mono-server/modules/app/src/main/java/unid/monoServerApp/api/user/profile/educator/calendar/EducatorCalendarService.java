@@ -215,15 +215,6 @@ public class EducatorCalendarService {
 
 
     private void sendAcceptStudentSessionEmail(){
-//        var template = freeMarkerConfigurer
-//                .getConfiguration()
-//                .getTemplate(getTemplatePath("NewUserRegistrationOtp_en"));
-//        var html = FreeMarkerTemplateUtils.processTemplateIntoString(
-//                template,
-//                Map.of(
-//                        "otp", payload.getOtp()
-//                )
-//        );
 //        emailService.sendEmail(
 //                "Verify Your E-mail",
 //                payload.getMessage().getContent(),

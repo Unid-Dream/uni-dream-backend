@@ -77,12 +77,6 @@ public class EmailService {
                 html,
                 Collections.singletonList(payload.getEmail()).toArray(new String[]{})
         );
-//        messageProducer.sendEmailRequest(EmailRequestPayload.builder()
-//                .category(EmailRequestPayload.Category.VERIFY_EMAIL)
-//                .subject("Verify Your E-mail")
-//                .content(html)
-//                .recipients(Arrays.asList(payload.getEmail()))
-//                .build());
     }
 
 //    @SneakyThrows
