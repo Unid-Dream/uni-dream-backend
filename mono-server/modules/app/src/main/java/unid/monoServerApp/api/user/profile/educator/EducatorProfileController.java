@@ -132,7 +132,7 @@ public class EducatorProfileController {
                         .getUserId()
         );
         var response = educatorProfileMapper.toResponse(result);
-        tagAppendService.refresh(result);
+        //tagAppendService.refresh(result);
         return UnifiedResponse.of(response);
     }
 
