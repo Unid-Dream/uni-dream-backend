@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.tables.pojos.UserPojo;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
+import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
@@ -22,6 +25,8 @@ import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 @Slf4j
 public class TransactionService {
     private final DSLContext dslContext;
+    private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
+    private final DbEducatorSessionNoteItem dbEducatorSessionNoteItem;
 
     public TransactionResponse get(UUID transactionId) {
         //0.查询 Writing Skill Transaction
@@ -47,5 +52,30 @@ public class TransactionService {
         response.setFirstNameI18n(firstNameI18n);
         response.setLastNameI18n(lastNameI18n);
         return response;
+    }
+
+    public void list(UUID profileId) {
+        //查询 educator session comment list item
+//        var commentQ = dbStudentPaymentTransaction.getDsl()
+//                        .select()
+//                        .from()
+
+
+
+
+
+
+
+//        dbStudentPaymentTransaction.getDsl()
+//                .select(
+//                        STUDENT_PAYMENT_TRANSACTION.asterisk(),
+//                        //查询educator session comment
+//                )
+//                .from(STUDENT_PAYMENT_TRANSACTION)
+//                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.FINISHED)))
+
+
+
+
     }
 }

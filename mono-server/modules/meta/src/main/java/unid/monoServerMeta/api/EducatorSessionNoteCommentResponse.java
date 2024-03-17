@@ -15,5 +15,4 @@ public class EducatorSessionNoteCommentResponse {
     private I18n titleI18n;
     private String comment;
 
-
 }

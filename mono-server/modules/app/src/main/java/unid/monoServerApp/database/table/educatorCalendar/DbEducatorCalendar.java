@@ -22,6 +22,8 @@ import unid.monoServerApp.ErrorCode;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
+import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
+import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerMeta.api.EducatorCalendarRejectRequest;
@@ -244,5 +246,8 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
     public static final class Result extends EducatorCalendarPojo implements Serializable {
         private DbStudentPaymentTransaction.Result paymentTransaction;
         private List<DbStudentProfile.Result> studentProfiles;
+
+        private List<DbEducatorSessionNoteItem.Result> comments;
+        private DbEducatorProfile.Result educatorProfile;
     }
 }

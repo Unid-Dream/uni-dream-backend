@@ -60,6 +60,12 @@ public class StudentProfileService {
                 .orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
     }
 
+    DbStudentProfile.Result getByProfileId(UUID profileId) {
+        // TODO ACL (student: get self only, admin: get all)
+        return userCacheService.getStudentProfileByProfileId(profileId)
+                .orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
+    }
+
     @CacheEvict(
             value = CacheTags.STUDENT_PROFILE,
             key = "#userId"

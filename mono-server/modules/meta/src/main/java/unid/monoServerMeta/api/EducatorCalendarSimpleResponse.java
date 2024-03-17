@@ -53,6 +53,7 @@ public class EducatorCalendarSimpleResponse implements Serializable {
         private I18n lastNameI18n;
         private I18n firstNameI18n;
         private Country country;
+        private String profilePicture;
         private SecondarySchool secondarySchool;
         private SecondarySchoolEducationLevel secondarySchoolEducationLevel;
     }

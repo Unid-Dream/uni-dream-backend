@@ -37,10 +37,10 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/meeting/educator/sessionNote")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
-@Tag(name = "Educator Session Note")
+@Tag(name = "Student Session History")
 @Slf4j
 @Hidden
 public class EducatorSessionNoteController {
@@ -49,7 +49,54 @@ public class EducatorSessionNoteController {
     private final DbEducatorSessionNote dbEducatorSessionNote;
     private final ObjectMapper objectMapper;
 
-    @GetMapping
+
+    @GetMapping("student/session/{studentProfileId}/list")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT,
+            matchingSessionProfileId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query"
+    )
+    @Hidden
+    public @Valid UnifiedResponse<PaginationResponse<EducatorSessionNoteResponse>> list(
+            @PathVariable("studentProfileId") UUID studentProfileId
+    ){
+        return UnifiedResponse.of(null);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @GetMapping("/meeting/educator/sessionNote")
     @ACL(
             authed = true,
             // TODO remove EDUCATOR
@@ -59,6 +106,7 @@ public class EducatorSessionNoteController {
     @Operation(
             summary = "Query"
     )
+    @Hidden
     public @Valid UnifiedResponse<PaginationResponse<EducatorSessionNoteResponse>> list(
             @Valid
             @ParameterObject
@@ -113,7 +161,7 @@ public class EducatorSessionNoteController {
         );
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/meeting/educator/sessionNote/{id}")
     @ACL(
             authed = true,
             // TODO remove EDUCATOR
@@ -123,6 +171,7 @@ public class EducatorSessionNoteController {
     @Operation(
             summary = "Get One"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorSessionNoteResponse> get(
             @PathVariable("id") UUID id
     ) {
@@ -132,7 +181,7 @@ public class EducatorSessionNoteController {
         );
     }
 
-    @PostMapping
+    @PostMapping("/meeting/educator/sessionNote")
     @Transactional
     @ACL(
             authed = true,
@@ -143,6 +192,7 @@ public class EducatorSessionNoteController {
     @Operation(
             summary = "Create"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorSessionNoteResponse> create(
             @RequestBody @Valid
             EducatorSessionNoteRequest payload) {
@@ -156,7 +206,7 @@ public class EducatorSessionNoteController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/meeting/educator/sessionNote/{id}")
     @Transactional
     @ACL(
             authed = true,
@@ -167,6 +217,7 @@ public class EducatorSessionNoteController {
     @Operation(
             summary = "Update"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorSessionNoteResponse> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid
@@ -182,7 +233,7 @@ public class EducatorSessionNoteController {
         );
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/meeting/educator/sessionNote/{id}")
     @Transactional
     @ACL(
             authed = true,
@@ -193,6 +244,7 @@ public class EducatorSessionNoteController {
     @Operation(
             summary = "Obsolete"
     )
+    @Hidden
     public @Valid UnifiedResponse<EducatorSessionNoteResponse> obsolete(
             @PathVariable UUID id) {
         var result = educatorSessionNoteService.get(

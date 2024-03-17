@@ -37,11 +37,11 @@ public class StudentProfileController {
     private final StudentProfileMapper studentProfileMapper;
     private final TagAppendService tagAppendService;
 
-    @GetMapping(value = {"student/user/{userId}/profile/student","educator/user/{userId}/profile/student"})
+    @GetMapping(value = {"student/user/{userId}/profile/student"})
     @ACL(
             authed = true,
             matchingSessionUserId = true,
-            allowedRoles = {UserRoleEnum.STUDENT,UserRoleEnum.EDUCATOR}
+            allowedRoles = {UserRoleEnum.STUDENT}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -52,6 +52,26 @@ public class StudentProfileController {
             @PathVariable @ACL.UserId UUID userId
     ) {
         var result = studentProfileService.get(userId);
+        StudentProfileResponse response = studentProfileMapper.toResponse(result);
+        studentProfileService.fill(result,response);
+        return UnifiedResponse.of(
+                response
+        );
+    }
+
+    @GetMapping(value = {"educator/user/{profileId}/profile/student"})
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.EDUCATOR
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get One"
+    )
+    public @Valid UnifiedResponse<StudentProfileResponse> getByProfileId(
+            @PathVariable @ACL.UserId UUID profileId
+    ) {
+        var result = studentProfileService.getByProfileId(profileId);
         StudentProfileResponse response = studentProfileMapper.toResponse(result);
         studentProfileService.fill(result,response);
         return UnifiedResponse.of(

@@ -67,6 +67,7 @@ public class JwtTokenService {
         if(userPojo.getUserRole().equals(UserRoleEnum.STUDENT)){
             userCacheService.getStudentProfileByUserId(userId).ifPresent( student -> {
                 claims.setProfilePicture(student.getProfilePicture());
+                claims.setTimezone(student.getTimezone());
             });
         }else if(userPojo.getUserRole().equals(UserRoleEnum.EDUCATOR)){
             userCacheService.getEducatorProfileByUserId(userId).ifPresent( educator -> {

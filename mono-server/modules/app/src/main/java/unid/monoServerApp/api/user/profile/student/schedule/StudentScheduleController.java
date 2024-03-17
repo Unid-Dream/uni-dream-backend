@@ -150,4 +150,20 @@ public class StudentScheduleController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return UnifiedResponse.of(studentScheduleService.page(profileId,startDate,endDate,1,10));
     }
+
+
+    @GetMapping("student/session/history/{profileId}")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.STUDENT,
+            matchingSessionProfileId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Student Session History"
+    )
+    public @Valid UnifiedResponse<JSONObject> getStudentSessionHistory(
+            @PathVariable("profileId") @ACL.ProfileId UUID profileId) {
+        return UnifiedResponse.of(null);
+    }
 }

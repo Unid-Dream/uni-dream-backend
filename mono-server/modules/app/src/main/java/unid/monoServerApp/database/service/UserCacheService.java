@@ -64,6 +64,13 @@ public class UserCacheService {
                 .fetchOptionalInto(DbStudentProfile.Result.class);
     }
 
+    public Optional<DbStudentProfile.Result> getStudentProfileByProfileId(UUID profileId) {
+        var table = dbStudentProfile.getTable();
+        return dbStudentProfile.getQuery(table)
+                .where(table.ID.eq(profileId))
+                .fetchOptionalInto(DbStudentProfile.Result.class);
+    }
+
     @Deprecated
     public DbStudentProfile.Result getStudentProfile(UserPojo userPojo){
 

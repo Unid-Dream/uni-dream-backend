@@ -43,6 +43,8 @@ public class DbEducatorSessionNoteItem extends Db<EducatorSessionNoteItemTable, 
         return q.from(alias);
     }
 
+
+
     @Override
     public Condition validateCondition(EducatorSessionNoteItemTable table) {
         return DSL.noCondition();

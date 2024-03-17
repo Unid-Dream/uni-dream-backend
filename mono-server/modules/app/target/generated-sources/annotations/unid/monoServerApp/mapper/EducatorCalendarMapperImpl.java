@@ -21,7 +21,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-16T23:25:50+0800",
+    date = "2024-03-17T09:35:01+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -227,6 +227,7 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
         studentProfileSimplePayload.setLastNameI18n( resultToI18n( result.getLastNameI18n() ) );
         studentProfileSimplePayload.setFirstNameI18n( resultToI18n( result.getFirstNameI18n() ) );
         studentProfileSimplePayload.setCountry( resultToCountry( result.getCountry() ) );
+        studentProfileSimplePayload.setProfilePicture( result.getProfilePicture() );
         studentProfileSimplePayload.setSecondarySchool( resultToSecondarySchool( result.getSecondarySchool() ) );
         studentProfileSimplePayload.setSecondarySchoolEducationLevel( resultToSecondarySchoolEducationLevel( result.getSecondarySchoolEducationLevel() ) );
 

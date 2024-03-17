@@ -78,6 +78,7 @@ public class EducatorCalendarService {
                                                         DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
                                                 ).as(DbStudentProfile.Result.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbI18N.Result.class)),
                                                 STUDENT_PROFILE.ID.as(StudentProfilePojo.Columns.id),
+                                                STUDENT_PROFILE.PROFILE_PICTURE.as(StudentProfilePojo.Columns.profilePicture),
                                                 DSL.multiset(
                                                         DSL.select(
                                                                     TAG.ID,
