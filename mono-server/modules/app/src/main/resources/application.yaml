@@ -92,3 +92,6 @@ unid:
     ms-secret-value: ${MS_SECRET_VALUE}
     ms-secret-id: ${MS_SECRET_ID}
     ms-organizer-id: ${MS_ORGANIZER_ID}
+
+server:
+  forward-headers-strategy: framework
