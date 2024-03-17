@@ -51,23 +51,23 @@ public class TransactionController {
 
 
 
-    @GetMapping("student/session/history/{profileId}")
-    @ACL(
-            authed = true,
-            allowedRoles = UserRoleEnum.STUDENT,
-            matchingSessionProfileId = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Get One"
-    )
-
-    public @Valid UnifiedResponse<TransactionResponse> list(
-            @PathVariable("profileId") UUID profileId
-    ) {
-        transactionService.list(profileId);
-        return UnifiedResponse.of(
-                null
-        );
-    }
+//    @GetMapping("student/session/history/{profileId}")
+//    @ACL(
+//            authed = true,
+//            allowedRoles = UserRoleEnum.STUDENT,
+//            matchingSessionProfileId = true
+//    )
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(
+//            summary = "Get One"
+//    )
+//
+//    public @Valid UnifiedResponse<TransactionResponse> list(
+//            @PathVariable("profileId") UUID profileId
+//    ) {
+//        transactionService.list(profileId);
+//        return UnifiedResponse.of(
+//                null
+//        );
+//    }
 }
