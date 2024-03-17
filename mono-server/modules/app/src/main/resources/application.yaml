@@ -8,7 +8,7 @@ spring:
     # 'default' in production
     # assign VM Option "-Dspring.profiles.active=local" during launching for dev to activate local configs
     active: "default"
-    include: local
+    include: demo
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USER}
