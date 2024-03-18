@@ -60,7 +60,8 @@ public class EducatorCalendarService {
 
 
 
-    public EducatorCalendarSimpleResponse getAvailableTimeSlots(UUID educatorProfileId,EducatorCalendarRequest.TimeSlotPayload payload){
+    public EducatorCalendarSimpleResponse getAvailableTimeSlots(UUID educatorProfileId,
+                                                                EducatorCalendarRequest.TimeSlotPayload payload){
         //根据时间范围查询, 状态为"预定"的时间槽
         OffsetDateTime startDateTimeUtc = OffsetDateTime.parse(payload.getStartDateTimeUtc());
         OffsetDateTime endDateTimeUtc = OffsetDateTime.parse(payload.getEndDateTimeUtc());

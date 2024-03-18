@@ -35,6 +35,7 @@ import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentScheduleMapper;
 import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
 import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
+import unid.monoServerMeta.api.StudentSchedulePageRequest;
 import unid.monoServerMeta.api.StudentScheduleResponse;
 
 import javax.validation.Valid;
@@ -168,11 +169,10 @@ public class StudentScheduleController {
     )
     public @Valid UnifiedResponse<JSONObject> list(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate) {
+            @ParameterObject StudentSchedulePageRequest request) {
         return UnifiedResponse.of(studentScheduleService.page(profileId,
-                StrUtil.isEmpty(startDate) ? null : OffsetDateTime.parse(startDate).toLocalDate(),
-                StrUtil.isEmpty(endDate) ? null : OffsetDateTime.parse(endDate).toLocalDate(),
+                StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()).toLocalDate(),
+                StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()).toLocalDate(),
                 1,
                 10));
     }
