@@ -14,7 +14,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>modules/mono</module>
-    <module>untitled</module>
   </modules>
   <properties>
     <unid.jooq-generator.columns-ignorecase-convertor>pwh.coreJooqLibs.converter.IgnoreCaseConverter</unid.jooq-generator.columns-ignorecase-convertor>

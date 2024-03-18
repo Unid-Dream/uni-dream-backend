@@ -1,11 +1,9 @@
-import com.asiapay.secure.PaydollarSecureException;
-import com.asiapay.secure.PaydollarSecureUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import unid.monoServerApp.SpringApp;
-
-import java.math.BigDecimal;
+import unid.monoServerApp.util.asiapay.PaydollarSecureException;
+import unid.monoServerApp.util.asiapay.PaydollarSecureUtil;
 
 @SpringBootTest(classes = SpringApp.class)
 @AutoConfigureMockMvc

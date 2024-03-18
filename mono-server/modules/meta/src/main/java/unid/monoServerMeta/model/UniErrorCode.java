@@ -180,7 +180,7 @@ public enum UniErrorCode{
         /**
          * 支付宝调用失败
          */
-        FAIL_TO_PAY_ON_ALIPAY(1001, "支付调用失败", "External.FAIL_TO_PAY_ON_ALIPAY");
+        FAIL_TO_PAY_ON_ALIPAY(1001, "支付调用失败", "External.FAIL_TO_PAY_ON_ASIAYPAY");
 
 
         private final int code;

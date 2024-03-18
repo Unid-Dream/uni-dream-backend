@@ -24,12 +24,13 @@ import unid.monoServerMeta.api.EducatorProfileResponse;
 import unid.monoServerMeta.api.EducatorProfileSimpleRequest;
 import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
 import unid.monoServerMeta.api.ExpertiseResponse;
+import unid.monoServerMeta.model.ApplicationApprovalEnum;
 import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-18T11:21:33+0800",
+    date = "2024-03-18T16:00:34+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -90,6 +91,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileSimpleResponse.setLanguageId( uUIDArrayToUUIDList( data.getLanguageId() ) );
         educatorProfileSimpleResponse.setProfilePicture( data.getProfilePicture() );
         educatorProfileSimpleResponse.setHourlyRate( data.getHourlyRate() );
+        educatorProfileSimpleResponse.setApplicationApproval( applicationApprovalEnumToApplicationApprovalEnum( data.getApplicationApproval() ) );
         educatorProfileSimpleResponse.setGender( genderEnumToGender( data.getGender() ) );
 
         return educatorProfileSimpleResponse;
@@ -244,6 +246,26 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         }
 
         return list;
+    }
+
+    protected ApplicationApprovalEnum applicationApprovalEnumToApplicationApprovalEnum(unid.jooqMono.model.enums.ApplicationApprovalEnum applicationApprovalEnum) {
+        if ( applicationApprovalEnum == null ) {
+            return null;
+        }
+
+        ApplicationApprovalEnum applicationApprovalEnum1;
+
+        switch ( applicationApprovalEnum ) {
+            case PENDING: applicationApprovalEnum1 = ApplicationApprovalEnum.PENDING;
+            break;
+            case APPROVED: applicationApprovalEnum1 = ApplicationApprovalEnum.APPROVED;
+            break;
+            case REJECTED: applicationApprovalEnum1 = ApplicationApprovalEnum.REJECTED;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + applicationApprovalEnum );
+        }
+
+        return applicationApprovalEnum1;
     }
 
     protected Gender genderEnumToGender(GenderEnum genderEnum) {

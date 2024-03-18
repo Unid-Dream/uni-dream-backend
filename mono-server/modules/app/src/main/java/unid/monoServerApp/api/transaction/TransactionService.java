@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.util.asiapay.PaydollarSecureUtil;
+import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
@@ -80,12 +82,13 @@ public class TransactionService {
 
     }
 
-    public PaymentTransactionResponse payment(UUID profileId, UUID transactionId) {
+    public PaymentTransactionResponse payment(UUID profileId, PaymentTransactionRequest request) {
         PaymentTransactionResponse response = new PaymentTransactionResponse();
         //查询当前学生是否有这个订单
+        //TODO:还需要判断当前订单是否有效
         DbStudentPaymentTransaction.Result transaction = dbStudentPaymentTransaction.getDsl().select()
                 .from(STUDENT_PAYMENT_TRANSACTION)
-                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId)))
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(request.getTransactionId()).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId)))
                 .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
                 .orElseThrow(()->Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
         //组装 AsiaPay Frontend需要的参数,以及创建
@@ -93,14 +96,15 @@ public class TransactionService {
         payload.setAmount(transaction.getTransactionAmount().toString());
         payload.setOrderRef(transaction.getId().toString());
         payload.setPaymentType("N");
-        payload.setCurrCode("334");
+        payload.setCurrCode(request.getAsiaPayPayload().getCurrCode());
         payload.setMerchantId("88163035");
-//        try{
-//            payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
-//        }catch (Exception e){
-//            StaticLog.error(" 创建AsiaPay SecureHash 异常",e);
-//            throw Exceptions.external(UniErrorCode.External.FAIL_TO_PAY_ON_ALIPAY);
-//        }
+        payload.setPayMethod(request.getAsiaPayPayload().getPayMethod());
+        try{
+            payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
+        }catch (Exception e){
+            StaticLog.error(" 创建AsiaPay SecureHash 异常",e);
+            throw Exceptions.external(UniErrorCode.External.FAIL_TO_PAY_ON_ALIPAY);
+        }
         response.setAsiaPayPayload(payload);
         return response;
 

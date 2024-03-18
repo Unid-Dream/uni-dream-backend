@@ -4,21 +4,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
+import java.util.UUID;
+
 @Data
 @FieldNameConstants
 @Schema
-public class PaymentTransactionResponse {
+public class PaymentTransactionRequest {
+    private UUID transactionId;
+
     private AsiaPayPayload asiaPayPayload;
 
     @Data
     @Schema
     public static class AsiaPayPayload{
-        private String merchantId;
-        private String orderRef;
         private String currCode;
-        private String amount;
-        private String paymentType;
-        private String secureHash;
         private String payMethod;
     }
 }

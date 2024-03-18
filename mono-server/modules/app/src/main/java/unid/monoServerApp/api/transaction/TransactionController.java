@@ -1,9 +1,8 @@
 package unid.monoServerApp.api.transaction;
 
+import cn.hutool.json.JSONUtil;
+import cn.hutool.log.StaticLog;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
+import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
-import unid.monoServerMeta.api.UserResponse;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -62,10 +62,28 @@ public class TransactionController {
     )
     public @Valid UnifiedResponse<PaymentTransactionResponse> payment(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
-            @PathVariable("transactionId") @ACL.ProfileId UUID transactionId
+            @RequestBody PaymentTransactionRequest request
     ) {
         return UnifiedResponse.of(
-                transactionService.payment(profileId,transactionId)
+                transactionService.payment(profileId,request)
+        );
+    }
+
+
+    @PostMapping("/student/transaction/payment/asiapay/callback")
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Asia Pay Notify Payment Result"
+    )
+    public @Valid UnifiedResponse<Void> asiaPayNotify(
+            Map<String,Object> param
+    ) {
+        StaticLog.info(" AsiaPay Notify Param {}", JSONUtil.toJsonPrettyStr(param));
+        return UnifiedResponse.of(
+                null
         );
     }
 
