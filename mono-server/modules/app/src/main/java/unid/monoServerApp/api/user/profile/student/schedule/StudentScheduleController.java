@@ -1,5 +1,6 @@
 package unid.monoServerApp.api.user.profile.student.schedule;//package unid.monoServerApp.api.country;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -169,10 +170,9 @@ public class StudentScheduleController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
-
         return UnifiedResponse.of(studentScheduleService.page(profileId,
-                startDate == null ? null : OffsetDateTime.parse(startDate).toLocalDate(),
-                endDate == null ? null : OffsetDateTime.parse(endDate).toLocalDate(),
+                StrUtil.isEmpty(startDate) ? null : OffsetDateTime.parse(startDate).toLocalDate(),
+                StrUtil.isEmpty(endDate) ? null : OffsetDateTime.parse(endDate).toLocalDate(),
                 1,
                 10));
     }
