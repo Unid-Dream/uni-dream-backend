@@ -31,8 +31,8 @@ public class EducatorProfileSimpleRequest {
     private Integer hourlyRate;
     private String profilePicture;
 
-    private String countryCode;
-    private String phoneNumber;
+    private String phoneCountryCode;
+    private String phone;
     private Gender gender;
 
     @Data

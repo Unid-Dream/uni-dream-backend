@@ -167,6 +167,9 @@ public class EducatorCalendarService {
         dbEducatorCalendar.getDao().deleteById(educatorProfileId);
     }
 
+    void reschedule(UUID educatorProfileId,SessionRescheduleRequest request){
+
+    }
 
     void acceptOrDenyBooking(
             UUID educatorProfileId,

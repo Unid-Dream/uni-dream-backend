@@ -136,6 +136,26 @@ public class EducatorCalendarController {
         return UnifiedResponse.of(null);
     }
 
+
+    @PutMapping("educator/user/profile/educator/{educatorProfileId}/calendar/reserve/reschedule")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.EDUCATOR},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Educator Reschedule Calendar Reservation"
+    )
+    public @Valid UnifiedResponse<Void> reschedule(
+            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @RequestBody @Valid SessionRescheduleRequest request) {
+        educatorCalendarService.reschedule(educatorProfileId,request);
+        return UnifiedResponse.of(null);
+    }
+
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/reserve/deny")
     @Transactional
     @ACL(
