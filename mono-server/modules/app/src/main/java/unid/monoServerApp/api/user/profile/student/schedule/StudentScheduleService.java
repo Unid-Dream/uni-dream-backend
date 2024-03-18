@@ -47,6 +47,7 @@ public class StudentScheduleService {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final StudentPaymentTransactionMapper studentPaymentTransactionMapper;
 
+
     public JSONObject page(UUID profileId,
                            LocalDate startDate,
                            LocalDate endDate,
@@ -88,31 +89,32 @@ public class StudentScheduleService {
 
 
        List<StudentScheduleResponse> list = dslContext.select(
-                STUDENT_PAYMENT_TRANSACTION.ID.as(StudentScheduleResponse.Fields.transactionId),
-                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.as(StudentScheduleResponse.Fields.id),
-                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT,
-                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_CURRENCY,
-                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM,
-                STUDENT_PAYMENT_TRANSACTION.PAYMENT_METHOD,
-                STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS,
-                       STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentScheduleResponse.Fields.requestSubmissionTime),
-
-                       STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(BaseResponse.BaseResponseFields.createdOnUtc),
-                STUDENT_PAYMENT_TRANSACTION.UPDATED_ON.as(BaseResponse.BaseResponseFields.updatedOnUtc),
-                multiset(
-                               dbEducatorProfile.getQueryEducatorProfile().and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
-                        ).as(StudentScheduleResponse.Fields.educator).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(EducatorResponse.class)),
-                multiset(
-                               calendarQ.where(EDUCATOR_CALENDAR.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
-                       ).as(StudentScheduleResponse.Fields.calendar).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentScheduleResponse.Calendar.class)),
-                multiset(
-                               dbLearningHub.getQuery().and(EVENT.ID.eq(EDUCATOR_CALENDAR_EXTENSION.EVENT_ID))
-                       ).as(StudentScheduleResponse.Fields.learningHubResponse).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(LearningHubResponse.class)),
-                multiset(
-                               select(I18N.fields())
-                                       .from(EVENT,I18N)
-                                       .where(I18N.ID.eq(EVENT.TITLE_I18N_ID).and(EDUCATOR_CALENDAR_EXTENSION.EVENT_ID.eq(EVENT.ID)))
-                       ).as(StudentScheduleResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+//                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.as(StudentScheduleResponse.Fields.id),
+//                       STUDENT_PAYMENT_TRANSACTION.ID.as(StudentScheduleResponse.Fields.transactionId),
+//
+//                       STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT,
+//                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_CURRENCY,
+//                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM,
+//                STUDENT_PAYMENT_TRANSACTION.PAYMENT_METHOD,
+//                STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS,
+//                       STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentScheduleResponse.Fields.requestSubmissionTime),
+//
+//                       STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(BaseResponse.BaseResponseFields.createdOnUtc),
+//                STUDENT_PAYMENT_TRANSACTION.UPDATED_ON.as(BaseResponse.BaseResponseFields.updatedOnUtc),
+//                multiset(
+//                               dbEducatorProfile.getQueryEducatorProfile().and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
+//                        ).as(StudentScheduleResponse.Fields.educator).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(EducatorResponse.class)),
+//                multiset(
+//                               calendarQ.where(EDUCATOR_CALENDAR.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
+//                       ).as(StudentScheduleResponse.Fields.calendar).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentScheduleResponse.Calendar.class)),
+//                multiset(
+//                               dbLearningHub.getQuery().and(EVENT.ID.eq(EDUCATOR_CALENDAR_EXTENSION.EVENT_ID))
+//                       ).as(StudentScheduleResponse.Fields.learningHubResponse).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(LearningHubResponse.class)),
+//                multiset(
+//                               select(I18N.fields())
+//                                       .from(EVENT,I18N)
+//                                       .where(I18N.ID.eq(EVENT.TITLE_I18N_ID).and(EDUCATOR_CALENDAR_EXTENSION.EVENT_ID.eq(EVENT.ID)))
+//                       ).as(StudentScheduleResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
 
                ).from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR,EDUCATOR_CALENDAR_EXTENSION)
                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID).and(EDUCATOR_CALENDAR_EXTENSION.EDUCATOR_CALENDAR_ID.eq(EDUCATOR_CALENDAR.ID)))
