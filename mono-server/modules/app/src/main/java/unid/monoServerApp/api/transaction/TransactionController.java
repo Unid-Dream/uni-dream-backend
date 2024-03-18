@@ -51,7 +51,7 @@ public class TransactionController {
 
 
 
-    @PostMapping("student/{profileId}/transaction/{transactionId}/payment")
+    @PostMapping("student/{profileId}/transaction/payment")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.STUDENT,

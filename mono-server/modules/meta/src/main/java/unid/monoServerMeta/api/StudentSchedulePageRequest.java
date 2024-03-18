@@ -1,5 +1,6 @@
 package unid.monoServerMeta.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -12,6 +13,8 @@ public class StudentSchedulePageRequest {
 
     private String startDate;
     private String endDate;
+    @JsonIgnore
     private Integer pageNumber;
+    @JsonIgnore
     private Integer pageSize;
 }
