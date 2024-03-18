@@ -13,7 +13,7 @@ import unid.monoServerMeta.api.SchoolIdentityResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-18T20:54:48+0800",
+    date = "2024-03-18T21:35:08+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
