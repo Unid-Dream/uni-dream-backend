@@ -178,7 +178,9 @@ public class EducatorCalendarController {
     }
 
 
-    @GetMapping("educator/user/profile/educator/{profileId}/calendar/{calendarId}/session/status")
+    @GetMapping(value = {
+            "educator/user/profile/educator/{profileId}/calendar/{calendarId}/session/status" ,
+            "student/user/profile/educator/{profileId}/calendar/{calendarId}/session/status"})
     @Transactional
     @ACL(
             authed = true,
