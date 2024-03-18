@@ -1,5 +1,5 @@
 # 基于OpenJDK构建Spring Boot应用的Docker镜像
-FROM 767398110927.dkr.ecr.ap-southeast-1.amazonaws.com/openjdk:11-jre-slim
+FROM openjdk:11-jre-slim
 
 # 将目标jar包复制到容器中
 COPY ./modules/app/target/monoserver-app-20230926.0.jar /app.jar

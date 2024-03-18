@@ -171,8 +171,8 @@ public class StudentScheduleController {
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @ParameterObject StudentSchedulePageRequest request) {
         return UnifiedResponse.of(studentScheduleService.page(profileId,
-                StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()).toLocalDate(),
-                StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()).toLocalDate(),
+                StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()),
+                StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()),
                 request.getPageNumber(),
                 request.getPageSize()));
     }
