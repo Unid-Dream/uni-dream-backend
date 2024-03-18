@@ -73,6 +73,7 @@ public class JwtTokenService {
             userCacheService.getEducatorProfileByUserId(userId).ifPresent( educator -> {
                 claims.setProfilePicture(educator.getProfilePicture());
                 claims.setTimezone(educator.getTimezone());
+                claims.setEducatorProfileId(educator.getId());
                 claims.setApplicationApproval(educator.getApplicationApproval().getLiteral());
             });
         }

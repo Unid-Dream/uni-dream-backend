@@ -21,6 +21,7 @@ import java.util.UUID;
 @FieldNameConstants
 @Validated
 public class JwtTokenClaims implements Serializable {
+    private UUID educatorProfileId;
     @NotNull
     private UUID userId;
     @NotNull

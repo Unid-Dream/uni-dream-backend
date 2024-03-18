@@ -2,6 +2,7 @@ package unid.monoServerMeta.api;
 
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
+import unid.monoServerMeta.model.ApplicationApprovalEnum;
 import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 
@@ -24,6 +25,7 @@ public class EducatorProfileSimpleResponse implements Serializable {
     private List<UUID> languageId;
     private String profilePicture;
     private Integer hourlyRate;
+    private ApplicationApprovalEnum applicationApproval;
 
     private String phoneCountryCode;
     private String phone;
