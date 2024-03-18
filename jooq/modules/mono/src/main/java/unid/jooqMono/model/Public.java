@@ -60,6 +60,7 @@ import unid.jooqMono.model.tables.PricingTable;
 import unid.jooqMono.model.tables.SchoolExtensionTable;
 import unid.jooqMono.model.tables.SchoolIdentityTable;
 import unid.jooqMono.model.tables.SchoolTable;
+import unid.jooqMono.model.tables.SessionRescheduleTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyAnswerMapTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyMapTable;
 import unid.jooqMono.model.tables.StudentEcaProfileMapTable;
@@ -649,6 +650,11 @@ public class Public extends SchemaImpl {
     public final SchoolIdentityTable SCHOOL_IDENTITY = SchoolIdentityTable.SCHOOL_IDENTITY;
 
     /**
+     * The table <code>public.session_reschedule</code>.
+     */
+    public final SessionRescheduleTable SESSION_RESCHEDULE = SessionRescheduleTable.SESSION_RESCHEDULE;
+
+    /**
      * The table <code>public.student_booking_survey_answer_map</code>.
      */
     public final StudentBookingSurveyAnswerMapTable STUDENT_BOOKING_SURVEY_ANSWER_MAP = StudentBookingSurveyAnswerMapTable.STUDENT_BOOKING_SURVEY_ANSWER_MAP;
@@ -960,6 +966,7 @@ public class Public extends SchemaImpl {
             SchoolTable.SCHOOL,
             SchoolExtensionTable.SCHOOL_EXTENSION,
             SchoolIdentityTable.SCHOOL_IDENTITY,
+            SessionRescheduleTable.SESSION_RESCHEDULE,
             StudentBookingSurveyAnswerMapTable.STUDENT_BOOKING_SURVEY_ANSWER_MAP,
             StudentBookingSurveyMapTable.STUDENT_BOOKING_SURVEY_MAP,
             StudentEcaProfileMapTable.STUDENT_ECA_PROFILE_MAP,

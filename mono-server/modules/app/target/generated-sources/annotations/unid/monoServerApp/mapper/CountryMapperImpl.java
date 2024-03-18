@@ -13,7 +13,7 @@ import unid.monoServerMeta.api.CountryResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-17T21:01:52+0800",
+    date = "2024-03-18T11:21:32+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component

@@ -144,6 +144,9 @@ public enum UniErrorCode{
         // ---------------------------------- STUDENT -----------------------------------------------
         STUDENT_PAYMENT_TRANSACTION_NOT_EXIST(10705,"Business.当前交易不存在"),
 
+        // ---------------------------------- USER -----------------------------------------------
+        USER_PROFILE_ID_NOT_EXIST(10805,"Business.用户不存在"),
+
         ;
 
 

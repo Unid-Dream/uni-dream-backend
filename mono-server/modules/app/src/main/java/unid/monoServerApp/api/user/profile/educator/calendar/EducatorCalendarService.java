@@ -9,19 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import unid.jooqMono.model.enums.*;
 import unid.jooqMono.model.tables.daos.StudentPaymentTransactionDao;
-import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
-import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
-import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
-import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
+import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
+import unid.monoServerApp.database.table.educatorCalendar.DbSessionReschedule;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.EducatorCalendarMapper;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
 import unid.monoServerApp.queue.model.EmailRequestPayload;
@@ -47,6 +46,8 @@ public class EducatorCalendarService {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final DbEducatorProfile dbEducatorProfile;
     private final StudentPaymentTransactionMapper studentPaymentTransactionMapper;
+    private final DbUser dbUser;
+    private final DbSessionReschedule dbSessionReschedule;
 
     public DbEducatorCalendar.Result get(UUID id) {
         var table = dbEducatorCalendar.getTable();
@@ -167,9 +168,7 @@ public class EducatorCalendarService {
         dbEducatorCalendar.getDao().deleteById(educatorProfileId);
     }
 
-    void reschedule(UUID educatorProfileId,SessionRescheduleRequest request){
 
-    }
 
     void acceptOrDenyBooking(
             UUID educatorProfileId,
@@ -210,7 +209,6 @@ public class EducatorCalendarService {
             dbStudentPaymentTransaction.getDao().update(studentPaymentTransactionPojo);
             //将EducatorCalendar的状态改为Accept
             //给student 发送educator accept email
-
 
         });
 
@@ -313,6 +311,31 @@ public class EducatorCalendarService {
                 .fetchOptionalInto(DbEducatorCalendar.Result.class)
                 .orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_NOT_EXIST));
         return educatorCalendarMapper.toSessionResponse(data);
+
+    }
+
+    public void reschedule(UUID profileId, SessionRescheduleRequest request) {
+        //查询这个profileId,是老师还是学生
+        DbUser.Result user = dbUser.getDsl()
+                .select(USER.asterisk())
+                .from(STUDENT_PROFILE,USER)
+                .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(profileId)))
+                .fetchOptionalInto(DbUser.Result.class)
+                .orElseGet(
+                        ()-> dbUser.getDsl()
+                                .select(USER.asterisk())
+                                .from(EDUCATOR_PROFILE,USER)
+                                .where(EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_PROFILE.ID.eq(profileId)))
+                                .fetchOptionalInto(DbUser.Result.class)
+                                .orElseThrow(()->Exceptions.business(UniErrorCode.Business.USER_PROFILE_ID_NOT_EXIST))
+                );
+        SessionReschedulePojo pojo = new SessionReschedulePojo()
+                .setEducatorCalendarId(request.getEducatorCalendarId())
+                .setEndTimeUtc(OffsetDateTime.parse(request.getEndTimeUtc()))
+                .setStartTimeUtc(OffsetDateTime.parse(request.getStartTimeUtc()))
+                .setUserId(user.getId())
+                .setUserRole(user.getUserRole());
+        dbSessionReschedule.getDao().insert(pojo);
 
 
 

@@ -29,7 +29,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-17T22:22:36+0800",
+    date = "2024-03-18T11:21:33+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -81,6 +81,7 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
         educatorProfileSimpleResponse.setPhoneCountryCode( data.getPhoneCountryCode() );
         educatorProfileSimpleResponse.setPhone( data.getPhone() );
         educatorProfileSimpleResponse.setEmail( data.getEmail() );
+        educatorProfileSimpleResponse.setId( data.getId() );
         educatorProfileSimpleResponse.setCountryId( data.getCountryId() );
         educatorProfileSimpleResponse.setTimezone( data.getTimezone() );
         educatorProfileSimpleResponse.setDescription( data.getDescription() );
@@ -152,6 +153,8 @@ public class EducatorProfileMapperImpl implements EducatorProfileMapper {
 
         data.setCountryId( source.getCountryId() );
         data.setProfilePicture( source.getProfilePicture() );
+        data.setPhoneCountryCode( source.getPhoneCountryCode() );
+        data.setPhone( source.getPhone() );
         data.setHourlyRate( source.getHourlyRate() );
         data.setExpertiseId( uUIDListToUUIDArray( source.getExpertiseId() ) );
         data.setDescription( source.getDescription() );

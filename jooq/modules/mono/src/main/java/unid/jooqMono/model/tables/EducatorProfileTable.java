@@ -256,11 +256,10 @@ public class EducatorProfileTable extends TableImpl<EducatorProfileRecord> {
     @Override
     @Nonnull
     public List<ForeignKey<EducatorProfileRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_USER, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_COUT, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_UITY, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_EDU_LEVL, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_UITY_IDTY);
+        return Arrays.asList(Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_USER, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_UITY, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_EDU_LEVL, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_UITY_IDTY);
     }
 
     private transient UserTable _user;
-    private transient CountryTable _country;
     private transient SchoolTable _school;
     private transient EducationLevelTable _educationLevel;
     private transient SchoolIdentityTable _schoolIdentity;
@@ -270,13 +269,6 @@ public class EducatorProfileTable extends TableImpl<EducatorProfileRecord> {
             _user = new UserTable(this, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_USER);
 
         return _user;
-    }
-
-    public CountryTable country() {
-        if (_country == null)
-            _country = new CountryTable(this, Keys.EDUCATOR_PROFILE__FK_EDUC_PROF_COUT);
-
-        return _country;
     }
 
     public SchoolTable school() {

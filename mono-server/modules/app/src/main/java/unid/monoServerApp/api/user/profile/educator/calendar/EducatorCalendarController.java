@@ -137,11 +137,11 @@ public class EducatorCalendarController {
     }
 
 
-    @PutMapping("educator/user/profile/educator/{educatorProfileId}/calendar/reserve/reschedule")
+    @PutMapping(value = {"educator/user/profile/{profileId}/calendar/reserve/reschedule","student/user/profile/{profileId}/calendar/reserve/reschedule"})
     @Transactional
     @ACL(
             authed = true,
-            allowedRoles = {UserRoleEnum.EDUCATOR},
+            allowedRoles = {UserRoleEnum.EDUCATOR,UserRoleEnum.STUDENT},
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
@@ -150,9 +150,9 @@ public class EducatorCalendarController {
             summary = "Educator Reschedule Calendar Reservation"
     )
     public @Valid UnifiedResponse<Void> reschedule(
-            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid SessionRescheduleRequest request) {
-        educatorCalendarService.reschedule(educatorProfileId,request);
+        educatorCalendarService.reschedule(profileId,request);
         return UnifiedResponse.of(null);
     }
 
