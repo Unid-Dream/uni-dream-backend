@@ -308,7 +308,7 @@ public class EducatorCalendarService {
                         ).as(DbEducatorCalendar.Result.Fields.paymentTransaction).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbStudentPaymentTransaction.Result.class))
                 )
                 .from(EDUCATOR_CALENDAR)
-                .where(EDUCATOR_CALENDAR.ID.eq(calendarId).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId)))
+                .where(EDUCATOR_CALENDAR.ID.eq(calendarId))
                 .fetchOptionalInto(DbEducatorCalendar.Result.class)
                 .orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_NOT_EXIST));
         return educatorCalendarMapper.toSessionResponse(data);

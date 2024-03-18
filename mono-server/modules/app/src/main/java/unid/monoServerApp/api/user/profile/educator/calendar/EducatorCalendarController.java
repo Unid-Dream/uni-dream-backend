@@ -184,7 +184,7 @@ public class EducatorCalendarController {
     @Transactional
     @ACL(
             authed = true,
-            allowedRoles = {UserRoleEnum.EDUCATOR},
+            allowedRoles = {UserRoleEnum.EDUCATOR,UserRoleEnum.STUDENT},
             matchingSessionProfileId = true,
             educatorProfileApproved = true
     )
