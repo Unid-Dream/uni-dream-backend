@@ -173,8 +173,8 @@ public class StudentScheduleController {
         return UnifiedResponse.of(studentScheduleService.page(profileId,
                 StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()).toLocalDate(),
                 StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()).toLocalDate(),
-                1,
-                10));
+                request.getPageNumber(),
+                request.getPageSize()));
     }
 
 
