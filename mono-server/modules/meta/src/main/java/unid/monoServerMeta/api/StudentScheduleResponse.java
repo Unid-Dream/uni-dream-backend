@@ -42,7 +42,7 @@ public class StudentScheduleResponse extends BaseResponse {
     private PaymentStatus paymentStatus;
     @NotNull
     @Valid
-    private EducatorResponse educator;
+    private EducatorProfileSimpleResponse educator;
     @NotNull
     @Valid
     private Calendar calendar;
