@@ -88,8 +88,14 @@ public class StudentScheduleService {
                 .fetchOptionalInto(Integer.class).orElse(0);
 
 
-       List<StudentScheduleResponse> list = dslContext.select(
-//                STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.as(StudentScheduleResponse.Fields.id),
+       List<StudentScheduleResponse> list = dbStudentPaymentTransaction.getDsl()
+               .select(
+//                       STUDENT_PAYMENT_TRANSACTION.asterisk(),
+                       //查询 session
+
+//                       STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.as(StudentScheduleResponse.Fields.id)
+               )
+
 //                       STUDENT_PAYMENT_TRANSACTION.ID.as(StudentScheduleResponse.Fields.transactionId),
 //
 //                       STUDENT_PAYMENT_TRANSACTION.TRANSACTION_AMOUNT,
@@ -116,14 +122,13 @@ public class StudentScheduleService {
 //                                       .where(I18N.ID.eq(EVENT.TITLE_I18N_ID).and(EDUCATOR_CALENDAR_EXTENSION.EVENT_ID.eq(EVENT.ID)))
 //                       ).as(StudentScheduleResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
 
-               ).from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR,EDUCATOR_CALENDAR_EXTENSION)
-               .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID).and(EDUCATOR_CALENDAR_EXTENSION.EDUCATOR_CALENDAR_ID.eq(EDUCATOR_CALENDAR.ID)))
-               .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId))
-               .and(EDUCATOR_CALENDAR.DATE.ge(startDate).and(endDate == null? DSL.noCondition():EDUCATOR_CALENDAR.DATE.le(endDate)))
-               .orderBy(EDUCATOR_CALENDAR.DATE.desc(),EDUCATOR_CALENDAR.HOUR_START.asc())
-                .limit(pageSize)
-                .offset((pageNumber - 1) * pageSize)
-                .fetchInto(StudentScheduleResponse.class);
+               .from(STUDENT_PAYMENT_TRANSACTION)
+               .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId))
+//               .and(STUDENT_PAYMENT_TRANSACTION.DATE.ge(startDate).and(endDate == null? DSL.noCondition():EDUCATOR_CALENDAR.DATE.le(endDate)))
+//               .orderBy(STUDENT_PAYMENT_TRANSACTION.DATE.desc(),EDUCATOR_CALENDAR.HOUR_START.asc())
+               .limit(pageSize)
+               .offset((pageNumber - 1) * pageSize)
+               .fetchInto(StudentScheduleResponse.class);
 
         int totalPages = (totalRecords + pageSize - 1) / pageSize;
 
