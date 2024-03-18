@@ -204,24 +204,23 @@ public class SchoolService {
     }
 
 
-    @Cacheable(value = CacheTags.SECONDARY_SCHOOL, key = "#schoolLevelEnum", condition = "#schoolLevelEnum == T(unid.jooqMono.model.enums.SchoolLevelEnum).SECONDARY_SCHOOL")
+//    @Cacheable(value = CacheTags.SECONDARY_SCHOOL, key = "#schoolLevelEnum", condition = "#schoolLevelEnum == T(unid.jooqMono.model.enums.SchoolLevelEnum).SECONDARY_SCHOOL")
     public List<SchoolResponse> list(String searchKey,SchoolLevelEnum schoolLevelEnum){
         //如果是高中,则只查询
         if(schoolLevelEnum.equals(SchoolLevelEnum.SECONDARY_SCHOOL)){
-           List<SchoolResponse> list = dslContext.select(
-                            SCHOOL.ID,
-                            SCHOOL.CREATED_ON.as(BaseResponse.BaseResponseFields.createdOnUtc),
-                            SCHOOL.UPDATED_ON.as(BaseResponse.BaseResponseFields.updatedOnUtc),
-                            multiset(
-                                    DSL.select(I18N.fields())
-                                            .from(I18N)
-                                            .where(I18N.ID.eq(SCHOOL.NAME_I18N_ID))
-                            ).as(SchoolResponse.Fields.nameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
-                    )
-                    .from(SCHOOL)
-                    .where(SCHOOL.SCHOOL_LEVEL.eq(schoolLevelEnum))
-                    .fetchInto(SchoolResponse.class);
-           return list;
+            return dslContext.select(
+                             SCHOOL.ID,
+                             SCHOOL.CREATED_ON.as(BaseResponse.BaseResponseFields.createdOnUtc),
+                             SCHOOL.UPDATED_ON.as(BaseResponse.BaseResponseFields.updatedOnUtc),
+                             multiset(
+                                     DSL.select(I18N.fields())
+                                             .from(I18N)
+                                             .where(I18N.ID.eq(SCHOOL.NAME_I18N_ID))
+                             ).as(SchoolResponse.Fields.nameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                     )
+                     .from(SCHOOL)
+                     .where(SCHOOL.SCHOOL_LEVEL.eq(schoolLevelEnum))
+                     .fetchInto(SchoolResponse.class);
         }
 
 

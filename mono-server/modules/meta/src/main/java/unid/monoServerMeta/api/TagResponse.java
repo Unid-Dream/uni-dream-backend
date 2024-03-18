@@ -21,11 +21,11 @@ import java.util.UUID;
 @FieldNameConstants
 @Validated
 public class TagResponse extends BaseResponse {
-    @NotNull
+//    @NotNull
     private UUID id;
-    @NotNull
-    @Valid
+//    @NotNull
+//    @Valid
     private I18n descriptionI18n;
-    @NotNull
+//    @NotNull
     private TagCategory tagCategory;
 }
