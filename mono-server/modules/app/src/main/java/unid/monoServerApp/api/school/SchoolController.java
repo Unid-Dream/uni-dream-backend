@@ -207,7 +207,6 @@ public class SchoolController {
     @Operation(
             summary = "Query School Map"
     )
-    
     public @Valid UnifiedResponse<List<SchoolResponse>> getSchoolMap(
             @RequestParam(required = false) String searchKey,
             @RequestParam SchoolLevelEnum  schoolLevel
