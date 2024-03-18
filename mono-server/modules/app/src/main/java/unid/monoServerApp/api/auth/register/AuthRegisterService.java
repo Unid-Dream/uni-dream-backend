@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pwh.springStarter.service.ValidationService;
+import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
@@ -95,7 +96,7 @@ public class AuthRegisterService {
             );
         }else if (user.getUserRole().equals(UserRoleEnum.EDUCATOR)){
             dbEducatorProfile.getDao().insert(
-                    new EducatorProfilePojo().setUserId(user.getId())
+                    new EducatorProfilePojo().setUserId(user.getId()).setApplicationApproval(ApplicationApprovalEnum.PENDING)
             );
         }
         log.info("Inserted User: {}", user);

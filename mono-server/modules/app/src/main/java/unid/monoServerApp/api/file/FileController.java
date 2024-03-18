@@ -93,11 +93,11 @@ public class FileController {
     private static final String s3AccessKey = "AKIA3FLD543H7ZXHRDJW";
     private static final String s3SecretKey= "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";
 
-    @GetMapping("student/file/preSignedUrl")
+    @GetMapping(value = {"student/file/preSignedUrl","educator/file/preSignedUrl"})
     @ResponseStatus(HttpStatus.OK)
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = {UserRoleEnum.STUDENT,UserRoleEnum.EDUCATOR}
     )
     @Operation(
             summary = "Get PreSignedUrl"
