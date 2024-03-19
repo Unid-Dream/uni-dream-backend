@@ -15,9 +15,12 @@ import unid.jooqMono.model.enums.StudentTransactionItemEnum;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.database.table.course.DbEvent;
+import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.learningHub.DbLearningHub;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
@@ -48,8 +51,73 @@ public class StudentScheduleService {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final StudentPaymentTransactionMapper studentPaymentTransactionMapper;
 
+    private final DbEvent dbEvent;
+    private final DbStudentProfile dbStudentProfile;
+    private final DbEducatorCalendar dbEducatorCalendar;
 
-    public JSONObject page(UUID profileId,
+
+    public JSONObject page(UUID studentProfileId,
+                     OffsetDateTime startDateTimeUtc,
+                     OffsetDateTime endDateTimeUtc,
+                     Integer pageNumber,
+                     Integer pageSize){
+        //查询 sessionQ
+        var sessionQ = DSL.multiset(
+                dbEducatorCalendar.getSimpleQuery(dbEducatorCalendar.getTable())
+                        .where(dbEducatorCalendar.getTable().ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID)
+                                .and(dbEducatorCalendar.getTable().START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
+        ).as(DbStudentPaymentTransaction.Result.Fields.session).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorCalendar.SimpleResult.class));
+
+        //查询 courseQ
+        var courseQ = DSL.multiset(
+                dbEvent.getSimpleQuery(dbEvent.getTable()).where(EVENT.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
+        ).as(DbStudentPaymentTransaction.Result.Fields.event).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEvent.SimpleResult.class));
+
+        //查询 student
+        var studentQ = DSL.multiset(
+                dbStudentProfile
+                        .getSimpleQuery(dbStudentProfile.getTable())
+                        .where(STUDENT_PROFILE.ID.eq(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID))
+        ).as(DbStudentPaymentTransaction.Result.Fields.studentProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbStudentProfile.SimpleResult.class));
+
+
+
+        Integer total = dbStudentPaymentTransaction.getDsl()
+                .selectCount()
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .fetchOneInto(Integer.class);
+
+
+        List<DbStudentPaymentTransaction.Result> list = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_PAYMENT_TRANSACTION.asterisk(),
+                        courseQ,
+                        studentQ,
+                        sessionQ
+                )
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .limit(pageSize)
+                .offset((pageNumber - 1) * pageSize)
+                .fetchInto(DbStudentPaymentTransaction.Result.class);
+        List<StudentPaymentTransactionResponse> result = studentPaymentTransactionMapper.toResponse(list);
+        int totalPages = (total + pageSize - 1) / pageSize;
+
+        return JSONUtil.createObj().set("totalRecords", total)
+                .set("pageNumber", pageNumber)
+                .set("totalPages", totalPages)
+                .set("pageSize", pageSize)
+                .set("result", result);
+    }
+
+
+
+
+
+
+
+    public JSONObject pageXXXX(UUID profileId,
                            OffsetDateTime startDateTimeUtc,
                            OffsetDateTime endDateTimeUtc,
                            Integer pageNumber,

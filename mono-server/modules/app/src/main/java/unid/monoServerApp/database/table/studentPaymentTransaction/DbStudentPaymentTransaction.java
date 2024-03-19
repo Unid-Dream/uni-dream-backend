@@ -15,6 +15,7 @@ import unid.jooqMono.model.tables.daos.StudentPaymentTransactionDao;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
+import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
@@ -105,7 +106,11 @@ public class DbStudentPaymentTransaction extends Db<StudentPaymentTransactionTab
     // (selectively) inherited from related jOOQ generated POJO
     // expanding foreign keys
     public static final class Result extends StudentPaymentTransactionPojo implements Serializable {
-        private DbStudentProfile.Result studentProfile;
+        private DbStudentProfile.SimpleResult studentProfile;
+        private DbEducatorCalendar.SimpleResult session;
+        private DbEvent.SimpleResult event;
+
+
     }
 
     @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)

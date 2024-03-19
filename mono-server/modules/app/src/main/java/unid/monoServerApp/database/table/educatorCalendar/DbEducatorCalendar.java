@@ -5,10 +5,7 @@ import io.lettuce.core.BitFieldArgs;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.SelectJoinStep;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,10 +21,15 @@ import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
+import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteMap;
+import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerMeta.api.EducatorCalendarRejectRequest;
-import unid.monoServerMeta.model.UniErrorCode;
+import unid.monoServerMeta.api.EducatorLevelResponse;
+import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
+import unid.monoServerMeta.model.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -43,16 +45,19 @@ import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 @Slf4j
 public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalendarDao> {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
+    private final DbEducatorProfile dbEducatorProfile;
     private final Properties properties;
 
     @Autowired
     public DbEducatorCalendar(
             DSLContext dslContext,
             DbStudentPaymentTransaction dbStudentPaymentTransaction,
+            DbEducatorProfile dbEducatorProfile,
             Properties properties
     ) {
         super(dslContext, Public.PUBLIC.EDUCATOR_CALENDAR, new EducatorCalendarDao(dslContext.configuration()));
         this.dbStudentPaymentTransaction = dbStudentPaymentTransaction;
+        this.dbEducatorProfile = dbEducatorProfile;
         this.properties = properties;
     }
 
@@ -76,6 +81,22 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                         alias.asterisk()
                 );
         return q.from(alias);
+    }
+
+
+
+    public SelectJoinStep<Record> getSimpleQuery(EducatorCalendarTable alias) {
+         return  DSL.select(
+                        alias.asterisk(),
+                        DSL.multiset(
+                                dbEducatorProfile.getSimpleQuery(dbEducatorProfile.getTable())
+                                        .where(dbEducatorProfile.getTable().ID.eq(alias.EDUCATOR_PROFILE_ID))
+                        ).as(Result.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorProfile.SimpleResult.class))
+//                         DSL.multiset(
+//                                 dbEducatorSessionNoteMap.getQuery(dbEducatorSessionNoteMap.getTable()).where(dbEducatorSessionNoteMap.getTable().EDUCATOR_CALENDAR_ID.eq(alias.ID))
+//                         ).as(Result.Fields.comments).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorSessionNoteItem.Result.class))
+                )
+                .from(alias);
     }
 
     @Override
@@ -249,4 +270,19 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         private List<DbEducatorSessionNoteItem.Result> comments;
         private DbEducatorProfile.Result educatorProfile;
     }
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @FieldNameConstants
+    @ToString(callSuper = true)
+    // (selectively) inherited from related jOOQ generated POJO
+    // expanding foreign keys
+    public static final class SimpleResult extends EducatorCalendarPojo implements Serializable {
+        private DbEducatorProfile.SimpleResult educatorProfile;
+        private List<DbEducatorSessionNoteItem.Result> comments;
+    }
+
+
 }

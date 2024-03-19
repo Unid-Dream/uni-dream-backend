@@ -11,6 +11,7 @@ import unid.jooqMono.model.Tables;
 import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 import unid.jooqMono.model.tables.EducatorProfileLanguageMapTable;
 import unid.jooqMono.model.tables.EducatorProfileTable;
+import unid.jooqMono.model.tables.EventTable;
 import unid.jooqMono.model.tables.daos.EducatorProfileDao;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.monoServerApp.database.Db;
@@ -88,6 +89,36 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                 ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
         ).from(Tables.EDUCATOR_PROFILE,USER).where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID));
     }
+
+
+    public SelectJoinStep<Record> getSimpleQuery(EducatorProfileTable alias){
+        return DSL.select(
+                EDUCATOR_PROFILE.asterisk(),
+                multiset(
+                        select(USER.EMAIL)
+                                .from(USER)
+                                .where(USER.ID.eq(alias.USER_ID))
+                ).as(SimpleResult.Fields.email).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(String.class)),
+                multiset(
+                        select(
+                                EDUCATOR_SCHOOL.asterisk()
+                        )
+                                .from(EDUCATOR_SCHOOL)
+                                .where(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID.eq(Tables.EDUCATOR_PROFILE.ID))
+                ).as(DbEducatorProfile.Result.Fields.educationLevel).convertFrom(r -> r.isEmpty() ? null : r.into(DbEducatorSchool.Result.class)),
+                multiset(
+                        select()
+                                .from(I18N,USER)
+                                .where(I18N.ID.eq(USER.LAST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
+                ).as(DbEducatorProfile.Result.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                multiset(
+                        select()
+                                .from(I18N,USER)
+                                .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
+                ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+        ).from(alias);
+    }
+
 
 
 
@@ -308,5 +339,25 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
         private List<DbLanguage.Result> languages;
         private List<DbExpertise.Result> expertises;
         private List<DbEducatorSchool.Result> educationLevel;
+    }
+
+
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldNameConstants
+    @ToString(callSuper = true)
+    // (selectively) inherited from related jOOQ generated POJO
+    // expanding foreign keys
+    public static final class SimpleResult extends EducatorProfilePojo implements Serializable {
+        private static final long serialVersionUID = -8912227184217854156L;
+
+        private DbI18N.Result firstNameI18n;
+        private DbI18N.Result lastNameI18n;
+        private String email;
+
     }
 }

@@ -1,5 +1,7 @@
 package unid.monoServerApp.api.user.profile.student.schedule;//package unid.monoServerApp.api.country;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,12 +38,10 @@ import unid.monoServerApp.mapper.StudentScheduleMapper;
 import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
 import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
 import unid.monoServerMeta.api.StudentSchedulePageRequest;
-import unid.monoServerMeta.api.StudentScheduleResponse;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -170,12 +170,15 @@ public class StudentScheduleController {
     public @Valid UnifiedResponse<JSONObject> list(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @ParameterObject StudentSchedulePageRequest request) {
+
+
         return UnifiedResponse.of(studentScheduleService.page(profileId,
-                StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()),
-                StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()),
+                StrUtil.isEmpty(request.getStartDate()) ? null : DateUtil.parseLocalDateTime(request.getStartDate()).atOffset(ZoneOffset.UTC),
+                StrUtil.isEmpty(request.getEndDate()) ? null : DateUtil.parseLocalDateTime(request.getEndDate()).atOffset(ZoneOffset.UTC),
                 1,
                 20));
     }
+
 
 
     @GetMapping("student/session/history/{profileId}")

@@ -198,6 +198,20 @@ public class SchoolController {
         );
     }
 
+    @GetMapping(value = {"educator/secondarySchool /tags","student/secondarySchool /tags"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Tags"
+    )
+    public @Valid UnifiedResponse<List<TagResponse>> secondarySchoolTags() {
+        return UnifiedResponse.of(
+                schoolService.tags()
+        );
+    }
+
     @GetMapping("student/school/list")
     @ACL(
             authed = true,

@@ -12,7 +12,9 @@ public class AsiaPayTest {
 
     @Test
     public void testGeneratePaymentSecureHash() throws PaydollarSecureException {
-        String secureHash = PaydollarSecureUtil.generatePaymentSecureHash("88163035","b69d4ab3-a8b8-4c9d-b8d7-8f8ad48b27cc","344","75.00","N");
+        String secureHash = PaydollarSecureUtil.generatePaymentSecureHash(
+                "88163035",
+                "000000000018","156","3000","N");
         System.out.println(secureHash);
     }
 

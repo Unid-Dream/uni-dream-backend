@@ -2,14 +2,13 @@ package unid.monoServerApp.database.table.studentProfile;
 
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.SelectJoinStep;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.Tables;
+import unid.jooqMono.model.tables.StudentPaymentTransactionTable;
 import unid.jooqMono.model.tables.StudentProfileTable;
 import unid.jooqMono.model.tables.daos.StudentProfileDao;
 import unid.jooqMono.model.tables.pojos.StudentProfilePojo;
@@ -17,14 +16,19 @@ import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.curriculum.DbCurriculum;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
+import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.database.table.user.DbUser;
 
 import java.util.List;
 
 import static com.google.common.base.CharMatcher.any;
+import static org.jooq.impl.DSL.multiset;
+import static org.jooq.impl.DSL.select;
 import static unid.jooqMono.model.Tables.I18N;
+import static unid.jooqMono.model.Tables.USER;
 
 @Component
 public class DbStudentProfile extends Db<StudentProfileTable, StudentProfileDao> {
@@ -113,6 +117,26 @@ public class DbStudentProfile extends Db<StudentProfileTable, StudentProfileDao>
         return q.from(alias);
     }
 
+    public SelectJoinStep<Record> getSimpleQuery(StudentProfileTable alias){
+        return DSL.select(
+                        alias.asterisk(),
+                        multiset(
+                                select()
+                                        .from(I18N,USER)
+                                        .where(I18N.ID.eq(USER.LAST_NAME_I18N_ID).and(USER.ID.eq(Tables.STUDENT_PROFILE.USER_ID)))
+                        ).as(Result.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class)),
+                        multiset(
+                                select()
+                                        .from(I18N,USER)
+                                        .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(Tables.STUDENT_PROFILE.USER_ID)))
+                        ).as(Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(alias);
+    }
+
+
+
+
     @Override
     public Condition validateCondition(StudentProfileTable table) {
         return DSL.noCondition();
@@ -139,4 +163,21 @@ public class DbStudentProfile extends Db<StudentProfileTable, StudentProfileDao>
         private DbSchool.Result preferredUniversity_3;
         private List<DbStudentProfileSchoolReport.Result> studentProfileSchoolReports;
     }
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldNameConstants
+    @ToString(callSuper = true)
+    // (selectively) inherited from related jOOQ generated POJO
+    // expanding foreign keys
+    public static final class SimpleResult extends StudentProfilePojo {
+        private DbI18N.Result firstNameI18n;
+        private DbI18N.Result lastNameI18n;
+        private List<DbEducatorSchool.Result> educationLevel;
+    }
+
+
 }

@@ -59,6 +59,10 @@ public class DbEducatorSessionNoteMap extends Db<EducatorSessionNoteMapTable, Ed
         return q.from(alias);
     }
 
+
+
+
+
     public List<Map> getMap(
             EducatorSessionNoteMapTable alias,
             Function<SelectJoinStep<Record>, SelectForStep<Record>> sql
