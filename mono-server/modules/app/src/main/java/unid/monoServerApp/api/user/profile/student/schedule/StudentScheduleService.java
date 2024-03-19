@@ -9,6 +9,7 @@ import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
@@ -24,6 +25,7 @@ import unid.monoServerApp.database.table.learningHub.DbLearningHub;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
+import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
 import unid.monoServerMeta.model.I18n;
@@ -57,6 +59,7 @@ public class StudentScheduleService {
     private final DbEvent dbEvent;
     private final DbStudentProfile dbStudentProfile;
     private final DbEducatorCalendar dbEducatorCalendar;
+    private final RedisTemplate<String, String> redisTemplateRefCache;
 
 
     public JSONObject page(UUID studentProfileId,
@@ -248,6 +251,7 @@ public class StudentScheduleService {
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
                 .setProcessStatus(BookingStatusEnum.PENDING)
                 .setTransactionSubmitTime(LocalDateTime.now());
+        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("EC",redisTemplateRefCache));
         dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
         return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
     }

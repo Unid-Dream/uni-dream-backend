@@ -459,4 +459,22 @@ public class StudentPaymentTransactionDao extends DAOImpl<StudentPaymentTransact
     public List<StudentPaymentTransactionPojo> fetchByRejectReason(String... values) {
         return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.REJECT_REASON, values);
     }
+
+    /**
+     * Fetch records that have <code>transaction_serial_number BETWEEN
+     * lowerInclusive AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchRangeOfTransactionSerialNumber(String lowerInclusive, String upperInclusive) {
+        return fetchRange(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SERIAL_NUMBER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>transaction_serial_number IN
+     * (values)</code>
+     */
+    @Nonnull
+    public List<StudentPaymentTransactionPojo> fetchByTransactionSerialNumber(String... values) {
+        return fetch(StudentPaymentTransactionTable.STUDENT_PAYMENT_TRANSACTION.TRANSACTION_SERIAL_NUMBER, values);
+    }
 }

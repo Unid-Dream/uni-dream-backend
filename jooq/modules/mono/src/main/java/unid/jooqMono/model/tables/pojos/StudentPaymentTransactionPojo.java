@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
@@ -62,6 +63,7 @@ public class StudentPaymentTransactionPojo implements Serializable {
     private LocalDateTime              transactionSubmitTime;
     private BookingStatusEnum          processStatus;
     private String                     rejectReason;
+    private String                     transactionSerialNumber;
 
     public StudentPaymentTransactionPojo() {}
 
@@ -89,9 +91,10 @@ public class StudentPaymentTransactionPojo implements Serializable {
         this.transactionSubmitTime = value.transactionSubmitTime;
         this.processStatus = value.processStatus;
         this.rejectReason = value.rejectReason;
+        this.transactionSerialNumber = value.transactionSerialNumber;
     }
 
-    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
+    @ConstructorProperties({ "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason", "transactionSerialNumber" })
     public StudentPaymentTransactionPojo(
         @Nonnull UUID                       id,
         @Nonnull UUID                       studentProfileId,
@@ -115,7 +118,8 @@ public class StudentPaymentTransactionPojo implements Serializable {
         @Nullable String                     updatedBy,
         @Nullable LocalDateTime              transactionSubmitTime,
         @Nullable BookingStatusEnum          processStatus,
-        @Nullable String                     rejectReason
+        @Nullable String                     rejectReason,
+        @Nullable String                     transactionSerialNumber
     ) {
         this.id = id;
         this.studentProfileId = studentProfileId;
@@ -140,6 +144,7 @@ public class StudentPaymentTransactionPojo implements Serializable {
         this.transactionSubmitTime = transactionSubmitTime;
         this.processStatus = processStatus;
         this.rejectReason = rejectReason;
+        this.transactionSerialNumber = transactionSerialNumber;
     }
 
     /**
@@ -541,6 +546,25 @@ public class StudentPaymentTransactionPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public.student_payment_transaction.transaction_serial_number</code>.
+     */
+    @Size(max = 200)
+    @Nullable
+    public String getTransactionSerialNumber() {
+        return this.transactionSerialNumber;
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_payment_transaction.transaction_serial_number</code>.
+     */
+    public StudentPaymentTransactionPojo setTransactionSerialNumber(@Nullable String transactionSerialNumber) {
+        this.transactionSerialNumber = transactionSerialNumber;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("StudentPaymentTransactionPojo (");
@@ -568,6 +592,7 @@ public class StudentPaymentTransactionPojo implements Serializable {
         sb.append(", ").append(transactionSubmitTime);
         sb.append(", ").append(processStatus);
         sb.append(", ").append(rejectReason);
+        sb.append(", ").append(transactionSerialNumber);
 
         sb.append(")");
         return sb.toString();

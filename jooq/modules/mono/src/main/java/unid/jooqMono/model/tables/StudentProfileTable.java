@@ -225,17 +225,11 @@ public class StudentProfileTable extends TableImpl<StudentProfileRecord> {
     @Override
     @Nonnull
     public List<ForeignKey<StudentProfileRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.STUDENT_PROFILE__FK_STUD_PROF_USER, Keys.STUDENT_PROFILE__FK_STUD_PROF_COUT, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL_EDU_LEVL, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL_CRCU, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_1, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_2, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_3);
+        return Arrays.asList(Keys.STUDENT_PROFILE__FK_STUD_PROF_USER, Keys.STUDENT_PROFILE__FK_STUD_PROF_COUT);
     }
 
     private transient UserTable _user;
     private transient CountryTable _country;
-    private transient SchoolTable _fkStudProfSecdSchl;
-    private transient EducationLevelTable _educationLevel;
-    private transient CurriculumTable _curriculum;
-    private transient SchoolTable _fkStudProfPrefUniy_1;
-    private transient SchoolTable _fkStudProfPrefUniy_2;
-    private transient SchoolTable _fkStudProfPrefUniy_3;
 
     public UserTable user() {
         if (_user == null)
@@ -249,48 +243,6 @@ public class StudentProfileTable extends TableImpl<StudentProfileRecord> {
             _country = new CountryTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_COUT);
 
         return _country;
-    }
-
-    public SchoolTable fkStudProfSecdSchl() {
-        if (_fkStudProfSecdSchl == null)
-            _fkStudProfSecdSchl = new SchoolTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL);
-
-        return _fkStudProfSecdSchl;
-    }
-
-    public EducationLevelTable educationLevel() {
-        if (_educationLevel == null)
-            _educationLevel = new EducationLevelTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL_EDU_LEVL);
-
-        return _educationLevel;
-    }
-
-    public CurriculumTable curriculum() {
-        if (_curriculum == null)
-            _curriculum = new CurriculumTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_SECD_SCHL_CRCU);
-
-        return _curriculum;
-    }
-
-    public SchoolTable fkStudProfPrefUniy_1() {
-        if (_fkStudProfPrefUniy_1 == null)
-            _fkStudProfPrefUniy_1 = new SchoolTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_1);
-
-        return _fkStudProfPrefUniy_1;
-    }
-
-    public SchoolTable fkStudProfPrefUniy_2() {
-        if (_fkStudProfPrefUniy_2 == null)
-            _fkStudProfPrefUniy_2 = new SchoolTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_2);
-
-        return _fkStudProfPrefUniy_2;
-    }
-
-    public SchoolTable fkStudProfPrefUniy_3() {
-        if (_fkStudProfPrefUniy_3 == null)
-            _fkStudProfPrefUniy_3 = new SchoolTable(this, Keys.STUDENT_PROFILE__FK_STUD_PROF_PREF_UNIY_3);
-
-        return _fkStudProfPrefUniy_3;
     }
 
     @Override

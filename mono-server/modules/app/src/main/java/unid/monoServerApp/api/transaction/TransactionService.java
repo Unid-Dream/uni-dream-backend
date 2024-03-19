@@ -94,7 +94,7 @@ public class TransactionService {
         //组装 AsiaPay Frontend需要的参数,以及创建
         PaymentTransactionResponse.AsiaPayPayload payload = new PaymentTransactionResponse.AsiaPayPayload();
         payload.setAmount(transaction.getTransactionAmount().toString());
-        payload.setOrderRef(transaction.getId().toString());
+        payload.setOrderRef(transaction.getTransactionSerialNumber());
         payload.setPaymentType("N");
         payload.setCurrCode(request.getAsiaPayPayload().getCurrCode());
         payload.setMerchantId("88163035");

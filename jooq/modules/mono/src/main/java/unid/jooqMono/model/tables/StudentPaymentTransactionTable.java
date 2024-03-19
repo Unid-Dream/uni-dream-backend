@@ -194,6 +194,12 @@ public class StudentPaymentTransactionTable extends TableImpl<StudentPaymentTran
      */
     public final TableField<StudentPaymentTransactionRecord, String> REJECT_REASON = createField(DSL.name("reject_reason"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public.student_payment_transaction.transaction_serial_number</code>.
+     */
+    public final TableField<StudentPaymentTransactionRecord, String> TRANSACTION_SERIAL_NUMBER = createField(DSL.name("transaction_serial_number"), SQLDataType.VARCHAR(200), this, "");
+
     private StudentPaymentTransactionTable(Name alias, Table<StudentPaymentTransactionRecord> aliased) {
         this(alias, aliased, null);
     }

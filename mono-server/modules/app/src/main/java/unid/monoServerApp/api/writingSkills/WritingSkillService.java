@@ -1,10 +1,12 @@
 package unid.monoServerApp.api.writingSkills;
 
+import io.lettuce.core.support.caching.RedisCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
@@ -20,6 +22,7 @@ import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.mapper.StudentUploadedMapper;
 import unid.monoServerApp.mapper.WritingTopicMapper;
 import unid.monoServerApp.service.SessionService;
+import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
@@ -41,8 +44,7 @@ public class WritingSkillService {
     private final WritingTopicMapper writingTopicMapper;
     private final I18nMapper i18nMapper;
     private final StudentUploadedMapper studentUploadedMapper;
-
-
+    private final RedisTemplate<String, String> redisTemplateRefCache;
 
     public  WritingSkillAssessmentResponse query(UUID studentProfileId) {
         List<DbStudentUploadedWriting.Result> results = dslContext.select(
@@ -141,6 +143,8 @@ public class WritingSkillService {
                 .orElseThrow(() -> Exceptions.notFound("Writing Skill Interview Not Found"));
         //1. 创建交易记录(student_payment_transaction)
         var transaction = writingTopicMapper.merge(record,studentProfileId);
+        //创建订单流水号
+        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("IS",redisTemplateRefCache));
         UUID transactionId =  dslContext
                 .insertInto(STUDENT_PAYMENT_TRANSACTION)
                 .set(dslContext.newRecord(STUDENT_PAYMENT_TRANSACTION, transaction))

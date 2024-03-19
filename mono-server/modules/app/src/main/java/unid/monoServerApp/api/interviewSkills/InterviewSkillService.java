@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
@@ -18,6 +19,7 @@ import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.mapper.InterviewTopicMapper;
 import unid.monoServerApp.mapper.StudentUploadedMapper;
 import unid.monoServerApp.service.SessionService;
+import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 
 import java.util.List;
@@ -37,6 +39,8 @@ public class InterviewSkillService {
     private final InterviewTopicMapper interviewTopicMapper;
     private final I18nMapper i18nMapper;
     private final StudentUploadedMapper studentUploadedMapper;
+    private final RedisTemplate<String, String> redisTemplateRefCache;
+
 
     public InterviewTopicResponse query() {
         DbInterviewTopic.Result record = dslContext.select(
@@ -134,6 +138,8 @@ public class InterviewSkillService {
                 .orElseThrow(() -> Exceptions.notFound("Interview Skill Interview Not Found"));
         //1. 创建交易记录(student_payment_transaction)
         var transaction = interviewTopicMapper.merge(record,studentProfileId);
+        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("WS",redisTemplateRefCache));
+
         UUID transactionId =  dslContext
                 .insertInto(STUDENT_PAYMENT_TRANSACTION)
                 .set(dslContext.newRecord(STUDENT_PAYMENT_TRANSACTION, transaction))
