@@ -1,9 +1,11 @@
 package unid.monoServerApp.api.user.profile.student.schedule;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,6 +64,32 @@ public class StudentScheduleService {
                      OffsetDateTime endDateTimeUtc,
                      Integer pageNumber,
                      Integer pageSize){
+        //查询这个时间段session
+        List<UUID> transactionIdWithSessionCondition = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_PAYMENT_TRANSACTION.ID
+                )
+                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                                .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
+                .fetchInto(UUID.class);
+        //查询这个时间段的 course event
+        List<UUID> transactionIdWithCourseEventQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_PAYMENT_TRANSACTION.ID
+                )
+                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                        .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
+                .fetchInto(UUID.class);
+
+
+
+
+
+
+
+
         //查询 sessionQ
         var sessionQ = DSL.multiset(
                 dbEducatorCalendar.getSimpleQuery(dbEducatorCalendar.getTable())
@@ -86,7 +115,7 @@ public class StudentScheduleService {
                 .selectCount()
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
-                .fetchOneInto(Integer.class);
+                .fetchOptionalInto(Integer.class).orElse(0);
 
 
         List<DbStudentPaymentTransaction.Result> list = dbStudentPaymentTransaction.getDsl()
@@ -98,6 +127,7 @@ public class StudentScheduleService {
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .and(STUDENT_PAYMENT_TRANSACTION.ID.in(transactionIdWithSessionCondition))
                 .limit(pageSize)
                 .offset((pageNumber - 1) * pageSize)
                 .fetchInto(DbStudentPaymentTransaction.Result.class);

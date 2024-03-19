@@ -80,9 +80,9 @@ public class TransactionController {
             summary = "Asia Pay Notify Payment Result"
     )
     public @Valid UnifiedResponse<Void> asiaPayNotify(
-            Map<String,Object> param
+            @RequestBody Map<String,Object> paymentInfo
     ) {
-        StaticLog.info(" AsiaPay Notify Param {}", JSONUtil.toJsonPrettyStr(param));
+        StaticLog.info(" AsiaPay Notify Param {}", JSONUtil.toJsonPrettyStr(paymentInfo));
         return UnifiedResponse.of(
                 null
         );
