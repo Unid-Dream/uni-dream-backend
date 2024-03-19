@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -254,18 +255,22 @@ public class StudentScheduleService {
         Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.Business.EDUCATOR_NOT_EXIST));
         Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_HOURLY_RATE_IS_NULL));
         //当前学生是否已经提交过该时间段订单
-//        dbEducatorCalendar.getDsl()
-//                .select()
-//                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
-//                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
-//                .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
-//                .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(request.getEducatorProfileId()))
-//                .and(EDUCATOR_CALENDAR.ID.eq(request.getEducatorCalendarId()))
-//                .fetchOptional()
-//                .ifPresentOrElse(
-//                        value->{throw Exceptions.business(UniErrorCode.Business.USER_PROFILE_ID_NOT_EXIST)},
-//                        ()->{}
-//                );
+        dbEducatorCalendar.getDsl()
+                .select()
+                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
+                .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(request.getEducatorProfileId()))
+                .and(EDUCATOR_CALENDAR.ID.eq(request.getEducatorCalendarId()))
+                .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING))
+                .fetchOptional()
+                .ifPresentOrElse(
+                        value->{
+                                StaticLog.info(" 当前订单尚未处理, 无法重复提交 studentProfileId = {}, educatorCalendarId = ",studentProfileId,request.getEducatorCalendarId());
+                                throw Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_IS_EXIST);
+                            },
+                        ()->{}
+                );
 
 
 
