@@ -231,7 +231,8 @@ public class TransactionService {
 
             //  Update your database for Transaction Accepted and send email or notify your
             //   customer.
-            StaticLog.info("AsiaPay success !!! request param = {}", JSONUtil.toJsonPrettyStr(request.getParameterMap()));
+            StaticLog.info("AsiaPay success !!! ref = {}", ref);
+
             //根据回调的 orderRef,更新支付状态
 
 
