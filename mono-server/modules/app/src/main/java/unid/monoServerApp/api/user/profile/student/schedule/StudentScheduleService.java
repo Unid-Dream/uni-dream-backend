@@ -253,6 +253,21 @@ public class StudentScheduleService {
         EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
         Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.Business.EDUCATOR_NOT_EXIST));
         Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_HOURLY_RATE_IS_NULL));
+        //当前学生是否已经提交过该时间段订单
+//        dbEducatorCalendar.getDsl()
+//                .select()
+//                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+//                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
+//                .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+//                .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(request.getEducatorProfileId()))
+//                .and(EDUCATOR_CALENDAR.ID.eq(request.getEducatorCalendarId()))
+//                .fetchOptional()
+//                .ifPresentOrElse(
+//                        value->{throw Exceptions.business(UniErrorCode.Business.USER_PROFILE_ID_NOT_EXIST)},
+//                        ()->{}
+//                );
+
+
 
         StudentPaymentTransactionPojo studentPaymentTransactionPojo = new StudentPaymentTransactionPojo()
                 .setTransactionItemRefId(request.getEducatorCalendarId())

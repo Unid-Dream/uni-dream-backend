@@ -204,6 +204,7 @@ public class EducatorCalendarService {
                     .from(STUDENT_PAYMENT_TRANSACTION)
                     .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(request.getEducatorCalendarId()))
                     .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(session.getStudentProfileId()))
+                    .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING))
                     .fetchOptionalInto(StudentPaymentTransactionPojo.class)
                     .orElseThrow(()-> Exceptions.client(UniErrorCode.Client.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
             studentPaymentTransactionPojo.setProcessStatus(BookingStatusEnum.ACCEPTED);
