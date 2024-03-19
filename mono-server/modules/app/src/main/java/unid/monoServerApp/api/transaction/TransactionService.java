@@ -9,14 +9,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.StudentTransactionItemEnum;
+import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
+import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.queue.model.EducatorMeetingRequestPayload;
+import unid.monoServerApp.service.TeamsMeetingService;
 import unid.monoServerApp.util.asiapay.PaydollarSecureUtil;
 import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.TransactionItem;
 import unid.monoServerMeta.model.UniErrorCode;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +43,8 @@ public class TransactionService {
     private final DSLContext dslContext;
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final DbEducatorSessionNoteItem dbEducatorSessionNoteItem;
+    private final DbEducatorCalendar dbEducatorCalendar;
+    private final TeamsMeetingService teamsMeetingService;
 
 
     public TransactionResponse get(UUID transactionId) {
@@ -234,8 +245,31 @@ public class TransactionService {
             StaticLog.info("AsiaPay success !!! ref = {}", ref);
 
             //根据回调的 orderRef,更新支付状态
+            //查询当前支付的订单
+            List<StudentPaymentTransactionPojo> transactionPojoList = dbStudentPaymentTransaction.getDao().fetchByTransactionSerialNumber(ref);
+            if(transactionPojoList.isEmpty()){
+                StaticLog.info("AsiaPay success !!! 订单不存在 = {}", ref);
+                return;
+            }
+            //更新当前订单的支付状态
+            for(StudentPaymentTransactionPojo transactionPojo : transactionPojoList){
+                transactionPojo.setPaymentStatus(PaymentStatusEnum.PAID);
+                if(transactionPojo.getTransactionItem().equals(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)){
+                    //设置educator calendar状态为accept
+                    EducatorCalendarPojo calendarPojo =  dbEducatorCalendar.getDao().fetchOneById(transactionPojo.getTransactionItemRefId());
+                    if(calendarPojo == null){
+                        continue;
+                    }
+                    calendarPojo.setBookingStatus(BookingStatusEnum.ACCEPTED);
+                    dbEducatorCalendar.getDao().update(calendarPojo);
+                    //创建meeting url
+                    EducatorMeetingRequestPayload payload = new EducatorMeetingRequestPayload();
+                    payload.setCalendarId(calendarPojo.getId());
+                    payload.setEducatorProfileId(calendarPojo.getEducatorProfileId());
 
-
+                    teamsMeetingService.createMeetingWithStudent(payload);
+                }
+            }
 
 
 

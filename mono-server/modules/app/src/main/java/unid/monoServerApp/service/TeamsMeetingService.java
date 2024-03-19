@@ -43,8 +43,8 @@ public class TeamsMeetingService {
         var calendar = getCalendar(payload);
         var transaction = getTransaction(calendar);
         var student = getStudent(calendar, transaction);
-        var start = OffsetDateTime.of(calendar.getDate(), calendar.getHourStart(), ZoneOffset.UTC);
-        var end = OffsetDateTime.of(calendar.getDate(), calendar.getHourEnd(), ZoneOffset.UTC);
+        var start = calendar.getStartTimeUtc();
+        var end = calendar.getEndTimeUtc();
         var meeting = createMeeting(educator, student, calendar, start, end);
         var meetingEvent = MsGraphBuilder.build(new Event(), event -> {
             var format = DateTimeFormatter.ofPattern(Pattern.TEAM_BOOKING_DATE);
@@ -120,7 +120,8 @@ public class TeamsMeetingService {
     }
 
     private StudentPaymentTransactionPojo getTransaction(EducatorCalendarPojo calendar) {
-        return Optional.ofNullable(dbStudentPaymentTransaction.getDao().fetchOneById(calendar.getPaymentTransactionId()))
+        return dbStudentPaymentTransaction.getDao().fetchByTransactionItemRefId(calendar.getId())
+                .stream().findFirst()
                 .orElseThrow(() -> Exceptions.notFound("Transaction Not Found"));
     }
 
