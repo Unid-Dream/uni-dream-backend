@@ -32,6 +32,7 @@ public class StudentPaymentTransactionResponse {
     @NotNull
     private Currency transactionCurrency;
     private PaymentStatus paymentStatus;
+    private BookingStatus processStatus;
 
     @Nullable
     private ConsultationSessionResponse session;
