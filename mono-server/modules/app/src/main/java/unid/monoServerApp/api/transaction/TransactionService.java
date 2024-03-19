@@ -254,6 +254,8 @@ public class TransactionService {
             //更新当前订单的支付状态
             for(StudentPaymentTransactionPojo transactionPojo : transactionPojoList){
                 transactionPojo.setPaymentStatus(PaymentStatusEnum.PAID);
+                dbStudentPaymentTransaction.getDao().update(transactionPojo);
+
                 if(transactionPojo.getTransactionItem().equals(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)){
                     //设置educator calendar状态为accept
                     EducatorCalendarPojo calendarPojo =  dbEducatorCalendar.getDao().fetchOneById(transactionPojo.getTransactionItemRefId());
