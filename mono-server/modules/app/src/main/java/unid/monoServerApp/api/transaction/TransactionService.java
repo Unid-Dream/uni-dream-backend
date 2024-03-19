@@ -231,6 +231,12 @@ public class TransactionService {
             //  Update your database for Transaction Accepted and send email or notify your
             //   customer.
             StaticLog.info("AsiaPay success !!! ");
+            //根据回调的 orderRef,更新支付状态
+            
+
+
+
+
             // In case if your database or your system got problem, you can send a void transaction request. See API guide for more details
         } else {
             // Transaction Rejected

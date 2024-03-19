@@ -10,11 +10,13 @@ import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.GenderEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.StudentTransactionItemEnum;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.course.DbEventScheduleTime;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
+import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
@@ -28,10 +30,11 @@ import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.PaymentStatus;
+import unid.monoServerMeta.model.TransactionItem;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-19T17:01:56+0800",
+    date = "2024-03-19T19:02:13+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -79,6 +82,8 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         studentPaymentTransactionResponse.setTransactionAmount( data.getTransactionAmount() );
         studentPaymentTransactionResponse.setTransactionCurrency( currencyEnumToCurrency( data.getTransactionCurrency() ) );
         studentPaymentTransactionResponse.setPaymentStatus( paymentStatusEnumToPaymentStatus( data.getPaymentStatus() ) );
+        studentPaymentTransactionResponse.setProcessStatus( bookingStatusEnumToBookingStatus( data.getProcessStatus() ) );
+        studentPaymentTransactionResponse.setTransactionItem( studentTransactionItemEnumToTransactionItem( data.getTransactionItem() ) );
         studentPaymentTransactionResponse.setSession( simpleResultToConsultationSessionResponse( data.getSession() ) );
         studentPaymentTransactionResponse.setEvent( simpleResultToCourseEventResponse( data.getEvent() ) );
 
@@ -163,6 +168,62 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         }
 
         return paymentStatus;
+    }
+
+    protected BookingStatus bookingStatusEnumToBookingStatus(BookingStatusEnum bookingStatusEnum) {
+        if ( bookingStatusEnum == null ) {
+            return null;
+        }
+
+        BookingStatus bookingStatus;
+
+        switch ( bookingStatusEnum ) {
+            case AVAILABLE: bookingStatus = BookingStatus.AVAILABLE;
+            break;
+            case RESERVED: bookingStatus = BookingStatus.RESERVED;
+            break;
+            case PENDING: bookingStatus = BookingStatus.PENDING;
+            break;
+            case ACCEPTED: bookingStatus = BookingStatus.ACCEPTED;
+            break;
+            case REJECTED: bookingStatus = BookingStatus.REJECTED;
+            break;
+            case CANCELLED: bookingStatus = BookingStatus.CANCELLED;
+            break;
+            case VOID: bookingStatus = BookingStatus.VOID;
+            break;
+            case FINISHED: bookingStatus = BookingStatus.FINISHED;
+            break;
+            case UNFINISHED: bookingStatus = BookingStatus.UNFINISHED;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
+        }
+
+        return bookingStatus;
+    }
+
+    protected TransactionItem studentTransactionItemEnumToTransactionItem(StudentTransactionItemEnum studentTransactionItemEnum) {
+        if ( studentTransactionItemEnum == null ) {
+            return null;
+        }
+
+        TransactionItem transactionItem;
+
+        switch ( studentTransactionItemEnum ) {
+            case EDUCATOR_SCHEDULE: transactionItem = TransactionItem.EDUCATOR_SCHEDULE;
+            break;
+            case WRITING: transactionItem = TransactionItem.WRITING;
+            break;
+            case INTERVIEW: transactionItem = TransactionItem.INTERVIEW;
+            break;
+            case WEBINAR: transactionItem = TransactionItem.WEBINAR;
+            break;
+            case COURSE: transactionItem = TransactionItem.COURSE;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + studentTransactionItemEnum );
+        }
+
+        return transactionItem;
     }
 
     protected List<String> stringArrayToStringList(String[] stringArray) {
@@ -258,36 +319,30 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         return educatorProfileSimpleResponse;
     }
 
-    protected BookingStatus bookingStatusEnumToBookingStatus(BookingStatusEnum bookingStatusEnum) {
-        if ( bookingStatusEnum == null ) {
+    protected StudentPaymentTransactionResponse.SessionCommentItem resultToSessionCommentItem(DbEducatorSessionNoteItem.Result result) {
+        if ( result == null ) {
             return null;
         }
 
-        BookingStatus bookingStatus;
+        StudentPaymentTransactionResponse.SessionCommentItem sessionCommentItem = new StudentPaymentTransactionResponse.SessionCommentItem();
 
-        switch ( bookingStatusEnum ) {
-            case AVAILABLE: bookingStatus = BookingStatus.AVAILABLE;
-            break;
-            case RESERVED: bookingStatus = BookingStatus.RESERVED;
-            break;
-            case PENDING: bookingStatus = BookingStatus.PENDING;
-            break;
-            case ACCEPTED: bookingStatus = BookingStatus.ACCEPTED;
-            break;
-            case REJECTED: bookingStatus = BookingStatus.REJECTED;
-            break;
-            case CANCELLED: bookingStatus = BookingStatus.CANCELLED;
-            break;
-            case VOID: bookingStatus = BookingStatus.VOID;
-            break;
-            case FINISHED: bookingStatus = BookingStatus.FINISHED;
-            break;
-            case UNFINISHED: bookingStatus = BookingStatus.UNFINISHED;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
+        sessionCommentItem.setTitleI18n( resultToI18n( result.getTitleI18n() ) );
+        sessionCommentItem.setComment( result.getComment() );
+
+        return sessionCommentItem;
+    }
+
+    protected List<StudentPaymentTransactionResponse.SessionCommentItem> resultListToSessionCommentItemList(List<DbEducatorSessionNoteItem.Result> list) {
+        if ( list == null ) {
+            return null;
         }
 
-        return bookingStatus;
+        List<StudentPaymentTransactionResponse.SessionCommentItem> list1 = new ArrayList<StudentPaymentTransactionResponse.SessionCommentItem>( list.size() );
+        for ( DbEducatorSessionNoteItem.Result result : list ) {
+            list1.add( resultToSessionCommentItem( result ) );
+        }
+
+        return list1;
     }
 
     protected StudentPaymentTransactionResponse.ConsultationSessionResponse simpleResultToConsultationSessionResponse(DbEducatorCalendar.SimpleResult simpleResult) {
@@ -299,6 +354,7 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
 
         consultationSessionResponse.setId( simpleResult.getId() );
         consultationSessionResponse.setEducatorProfile( simpleResultToEducatorProfileSimpleResponse( simpleResult.getEducatorProfile() ) );
+        consultationSessionResponse.setComments( resultListToSessionCommentItemList( simpleResult.getComments() ) );
         consultationSessionResponse.setStartTimeUtc( simpleResult.getStartTimeUtc() );
         consultationSessionResponse.setEndTimeUtc( simpleResult.getEndTimeUtc() );
         consultationSessionResponse.setMeetingUrl( simpleResult.getMeetingUrl() );

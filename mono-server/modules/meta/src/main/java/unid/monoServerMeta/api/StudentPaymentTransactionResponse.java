@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
-import unid.monoServerMeta.model.BookingStatus;
-import unid.monoServerMeta.model.Currency;
-import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.PaymentStatus;
+import unid.monoServerMeta.model.*;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -33,6 +30,7 @@ public class StudentPaymentTransactionResponse {
     private Currency transactionCurrency;
     private PaymentStatus paymentStatus;
     private BookingStatus processStatus;
+    private TransactionItem transactionItem;
 
     @Nullable
     private ConsultationSessionResponse session;
@@ -60,7 +58,7 @@ public class StudentPaymentTransactionResponse {
     public static class ConsultationSessionResponse{
         private UUID id;
         private EducatorProfileSimpleResponse educatorProfile;
-        private EducatorSessionNoteCommentResponse comment;
+        private List<SessionCommentItem> comments;
         private OffsetDateTime startTimeUtc;
         private OffsetDateTime endTimeUtc;
         private String meetingUrl;
@@ -103,5 +101,12 @@ public class StudentPaymentTransactionResponse {
         private LocalDateTime endTime;
     }
 
+
+    @Data
+    @FieldNameConstants
+    public static class SessionCommentItem {
+        private I18n titleI18n;
+        private String comment;
+    }
 
 }

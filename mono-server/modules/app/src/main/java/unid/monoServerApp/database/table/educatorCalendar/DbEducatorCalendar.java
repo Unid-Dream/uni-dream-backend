@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static unid.jooqMono.model.Tables.EDUCATOR_CALENDAR;
-import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
+import static unid.jooqMono.model.Tables.*;
 
 @Component
 @Slf4j
@@ -91,10 +90,19 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                         DSL.multiset(
                                 dbEducatorProfile.getSimpleQuery(dbEducatorProfile.getTable())
                                         .where(dbEducatorProfile.getTable().ID.eq(alias.EDUCATOR_PROFILE_ID))
-                        ).as(Result.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorProfile.SimpleResult.class))
-//                         DSL.multiset(
-//                                 dbEducatorSessionNoteMap.getQuery(dbEducatorSessionNoteMap.getTable()).where(dbEducatorSessionNoteMap.getTable().EDUCATOR_CALENDAR_ID.eq(alias.ID))
-//                         ).as(Result.Fields.comments).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorSessionNoteItem.Result.class))
+                        ).as(Result.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorProfile.SimpleResult.class)),
+                        DSL.multiset(
+                                DSL.select(
+                                            DSL.multiset(
+                                                    DSL.select(I18N.asterisk()).from(I18N)
+                                                            .where(I18N.ID.eq(EDUCATOR_SESSION_NOTE_ITEM.TITLE_I18N_ID))
+                                            ).as(DbEducatorSessionNoteItem.Result.Fields.titleI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbI18N.Result.class)),
+                                            EDUCATOR_SESSION_NOTE_MAP.NOTE_ITEM_INPUT.as(DbEducatorSessionNoteItem.Result.Fields.comment)
+                                        )
+                                        .from(EDUCATOR_SESSION_NOTE_MAP,EDUCATOR_SESSION_NOTE_ITEM)
+                                        .where(EDUCATOR_SESSION_NOTE_MAP.EDUCATOR_CALENDAR_ID.eq(alias.ID).and(EDUCATOR_SESSION_NOTE_ITEM.ID.eq(EDUCATOR_SESSION_NOTE_MAP.EDUCATOR_SESSION_NOTE_ITEM_ID)))
+                                        .orderBy(EDUCATOR_SESSION_NOTE_ITEM.ORDER)
+                        ).as(Result.Fields.comments).convertFrom(r->r.isEmpty()?null:r.into(DbEducatorSessionNoteItem.Result.class))
                 )
                 .from(alias);
     }

@@ -176,7 +176,8 @@ public class StudentScheduleController {
                 StrUtil.isEmpty(request.getStartDate()) ? null : OffsetDateTime.parse(request.getStartDate()),
                 StrUtil.isEmpty(request.getEndDate()) ? null : OffsetDateTime.parse(request.getEndDate()),
                 1,
-                20));
+                20,
+                request.getTransactionId()));
     }
 
 

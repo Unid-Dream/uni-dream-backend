@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.user.profile.student.schedule;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
@@ -66,18 +67,22 @@ public class StudentScheduleService {
                      OffsetDateTime startDateTimeUtc,
                      OffsetDateTime endDateTimeUtc,
                      Integer pageNumber,
-                     Integer pageSize){
+                     Integer pageSize,
+                     UUID transactionId){
         //查询这个时间段session
         List<UUID> sessionTimeCondition = dbStudentPaymentTransaction.getDsl()
                 .select(
                         STUDENT_PAYMENT_TRANSACTION.ID
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
-                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                .where(
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
                                 .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc)
                                         .and(endDateTimeUtc == null?DSL.noCondition():EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc))
                                 )
                 )
+                .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .and(transactionId == null?DSL.noCondition():STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId))
                 .fetchInto(UUID.class);
         //查询这个时间段的 course event
         List<UUID> courseTimeCondition = dbStudentPaymentTransaction.getDsl()
@@ -103,8 +108,7 @@ public class StudentScheduleService {
         //查询 sessionQ
         var sessionQ = DSL.multiset(
                 dbEducatorCalendar.getSimpleQuery(dbEducatorCalendar.getTable())
-                        .where(dbEducatorCalendar.getTable().ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID)
-                                .and(dbEducatorCalendar.getTable().START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
+                        .where(dbEducatorCalendar.getTable().ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
         ).as(DbStudentPaymentTransaction.Result.Fields.session).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorCalendar.SimpleResult.class));
 
         //查询 courseQ
@@ -137,8 +141,8 @@ public class StudentScheduleService {
                         sessionQ
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION)
-                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
-                .and(STUDENT_PAYMENT_TRANSACTION.ID.in(sessionTimeCondition))
+//                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.in(sessionTimeCondition))
                 .limit(pageSize)
                 .offset((pageNumber - 1) * pageSize)
                 .fetchInto(DbStudentPaymentTransaction.Result.class);
