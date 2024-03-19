@@ -74,7 +74,10 @@ public class StudentScheduleService {
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
                 .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
-                                .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
+                                .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc)
+                                        .and(endDateTimeUtc == null?DSL.noCondition():EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc))
+                                )
+                )
                 .fetchInto(UUID.class);
         //查询这个时间段的 course event
         List<UUID> courseTimeCondition = dbStudentPaymentTransaction.getDsl()
@@ -85,7 +88,9 @@ public class StudentScheduleService {
                 .leftJoin(EVENT).on(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EVENT.ID))
                 .leftJoin(EVENT_SCHEDULE_TIME).on(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(EVENT.ID))
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId)
-                        .and(EVENT_SCHEDULE_TIME.START_TIME.between(startDateTimeUtc.toLocalDateTime(),endDateTimeUtc.toLocalDateTime())))
+                        .and(EVENT_SCHEDULE_TIME.START_TIME.ge(startDateTimeUtc.toLocalDateTime())
+                                .and(endDateTimeUtc == null?DSL.noCondition():EVENT_SCHEDULE_TIME.START_TIME.le(endDateTimeUtc.toLocalDateTime()))
+                        ))
                         .fetchInto(UUID.class);
         sessionTimeCondition.addAll(courseTimeCondition);
 
