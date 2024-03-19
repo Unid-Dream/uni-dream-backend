@@ -251,7 +251,7 @@ public class StudentScheduleService {
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
                 .setProcessStatus(BookingStatusEnum.PENDING)
                 .setTransactionSubmitTime(LocalDateTime.now());
-        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("EC",redisTemplateRefCache));
+        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("ER",redisTemplateRefCache));
         dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
         return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
     }
