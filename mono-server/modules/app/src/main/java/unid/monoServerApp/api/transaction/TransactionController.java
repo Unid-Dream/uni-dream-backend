@@ -17,6 +17,7 @@ import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
@@ -79,10 +80,9 @@ public class TransactionController {
     @Operation(
             summary = "Asia Pay Notify Payment Result"
     )
-    public @Valid UnifiedResponse<Void> asiaPayNotify(
-            @RequestBody Map<String,Object> paymentInfo
-    ) {
-        StaticLog.info(" AsiaPay Notify Param {}", JSONUtil.toJsonPrettyStr(paymentInfo));
+    public @Valid UnifiedResponse<Void> asiaPayNotify(HttpServletRequest request) {
+        StaticLog.info(" AsiaPay Notify Param {}");
+        transactionService.acceptAsiaPayNotify(request);
         return UnifiedResponse.of(
                 null
         );

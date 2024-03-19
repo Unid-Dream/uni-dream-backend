@@ -18,6 +18,10 @@ import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.UniErrorCode;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 import static unid.jooqMono.model.Tables.*;
@@ -109,5 +113,130 @@ public class TransactionService {
         return response;
 
 
+    }
+
+    public void acceptAsiaPayNotify(HttpServletRequest request) {
+        StaticLog.info("*********************************************************************************************************************");
+        StaticLog.info("Requeset PathInfo=>" + request.getPathInfo());
+        StaticLog.info("Requeset PathTranslated=>"
+                + request.getPathTranslated());
+        StaticLog.info("Requeset RequestURI=>"
+                + request.getRequestURI());
+        StaticLog.info("Requeset QueryString=>"
+                + request.getQueryString());
+        Enumeration enumeration = request.getParameterNames();
+        String[] paramValues = null;
+        String paramName = null;
+        StringBuffer buffer = new StringBuffer();
+        int paramValuesSize = 0;
+
+        while (enumeration != null && enumeration.hasMoreElements()) {
+            buffer.delete(0, buffer.length());
+            paramName = (String) enumeration.nextElement();
+            paramValues = request.getParameterValues(paramName);
+            paramValuesSize = 0;
+            if (paramValues != null && paramValues.length > 0)
+                paramValuesSize = paramValues.length;
+
+            for (int i = 0; i < paramValuesSize; i++) {
+                buffer.append(paramValues[i] + ",");
+            }
+
+            buffer.deleteCharAt(buffer.lastIndexOf(","));
+
+            StaticLog.info("Requeset Parameter NAME=>" + paramName
+                    + " VALUES =>" + buffer.toString());
+
+        }
+
+        StaticLog.info("Request Charater Encoding is ==>"
+                + request.getCharacterEncoding());
+
+        String src = request.getParameter("src"); 													//Return bank host status code (secondary).
+        String prc = request.getParameter("prc");													//Return bank host status code (primary).
+        String successcode = request.getParameter("successcode");					//0- succeeded, 1- failure, Others - error
+        String ref = request.getParameter("Ref");													//Merchant‘s Order Reference Number
+        String payRef = request.getParameter("PayRef");										//PayDollar Payment Reference Number
+        String amt = request.getParameter("Amt");												//Transaction Amount
+        String cur = request.getParameter("Cur");													//Transaction Currency
+        String payerAuth = request.getParameter("payerAuth");							//Payer Authentication Status
+
+        String ord = request.getParameter("Ord");													//Bank Reference – Order id
+        String holder = request.getParameter("Holder");										//The Holder Name of the Payment Account
+        String remark = request.getParameter("remark");										//A remark field for you to store additional data that will not show on the transaction web page
+        String authId = request.getParameter("AuthId");										//Approval Code
+        String eci = request.getParameter("eci");														//ECI value (for 3D enabled Merchants)
+        String sourceIp = request.getParameter("sourceIp");									//IP address of payer
+        String ipCountry = request.getParameter("ipCountry");							//Country of payer ( e.g. HK) - if country is on high risk country list, an asterisk will be shown (e.g. MY*)
+
+        String mpsAmt = request.getParameter("mpsAmt");								//MPS Transaction Amount
+        String mpsCur = request.getParameter("mpsCur");									//MPS Transaction Currency
+        String mpsForeignAmt = request.getParameter("mpsForeignAmt");		//MPS Transaction Foreign Amount
+        String mpsForeignCur = request.getParameter("mpsForeignCur");			//MPS Transaction Foreign Currency
+        String mpsRate = request.getParameter("mpsRate");								//MPS Exchange Rate: (Foreign / Base) e.g. USD / HKD = 7.77
+        String cardlssuingCountry = request
+                .getParameter("cardlssuingCountry");													//Card Issuing Country Code ( e.g. HK)
+        String payMethod = request.getParameter("payMethod");						//Payment method (e.g. VISA, Master, Diners, JCB, AMEX)
+
+
+        StaticLog.info("OK");
+
+        boolean isSecureHashSetting=true;
+
+        //if Secure Hash is used
+        if (isSecureHashSetting) {
+            String[] secureHash = request.getParameterValues("secureHash");
+            List tempList = new ArrayList();
+            if (secureHash != null) {
+                for (int i = 0; i < secureHash.length; i++) {
+                    System.out.println(secureHash[i]);
+
+                    if (secureHash[i].indexOf(",") > 0) {
+                        String[] data = secureHash[i].split(",");
+                        for (int j = 0; data != null & j < data.length; j++) {
+                            tempList.add(data[j]);
+                        }
+
+                    } else {
+                        tempList.add(secureHash[i]);
+                    }
+                }
+            }
+
+            int size = tempList.size();
+            if (size > 0) {
+                secureHash = new String[size];
+                for (int i = 0; i < size; i++) {
+                    secureHash[i] = (String) tempList.get(i);
+                }
+
+            }
+
+            boolean verifyResult = PaydollarSecureUtil
+                    .verifyPaymentDatafeed(src, prc, successcode, ref,
+                            payRef, cur, amt, payerAuth, secureHash);
+
+            StaticLog.info("verifyResult =" + verifyResult);
+            if (!verifyResult) {
+                StaticLog.info("verifyResult fail");
+            }
+        }
+
+        if (successcode.equals("0")) {
+            // Transaction Accepted
+            // *** Add the Security Control here, to check the currency, amount with the
+            // *** merchant’s order reference from your database, if the order exist then
+            // *** accepted otherwise rejected the transaction.
+
+            //  Update your database for Transaction Accepted and send email or notify your
+            //   customer.
+            StaticLog.info("AsiaPay success !!! ");
+            // In case if your database or your system got problem, you can send a void transaction request. See API guide for more details
+        } else {
+            // Transaction Rejected
+            // Update your database for Transaction Rejected
+        }
+
+        StaticLog.info("*********************************************************************************************************************");
     }
 }
