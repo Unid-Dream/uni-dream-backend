@@ -35,6 +35,7 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentScheduleMapper;
+import unid.monoServerMeta.api.ScheduleTransactionResponse;
 import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
 import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
 import unid.monoServerMeta.api.StudentSchedulePageRequest;
@@ -144,14 +145,13 @@ public class StudentScheduleController {
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.STUDENT},
-            matchingSessionProfileId = true,
-            educatorProfileApproved = true
+            matchingSessionProfileId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Create Educator Calendar Payment Transaction"
     )
-    public @Valid UnifiedResponse<StudentPaymentTransactionResponse> bookEducatorCalendar(
+    public @Valid UnifiedResponse<ScheduleTransactionResponse> bookEducatorCalendar(
             @PathVariable("studentProfileId") @ACL.ProfileId UUID studentProfileId,
             @RequestBody StudentBookingEducatorCalendarRequest request) {
         return UnifiedResponse.of(studentScheduleService.create(studentProfileId, request));

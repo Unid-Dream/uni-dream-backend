@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
 import unid.jooqMono.model.enums.GenderEnum;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.database.table.course.DbEvent;
+import unid.monoServerApp.database.table.course.DbEventScheduleTime;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
+import unid.monoServerMeta.api.ScheduleTransactionResponse;
 import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
 import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
 import unid.monoServerMeta.model.ApplicationApprovalEnum;
@@ -23,14 +27,18 @@ import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.Gender;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.PaymentStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-19T12:49:49+0800",
+    date = "2024-03-19T17:01:56+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
 public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransactionMapper {
+
+    @Autowired
+    private EventScheduleTimeMapper eventScheduleTimeMapper;
 
     @Override
     public StudentPaymentTransactionPojo toPojo(StudentBookingEducatorCalendarRequest request) {
@@ -46,18 +54,16 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
     }
 
     @Override
-    public StudentPaymentTransactionResponse toResponse(StudentPaymentTransactionPojo pojo) {
+    public ScheduleTransactionResponse toResponse(StudentPaymentTransactionPojo pojo) {
         if ( pojo == null ) {
             return null;
         }
 
-        StudentPaymentTransactionResponse studentPaymentTransactionResponse = new StudentPaymentTransactionResponse();
+        ScheduleTransactionResponse scheduleTransactionResponse = new ScheduleTransactionResponse();
 
-        studentPaymentTransactionResponse.setId( pojo.getId() );
-        studentPaymentTransactionResponse.setTransactionAmount( pojo.getTransactionAmount() );
-        studentPaymentTransactionResponse.setTransactionCurrency( currencyEnumToCurrency( pojo.getTransactionCurrency() ) );
+        scheduleTransactionResponse.setId( pojo.getId() );
 
-        return studentPaymentTransactionResponse;
+        return scheduleTransactionResponse;
     }
 
     @Override
@@ -72,6 +78,7 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         studentPaymentTransactionResponse.setStudentProfile( simpleResultToStudentProfileResponse( data.getStudentProfile() ) );
         studentPaymentTransactionResponse.setTransactionAmount( data.getTransactionAmount() );
         studentPaymentTransactionResponse.setTransactionCurrency( currencyEnumToCurrency( data.getTransactionCurrency() ) );
+        studentPaymentTransactionResponse.setPaymentStatus( paymentStatusEnumToPaymentStatus( data.getPaymentStatus() ) );
         studentPaymentTransactionResponse.setSession( simpleResultToConsultationSessionResponse( data.getSession() ) );
         studentPaymentTransactionResponse.setEvent( simpleResultToCourseEventResponse( data.getEvent() ) );
 
@@ -90,24 +97,6 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         }
 
         return list;
-    }
-
-    protected Currency currencyEnumToCurrency(CurrencyEnum currencyEnum) {
-        if ( currencyEnum == null ) {
-            return null;
-        }
-
-        Currency currency;
-
-        switch ( currencyEnum ) {
-            case USD: currency = Currency.USD;
-            break;
-            case HKD: currency = Currency.HKD;
-            break;
-            default: throw new IllegalArgumentException( "Unexpected enum constant: " + currencyEnum );
-        }
-
-        return currency;
     }
 
     protected I18n resultToI18n(DbI18N.Result result) {
@@ -136,6 +125,44 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         studentProfileResponse.setLastNameI18n( resultToI18n( simpleResult.getLastNameI18n() ) );
 
         return studentProfileResponse;
+    }
+
+    protected Currency currencyEnumToCurrency(CurrencyEnum currencyEnum) {
+        if ( currencyEnum == null ) {
+            return null;
+        }
+
+        Currency currency;
+
+        switch ( currencyEnum ) {
+            case USD: currency = Currency.USD;
+            break;
+            case HKD: currency = Currency.HKD;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + currencyEnum );
+        }
+
+        return currency;
+    }
+
+    protected PaymentStatus paymentStatusEnumToPaymentStatus(PaymentStatusEnum paymentStatusEnum) {
+        if ( paymentStatusEnum == null ) {
+            return null;
+        }
+
+        PaymentStatus paymentStatus;
+
+        switch ( paymentStatusEnum ) {
+            case PENDING: paymentStatus = PaymentStatus.PENDING;
+            break;
+            case PAID: paymentStatus = PaymentStatus.PAID;
+            break;
+            case EXPIRED: paymentStatus = PaymentStatus.EXPIRED;
+            break;
+            default: throw new IllegalArgumentException( "Unexpected enum constant: " + paymentStatusEnum );
+        }
+
+        return paymentStatus;
     }
 
     protected List<String> stringArrayToStringList(String[] stringArray) {
@@ -281,6 +308,19 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         return consultationSessionResponse;
     }
 
+    protected List<StudentPaymentTransactionResponse.EventScheduleTime> resultListToEventScheduleTimeList(List<DbEventScheduleTime.Result> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<StudentPaymentTransactionResponse.EventScheduleTime> list1 = new ArrayList<StudentPaymentTransactionResponse.EventScheduleTime>( list.size() );
+        for ( DbEventScheduleTime.Result result : list ) {
+            list1.add( eventScheduleTimeMapper.toPojo( result ) );
+        }
+
+        return list1;
+    }
+
     protected StudentPaymentTransactionResponse.CourseEventResponse simpleResultToCourseEventResponse(DbEvent.SimpleResult simpleResult) {
         if ( simpleResult == null ) {
             return null;
@@ -303,6 +343,7 @@ public class StudentPaymentTransactionMapperImpl implements StudentPaymentTransa
         if ( simpleResult.getEventStatus() != null ) {
             courseEventResponse.setEventStatus( simpleResult.getEventStatus().name() );
         }
+        courseEventResponse.setEventScheduleTimes( resultListToEventScheduleTimeList( simpleResult.getEventScheduleTimes() ) );
 
         return courseEventResponse;
     }

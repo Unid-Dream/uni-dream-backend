@@ -8,11 +8,14 @@ import org.springframework.validation.annotation.Validated;
 import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.PaymentStatus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -28,6 +31,7 @@ public class StudentPaymentTransactionResponse {
     private BigDecimal transactionAmount;
     @NotNull
     private Currency transactionCurrency;
+    private PaymentStatus paymentStatus;
 
     @Nullable
     private ConsultationSessionResponse session;
@@ -87,8 +91,15 @@ public class StudentPaymentTransactionResponse {
         private I18n agendaI18n;
         @NotNull
         private String eventStatus;
+        @NotNull
+        private List<EventScheduleTime> eventScheduleTimes;
+    }
 
-
+    @Data
+    @FieldNameConstants
+    public static class EventScheduleTime{
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
     }
 
 

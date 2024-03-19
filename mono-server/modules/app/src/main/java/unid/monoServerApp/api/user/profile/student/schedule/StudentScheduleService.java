@@ -68,7 +68,7 @@ public class StudentScheduleService {
                      Integer pageNumber,
                      Integer pageSize){
         //查询这个时间段session
-        List<UUID> transactionIdWithSessionCondition = dbStudentPaymentTransaction.getDsl()
+        List<UUID> sessionTimeCondition = dbStudentPaymentTransaction.getDsl()
                 .select(
                         STUDENT_PAYMENT_TRANSACTION.ID
                 )
@@ -77,15 +77,17 @@ public class StudentScheduleService {
                                 .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
                 .fetchInto(UUID.class);
         //查询这个时间段的 course event
-        List<UUID> transactionIdWithCourseEventQ = dbStudentPaymentTransaction.getDsl()
+        List<UUID> courseTimeCondition = dbStudentPaymentTransaction.getDsl()
                 .select(
                         STUDENT_PAYMENT_TRANSACTION.ID
                 )
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
-                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
-                        .and(EDUCATOR_CALENDAR.START_TIME_UTC.between(startDateTimeUtc,endDateTimeUtc)))
-                .fetchInto(UUID.class);
-
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .leftJoin(EVENT).on(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EVENT.ID))
+                .leftJoin(EVENT_SCHEDULE_TIME).on(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(EVENT.ID))
+                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId)
+                        .and(EVENT_SCHEDULE_TIME.START_TIME.between(startDateTimeUtc.toLocalDateTime(),endDateTimeUtc.toLocalDateTime())))
+                        .fetchInto(UUID.class);
+        sessionTimeCondition.addAll(courseTimeCondition);
 
 
 
@@ -118,6 +120,7 @@ public class StudentScheduleService {
                 .selectCount()
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
+                .and(STUDENT_PAYMENT_TRANSACTION.ID.in(sessionTimeCondition))
                 .fetchOptionalInto(Integer.class).orElse(0);
 
 
@@ -130,7 +133,7 @@ public class StudentScheduleService {
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
-                .and(STUDENT_PAYMENT_TRANSACTION.ID.in(transactionIdWithSessionCondition))
+                .and(STUDENT_PAYMENT_TRANSACTION.ID.in(sessionTimeCondition))
                 .limit(pageSize)
                 .offset((pageNumber - 1) * pageSize)
                 .fetchInto(DbStudentPaymentTransaction.Result.class);
@@ -235,7 +238,7 @@ public class StudentScheduleService {
     }
 
     //预定educator时间槽
-    public StudentPaymentTransactionResponse create(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
+    public ScheduleTransactionResponse create(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
         //创建支付订单
         //查询educator收费
         EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());

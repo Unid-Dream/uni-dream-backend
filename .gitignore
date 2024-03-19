@@ -7,3 +7,6 @@
 pom.properties
 TEST-*.xml
 target
+
+
+mono-server/modules/app/src/main/resources/application.yaml
