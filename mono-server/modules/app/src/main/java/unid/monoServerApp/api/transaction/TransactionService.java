@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.transaction;
 
 
+import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
 //import com.asiapay.secure.PaydollarSecureUtil;
 import lombok.RequiredArgsConstructor;
@@ -230,9 +231,9 @@ public class TransactionService {
 
             //  Update your database for Transaction Accepted and send email or notify your
             //   customer.
-            StaticLog.info("AsiaPay success !!! ");
+            StaticLog.info("AsiaPay success !!! request param = {}", JSONUtil.toJsonPrettyStr(request.getParameterMap()));
             //根据回调的 orderRef,更新支付状态
-            
+
 
 
 
