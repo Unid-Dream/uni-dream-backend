@@ -100,12 +100,6 @@ public class StudentScheduleService {
                         .fetchInto(UUID.class);
         sessionTimeCondition.addAll(courseTimeCondition);
 
-
-
-
-
-
-
         //查询 sessionQ
         var sessionQ = DSL.multiset(
                 dbEducatorCalendar.getSimpleQuery(dbEducatorCalendar.getTable())
@@ -142,7 +136,6 @@ public class StudentScheduleService {
                         sessionQ
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION)
-//                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
                 .where(STUDENT_PAYMENT_TRANSACTION.ID.in(sessionTimeCondition))
                 .limit(pageSize)
                 .offset((pageNumber - 1) * pageSize)
@@ -162,7 +155,7 @@ public class StudentScheduleService {
 
 
 
-
+    @Deprecated
     public JSONObject pageXXXX(UUID profileId,
                            OffsetDateTime startDateTimeUtc,
                            OffsetDateTime endDateTimeUtc,
