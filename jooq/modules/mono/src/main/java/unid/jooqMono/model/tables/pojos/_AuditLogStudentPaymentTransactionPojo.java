@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.CurrencyEnum;
@@ -67,6 +68,7 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
     private LocalDateTime              transactionSubmitTime;
     private BookingStatusEnum          processStatus;
     private String                     rejectReason;
+    private String                     transactionSerialNumber;
 
     public _AuditLogStudentPaymentTransactionPojo() {}
 
@@ -99,9 +101,10 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
         this.transactionSubmitTime = value.transactionSubmitTime;
         this.processStatus = value.processStatus;
         this.rejectReason = value.rejectReason;
+        this.transactionSerialNumber = value.transactionSerialNumber;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason", "transactionSerialNumber" })
     public _AuditLogStudentPaymentTransactionPojo(
         @Nonnull Long                       auditSeq,
         @Nonnull OffsetDateTime             auditCreatedon,
@@ -130,7 +133,8 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
         @Nullable String                     updatedBy,
         @Nullable LocalDateTime              transactionSubmitTime,
         @Nullable BookingStatusEnum          processStatus,
-        @Nullable String                     rejectReason
+        @Nullable String                     rejectReason,
+        @Nullable String                     transactionSerialNumber
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -160,6 +164,7 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
         this.transactionSubmitTime = transactionSubmitTime;
         this.processStatus = processStatus;
         this.rejectReason = rejectReason;
+        this.transactionSerialNumber = transactionSerialNumber;
     }
 
     /**
@@ -673,6 +678,25 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public._audit_log_student_payment_transaction.transaction_serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTransactionSerialNumber() {
+        return this.transactionSerialNumber;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_student_payment_transaction.transaction_serial_number</code>.
+     */
+    public _AuditLogStudentPaymentTransactionPojo setTransactionSerialNumber(@Nullable String transactionSerialNumber) {
+        this.transactionSerialNumber = transactionSerialNumber;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogStudentPaymentTransactionPojo (");
@@ -705,6 +729,7 @@ public class _AuditLogStudentPaymentTransactionPojo implements Serializable {
         sb.append(", ").append(transactionSubmitTime);
         sb.append(", ").append(processStatus);
         sb.append(", ").append(rejectReason);
+        sb.append(", ").append(transactionSerialNumber);
 
         sb.append(")");
         return sb.toString();

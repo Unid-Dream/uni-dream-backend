@@ -42,7 +42,11 @@ public enum BookingStatusEnum implements EnumType {
 
     FINISHED("FINISHED"),
 
-    UNFINISHED("UNFINISHED");
+    UNFINISHED("UNFINISHED"),
+
+    ATTEND("ATTEND"),
+
+    ABSENT("ABSENT");
 
     private final String literal;
 

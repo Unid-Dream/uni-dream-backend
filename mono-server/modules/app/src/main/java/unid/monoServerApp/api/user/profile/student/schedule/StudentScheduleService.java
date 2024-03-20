@@ -267,7 +267,7 @@ public class StudentScheduleService {
                 .ifPresentOrElse(
                         value->{
                                 StaticLog.info(" 当前订单尚未处理, 无法重复提交 studentProfileId = {}, educatorCalendarId = ",studentProfileId,request.getEducatorCalendarId());
-                                throw Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_IS_EXIST);
+                                throw Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST);
                             },
                         ()->{}
                 );
@@ -287,4 +287,5 @@ public class StudentScheduleService {
         dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
         return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
     }
+
 }

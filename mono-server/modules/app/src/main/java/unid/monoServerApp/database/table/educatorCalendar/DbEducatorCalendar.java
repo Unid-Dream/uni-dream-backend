@@ -1,5 +1,6 @@
 package unid.monoServerApp.database.table.educatorCalendar;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.log.StaticLog;
 import io.lettuce.core.BitFieldArgs;
 import lombok.*;
@@ -34,6 +35,7 @@ import unid.monoServerMeta.model.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.*;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -232,22 +234,11 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
             StaticLog.error("{} , 当前时间段结束时间非整点",endDateTimeUtc);
             throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
         }
-        //如果时间间隔小于1个小时,则认为异常
-//        var span = endDateTimeUtc.toLocalTime().getHour() - startDateTimeUtc.toLocalTime().getHour();
-//        if(span != 1){
-//            StaticLog.error("{} - {} , 当前时间段开始时间和结束时间小于一个小时",startDateTimeUtc,endDateTimeUtc);
-//            throw Exceptions.business(
-//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
-//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
-//        }
-        //如果开始时间小于当前时间,则认为异常
-//        var now = LocalDateTime.now(ZoneOffset.UTC);
-//        if(startDateTimeUtc.toLocalDateTime().isBefore(now)){
-//            StaticLog.error("{}, 预定时间段不允许早于当前时间",startDateTimeUtc);
-//            throw Exceptions.business(
-//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.code(),
-//                    UniErrorCode.Client.EDUCATOR_CALENDAR_TIME_SLOT_INVALID.message());
-//        }
+        //检查开始时间段,距离今天不得超过三个月
+        if(Date.from(startDateTimeUtc.toInstant()).before(DateUtil.offsetMonth(new Date(), -3))){
+            StaticLog.error("{}, 开始时间不能超过3个月",startDateTimeUtc);
+            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_START_TIME_CAN_NOT_MORE_THEN_THREE_MONTH);
+        }
         //当前时间段是否已经有状态
         getDsl().select()
                 .from(EDUCATOR_CALENDAR)
@@ -291,6 +282,10 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         private DbEducatorProfile.SimpleResult educatorProfile;
         private List<DbEducatorSessionNoteItem.Result> comments;
     }
+
+
+
+
 
 
 }

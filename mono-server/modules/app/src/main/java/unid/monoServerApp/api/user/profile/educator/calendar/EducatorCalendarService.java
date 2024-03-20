@@ -342,4 +342,17 @@ public class EducatorCalendarService {
 
 
     }
+
+    //确定Student参加了Session, 只有educator可以确认学生是否参与了本次session
+    public void commitStudentAttend(UUID educatorProfileId, UUID calendarId) {
+        StudentPaymentTransactionPojo pojo = dbStudentPaymentTransaction.getDsl()
+                .select(STUDENT_PAYMENT_TRANSACTION.asterisk())
+                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                        .and(EDUCATOR_CALENDAR.ID.eq(calendarId)
+                        .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(educatorProfileId)))
+                ).fetchOptionalInto(StudentPaymentTransactionPojo.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
+        pojo.setProcessStatus(BookingStatusEnum.ATTEND);
+    }
 }

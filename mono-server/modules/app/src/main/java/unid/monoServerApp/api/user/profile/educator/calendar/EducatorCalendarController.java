@@ -137,6 +137,26 @@ public class EducatorCalendarController {
     }
 
 
+    @PutMapping("educator/user/profile/educator/{educatorProfileId}/calendar/{calendarId}/reserve/attend")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.EDUCATOR},
+            matchingSessionProfileId = true,
+            educatorProfileApproved = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Educator Commit Student Attend Calendar"
+    )
+    public @Valid UnifiedResponse<Void> commitStudentAttend(
+            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @PathVariable("calendarId") @ACL.ProfileId UUID calendarId) {
+        educatorCalendarService.commitStudentAttend(educatorProfileId,calendarId);
+        return UnifiedResponse.of(null);
+    }
+
+
     @PutMapping(value = {"educator/user/profile/{profileId}/calendar/reserve/reschedule","student/user/profile/{profileId}/calendar/reserve/reschedule"})
     @Transactional
     @ACL(

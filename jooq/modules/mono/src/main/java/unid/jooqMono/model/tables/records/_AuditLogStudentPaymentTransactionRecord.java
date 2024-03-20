@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.jooq.impl.TableRecordImpl;
 
@@ -553,6 +554,25 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
         return (String) get(27);
     }
 
+    /**
+     * Setter for
+     * <code>public._audit_log_student_payment_transaction.transaction_serial_number</code>.
+     */
+    public _AuditLogStudentPaymentTransactionRecord setTransactionSerialNumber(@Nullable String value) {
+        set(28, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_payment_transaction.transaction_serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getTransactionSerialNumber() {
+        return (String) get(28);
+    }
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -567,8 +587,8 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
     /**
      * Create a detached, initialised _AuditLogStudentPaymentTransactionRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason" })
-    public _AuditLogStudentPaymentTransactionRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionSubmitTime, @Nullable BookingStatusEnum processStatus, @Nullable String rejectReason) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "transactionAmount", "transactionCurrency", "transactionItem", "transactionItemRefId", "transactionPersonnelRefId", "paymentMethod", "paymentStatus", "codOrderRef", "codOutTradeNo", "codRefId", "codTransactionId", "codWallet", "codExpiry", "codPaymentUrl", "createdOn", "createdBy", "updatedOn", "updatedBy", "transactionSubmitTime", "processStatus", "rejectReason", "transactionSerialNumber" })
+    public _AuditLogStudentPaymentTransactionRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull BigDecimal transactionAmount, @Nonnull CurrencyEnum transactionCurrency, @Nonnull StudentTransactionItemEnum transactionItem, @Nullable UUID transactionItemRefId, @Nullable UUID transactionPersonnelRefId, @Nullable PaymentMethodEnum paymentMethod, @Nonnull PaymentStatusEnum paymentStatus, @Nullable String codOrderRef, @Nullable String codOutTradeNo, @Nullable String codRefId, @Nullable String codTransactionId, @Nullable String codWallet, @Nullable OffsetDateTime codExpiry, @Nullable String codPaymentUrl, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable LocalDateTime transactionSubmitTime, @Nullable BookingStatusEnum processStatus, @Nullable String rejectReason, @Nullable String transactionSerialNumber) {
         super(_AuditLogStudentPaymentTransactionTable._AUDIT_LOG_STUDENT_PAYMENT_TRANSACTION);
 
         setAuditSeq(auditSeq);
@@ -599,6 +619,7 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
         setTransactionSubmitTime(transactionSubmitTime);
         setProcessStatus(processStatus);
         setRejectReason(rejectReason);
+        setTransactionSerialNumber(transactionSerialNumber);
     }
 
     /**
@@ -636,6 +657,7 @@ public class _AuditLogStudentPaymentTransactionRecord extends TableRecordImpl<_A
             setTransactionSubmitTime(value.getTransactionSubmitTime());
             setProcessStatus(value.getProcessStatus());
             setRejectReason(value.getRejectReason());
+            setTransactionSerialNumber(value.getTransactionSerialNumber());
         }
     }
 }

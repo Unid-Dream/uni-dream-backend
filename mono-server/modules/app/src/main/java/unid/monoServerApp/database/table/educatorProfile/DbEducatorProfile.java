@@ -87,7 +87,8 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                                 .from(I18N,USER)
                                 .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
                 ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
-        ).from(Tables.EDUCATOR_PROFILE,USER).where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID));
+        ).from(Tables.EDUCATOR_PROFILE,USER)
+                .where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
     }
 
 

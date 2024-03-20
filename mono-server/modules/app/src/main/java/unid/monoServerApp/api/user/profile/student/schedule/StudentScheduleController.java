@@ -35,10 +35,7 @@ import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaym
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentScheduleMapper;
-import unid.monoServerMeta.api.ScheduleTransactionResponse;
-import unid.monoServerMeta.api.StudentBookingEducatorCalendarRequest;
-import unid.monoServerMeta.api.StudentPaymentTransactionResponse;
-import unid.monoServerMeta.api.StudentSchedulePageRequest;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
 import java.time.*;
@@ -156,6 +153,25 @@ public class StudentScheduleController {
             @RequestBody StudentBookingEducatorCalendarRequest request) {
         return UnifiedResponse.of(studentScheduleService.create(studentProfileId, request));
     }
+
+
+//    @PostMapping("student/user/profile/{studentProfileId}/educator/calendar/{calendarId}")
+//    @Transactional
+//    @ACL(
+//            authed = true,
+//            allowedRoles = {UserRoleEnum.STUDENT},
+//            matchingSessionProfileId = true
+//    )
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(
+//            summary = "Student Join Session"
+//    )
+//    public @Valid UnifiedResponse<ScheduleTransactionResponse> joinSession(
+//            @PathVariable("studentProfileId") @ACL.ProfileId UUID studentProfileId,
+//            ScheduleJoinSessionRequest request) {
+//        studentScheduleService.studentJoinSession(studentProfileId, request);
+//        return UnifiedResponse.of();
+//    }
 
     @GetMapping("student/user/profile/student/{profileId}/schedule")
     @ACL(

@@ -1,5 +1,6 @@
 package pwh.coreStarter.exception;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ public class UnifiedException extends RuntimeException {
     ) {
         this(errorCode, message, httpStatus, null);
     }
+
 
 
     private static Optional<String> formatIfPresent(

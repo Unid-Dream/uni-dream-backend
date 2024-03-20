@@ -231,6 +231,12 @@ public class _AuditLogStudentPaymentTransactionTable extends TableImpl<_AuditLog
      */
     public final TableField<_AuditLogStudentPaymentTransactionRecord, String> REJECT_REASON = createField(DSL.name("reject_reason"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_student_payment_transaction.transaction_serial_number</code>.
+     */
+    public final TableField<_AuditLogStudentPaymentTransactionRecord, String> TRANSACTION_SERIAL_NUMBER = createField(DSL.name("transaction_serial_number"), SQLDataType.VARCHAR(255), this, "");
+
     private _AuditLogStudentPaymentTransactionTable(Name alias, Table<_AuditLogStudentPaymentTransactionRecord> aliased) {
         this(alias, aliased, null);
     }

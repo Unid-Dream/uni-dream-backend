@@ -140,10 +140,11 @@ public enum UniErrorCode{
         EDUCATOR_NOT_EXIST(10603,"Business.当前Educator不存在"),
         EDUCATOR_HOURLY_RATE_IS_NULL(10604,"Business.当前Educator, HourlyRate为空"),
         EDUCATOR_CALENDAR_NOT_EXIST(10605,"Business.当前Educator Calendar不存在"),
+        EDUCATOR_CALENDAR_START_TIME_CAN_NOT_MORE_THEN_THREE_MONTH(10606,"Business.Educator Calendar设定开始时间不能超过3个月"),
 
         // ---------------------------------- STUDENT -----------------------------------------------
-        STUDENT_PAYMENT_TRANSACTION_NOT_EXIST(10705,"Business.当前交易不存在"),
-        STUDENT_PAYMENT_TRANSACTION_IS_EXIST(10705,"Business.当前交易已存在"),
+        STUDENT_PAYMENT_TRANSACTION_NOT_EXIST(10705,"Business.当前交易订单不存在"),
+        STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST(10706,"Business.当前交易订单已存在,不允许重复提交"),
 
         // ---------------------------------- USER -----------------------------------------------
         USER_PROFILE_ID_NOT_EXIST(10805,"Business.用户不存在"),
