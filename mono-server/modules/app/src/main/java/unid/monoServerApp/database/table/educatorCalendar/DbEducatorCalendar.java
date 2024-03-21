@@ -2,7 +2,6 @@ package unid.monoServerApp.database.table.educatorCalendar;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.log.StaticLog;
-import io.lettuce.core.BitFieldArgs;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -10,27 +9,22 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.Public;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.tables.EducatorCalendarTable;
 import unid.jooqMono.model.tables.daos.EducatorCalendarDao;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.monoServerApp.Constant;
-import unid.monoServerApp.ErrorCode;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.Properties;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
-import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteMap;
 import unid.monoServerApp.database.table.i18n.DbI18N;
-import unid.monoServerApp.database.table.school.DbEducatorSchool;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerMeta.api.EducatorCalendarRejectRequest;
-import unid.monoServerMeta.api.EducatorLevelResponse;
-import unid.monoServerMeta.api.EducatorProfileSimpleResponse;
-import unid.monoServerMeta.model.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -187,7 +181,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .fetchOptionalInto(DbEducatorCalendar.Result.class)
                 .orElseThrow(()->{
                     // 如果查询结果为空,则说明当前时间槽不是空闲状态,抛出异常
-                    throw Exceptions.business(UniErrorCode.Business.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE);
+                    throw Exceptions.business(UniErrorCode.SLOT_CAN_NOT_CHANGE_TO_UNAVAILABLE);
                 });
     }
 
@@ -208,8 +202,8 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .ifPresent(value->{
                     if(value != request.getSessions().size()){
                         //如果不相等,则当前提交拒绝异常
-                        throw Exceptions.client(
-                                UniErrorCode.Client.EDUCATOR_CAN_NOT_REJECT
+                        throw Exceptions.business(
+                                UniErrorCode.EDUCATOR_CAN_NOT_REJECT
                         );
 
                     }
@@ -228,16 +222,16 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
         //时间段是否都为整点, 如果不为整点,则认为异常
         if( startDateTimeUtc.getMinute()!=0 || startDateTimeUtc.getSecond()!=0){
             StaticLog.error(" {}, 当前时间段开始时间非整点",startDateTimeUtc);
-            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
+            throw Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
         }
         if( endDateTimeUtc.getMinute()!=0 || endDateTimeUtc.getSecond()!=0){
             StaticLog.error("{} , 当前时间段结束时间非整点",endDateTimeUtc);
-            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
+            throw Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
         }
         //检查开始时间段,距离今天不得超过三个月
         if(Date.from(startDateTimeUtc.toInstant()).before(DateUtil.offsetMonth(new Date(), -3))){
             StaticLog.error("{}, 开始时间不能超过3个月",startDateTimeUtc);
-            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_START_TIME_CAN_NOT_MORE_THEN_THREE_MONTH);
+            throw Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_START_TIME_CAN_NOT_MORE_THEN_THREE_MONTH);
         }
         //当前时间段是否已经有状态
         getDsl().select()
@@ -249,7 +243,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .ifPresentOrElse(
                         value -> {
                             // 如果Optional对象存在值，执行此处代码
-                            throw Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
+                            throw Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_TIME_SLOT_CAN_NOT_CHANGE);
                         },
                         () -> {}
                 );

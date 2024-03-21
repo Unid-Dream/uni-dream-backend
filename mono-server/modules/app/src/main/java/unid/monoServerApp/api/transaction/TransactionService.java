@@ -1,7 +1,6 @@
 package unid.monoServerApp.api.transaction;
 
 
-import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
 //import com.asiapay.secure.PaydollarSecureUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,7 @@ import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
 import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.TransactionItem;
-import unid.monoServerMeta.model.UniErrorCode;
+import pwh.springWebStarter.response.UniErrorCode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -35,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static unid.jooqMono.model.Tables.*;
+import static pwh.springWebStarter.response.UniErrorCode.STUDENT_PAYMENT_TRANSACTION_FAIL_TO_PAY_ON_ALIPAY;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -106,7 +105,7 @@ public class TransactionService {
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(request.getTransactionId()).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId)))
                 .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
-                .orElseThrow(()->Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
+                .orElseThrow(()->Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
         //组装 AsiaPay Frontend需要的参数,以及创建
         PaymentTransactionResponse.AsiaPayPayload payload = new PaymentTransactionResponse.AsiaPayPayload();
         payload.setAmount(transaction.getTransactionAmount().toString());
@@ -119,7 +118,7 @@ public class TransactionService {
             payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
         }catch (Exception e){
             StaticLog.error(" 创建AsiaPay SecureHash 异常",e);
-            throw Exceptions.external(UniErrorCode.External.FAIL_TO_PAY_ON_ALIPAY);
+            throw Exceptions.business(STUDENT_PAYMENT_TRANSACTION_FAIL_TO_PAY_ON_ALIPAY);
         }
         response.setAsiaPayPayload(payload);
         return response;

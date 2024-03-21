@@ -3,7 +3,7 @@ package unid.monoServerApp;
 import org.springframework.http.HttpStatus;
 import pwh.coreStarter.exception.UnifiedException;
 import pwh.springWebStarter.ErrorCodeGlobal;
-import unid.monoServerMeta.model.UniErrorCode;
+import pwh.springWebStarter.response.UniErrorCode;
 
 public class Exceptions {
     public static UnifiedException unauthorized(String... message) {
@@ -30,30 +30,13 @@ public class Exceptions {
         );
     }
 
-    public static UnifiedException business(UniErrorCode.Business error) {
+    public static UnifiedException business(UniErrorCode error) {
         throw new UnifiedException(
                 String.valueOf(error.code()),
                 error.message(),
                 HttpStatus.BAD_REQUEST.value()
         );
     }
-
-    public static UnifiedException external(UniErrorCode.External error) {
-        throw new UnifiedException(
-                String.valueOf(error.code()),
-                error.message(),
-                HttpStatus.BAD_REQUEST.value()
-        );
-    }
-
-    public static UnifiedException client(UniErrorCode.Client error) {
-        throw new UnifiedException(
-                String.valueOf(error.code()),
-                error.message(),
-                HttpStatus.BAD_REQUEST.value()
-        );
-    }
-
 
     public static UnifiedException invalidTimeslot(String... message) {
         throw new UnifiedException(

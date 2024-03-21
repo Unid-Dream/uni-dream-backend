@@ -78,7 +78,7 @@ public class GlobalErrorResolver implements HandlerExceptionResolver {
         } finally {
             responseBodyCustomizer.atFinally().accept(unifiedBody);
         }
-        response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
         objectMapper.writeValue(response.getWriter(), unifiedBody);
         response.getWriter().flush();
         return new ModelAndView();

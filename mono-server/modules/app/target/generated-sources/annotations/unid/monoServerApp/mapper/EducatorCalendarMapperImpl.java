@@ -25,7 +25,7 @@ import unid.monoServerMeta.model.PaymentStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-19T23:08:41+0800",
+    date = "2024-03-21T11:02:09+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -176,6 +176,10 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
             break;
             case UNFINISHED: bookingStatusEnum = BookingStatusEnum.UNFINISHED;
             break;
+            case ATTEND: bookingStatusEnum = BookingStatusEnum.ATTEND;
+            break;
+            case ABSENT: bookingStatusEnum = BookingStatusEnum.ABSENT;
+            break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatus );
         }
 
@@ -310,6 +314,10 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
             case FINISHED: bookingStatus = BookingStatus.FINISHED;
             break;
             case UNFINISHED: bookingStatus = BookingStatus.UNFINISHED;
+            break;
+            case ATTEND: bookingStatus = BookingStatus.ATTEND;
+            break;
+            case ABSENT: bookingStatus = BookingStatus.ABSENT;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
         }

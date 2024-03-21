@@ -29,7 +29,11 @@ public class AuthLoginController {
     private final AuthLoginService authLoginService;
     private final JwtTokenService jwtTokenService;
 
-    @PostMapping("student/auth/login")
+    @PostMapping({
+            "student/auth/login",
+            "educator/auth/login",
+            "admin/auth/login"
+    })
     @Transactional
     @ACL(
             noAuthed = true
@@ -67,42 +71,4 @@ public class AuthLoginController {
         );
     }
 
-
-    @PostMapping("educator/auth/login")
-    @Transactional
-    @ACL(
-            noAuthed = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Login"
-    )
-    public @Valid UnifiedResponse<AuthLoginResponse> login(
-            @RequestBody @Valid
-            AuthEducatorLoginRequest payload
-    ) {
-        var existUserRecord = authLoginService.getExistUser(payload)
-                .orElseThrow(() -> new UnifiedException(
-                        ErrorCode.INCORRECT_CREDENTIAL,
-                        "User Does Not Exist",
-                        HttpStatus.NOT_FOUND.value()
-                ));
-        if (
-                !authLoginService.isUserPasswordCorrect(
-                        payload.getLoginPassword(),
-                        existUserRecord
-                )
-        ) {
-            throw new UnifiedException(
-                    ErrorCode.INCORRECT_CREDENTIAL,
-                    "User Password Incorrect",
-                    HttpStatus.FORBIDDEN.value()
-            );
-        }
-        return UnifiedResponse.of(
-                AuthLoginResponse.builder()
-                        .token(jwtTokenService.generateTokenForUser(existUserRecord))
-                        .build()
-        );
-    }
 }

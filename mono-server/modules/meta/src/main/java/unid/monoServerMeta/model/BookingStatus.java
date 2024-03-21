@@ -18,7 +18,7 @@ public enum BookingStatus implements NamedEnum {
     UNFINISHED("UNFINISHED"),
     ATTEND("ATTEND"),
 
-    ABSENT("ABSENT");
+    ABSENT("ABSENT"),
 
     ;
     private final String value;

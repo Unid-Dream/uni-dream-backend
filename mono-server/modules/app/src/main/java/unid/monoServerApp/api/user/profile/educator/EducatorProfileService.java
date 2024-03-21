@@ -1,35 +1,19 @@
 package unid.monoServerApp.api.user.profile.educator;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
-import cn.hutool.poi.excel.ExcelReader;
-import cn.hutool.poi.excel.ExcelUtil;
 import lombok.*;
-import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import pwh.coreRsqlJooq.model.PaginationRequest;
-import pwh.coreRsqlJooq.model.PaginationResponse;
-import pwh.coreRsqlJooq.model.PaginationResult;
-import unid.jooqMono.model.enums.TagCategoryEnum;
-import unid.jooqMono.model.tables.CityTable;
-import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.cache.CacheTags;
 import unid.monoServerApp.database.Db;
 import unid.monoServerApp.database.service.UserCacheService;
-import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfileLanguageMap;
 import unid.monoServerApp.database.table.expertise.DbExpertise;
@@ -39,21 +23,18 @@ import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.mapper.CountryMapper;
 import unid.monoServerApp.mapper.EducatorProfileMapper;
 import unid.monoServerApp.mapper.I18nMapper;
-import unid.monoServerApp.mapper.UserMapper;
 import unid.monoServerApp.service.S3Service;
 import unid.monoServerApp.service.SessionService;
-import unid.monoServerApp.util.PageUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.UniErrorCode;
 
-import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.*;
 
 import static org.jooq.impl.DSL.*;
 import static unid.jooqMono.model.Tables.*;
+import static pwh.springWebStarter.response.UniErrorCode.EDUCATOR_UPDATE_PROFILE_FAIL;
+import static unid.jooqMono.model.tables.EducatorProfileTable.EDUCATOR_PROFILE;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -124,10 +105,10 @@ public class EducatorProfileService {
                 .execute();
         educationLevels.forEach(educationLevel -> {
             Optional.ofNullable(educationLevel.getDegreeId()).orElseThrow(
-                    ()->Exceptions.client(UniErrorCode.Client.EDUCATOR_UPDATE_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID)
+                    ()->Exceptions.business(EDUCATOR_UPDATE_PROFILE_FAIL)
             );
             Optional.ofNullable(educationLevel.getUniversityId()).orElseThrow(
-                    ()->Exceptions.client(UniErrorCode.Client.EDUCATOR_UPDATE_PROFILE_SCHOOL_LEVEL_PARAMETERS_INVALID)
+                    ()->Exceptions.business(EDUCATOR_UPDATE_PROFILE_FAIL)
             );
             EducatorSchoolPojo created = new EducatorSchoolPojo()
                     .setEducatorProfileId(educatorProfileId)
@@ -244,6 +225,7 @@ public class EducatorProfileService {
                 .and(subjectQuery == null || subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
                 .and(expertiseQuery == null || expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
                 .and(languageQuery == null || languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
+                .orderBy(EDUCATOR_PROFILE.ID.asc())
                 .offset((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .fetchInto(DbEducatorProfile.Result.class);

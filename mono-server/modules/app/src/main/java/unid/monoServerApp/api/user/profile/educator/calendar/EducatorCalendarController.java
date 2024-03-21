@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
+import unid.monoServerApp.api.EventLoggable;
 import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
@@ -73,6 +74,21 @@ public class EducatorCalendarController {
     }
 
 
+    @GetMapping("admin/calendar/session/page")
+    @Transactional
+    @ACL(
+//            authed = true,
+//            allowedRoles = {UserRoleEnum.ADMIN,UserRoleEnum.ROOT}
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query  Calendar Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getPage(
+            @ParameterObject @Valid CalendarSessionPageRequest request) {
+        return UnifiedResponse.of(educatorCalendarService.getPage(request));
+    }
 
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")

@@ -8,6 +8,7 @@ import lombok.experimental.FieldNameConstants;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
+import pwh.coreStarter.exception.UnifiedException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -65,7 +66,10 @@ public class UnifiedResponse<Data> implements Serializable {
         @NotBlank(groups = {ValidationGroup.class})
         private final String path;
         @Schema(description = "Brief description of the error")
+        @JsonIgnore
         private final List<String> description;
+        @Schema(description = "Brief description of the error")
+        private final UnifiedException.I18n message;
     }
 
 }

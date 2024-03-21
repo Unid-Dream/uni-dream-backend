@@ -2,7 +2,6 @@ package unid.monoServerApp.api.user.profile.educator.calendar.comment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +15,10 @@ import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.mapper.EducatorCalendarMapper;
 import unid.monoServerApp.mapper.EducatorSessionNoteItemMapper;
-import unid.monoServerApp.mapper.EducatorSessionNoteMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.EducatorSessionCommentRequest;
 import unid.monoServerMeta.api.EducatorSessionNoteCommentResponse;
-import unid.monoServerMeta.model.UniErrorCode;
+import pwh.springWebStarter.response.UniErrorCode;
 
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +75,7 @@ public class EducatorSessionCommentService {
                         .from(EDUCATOR_CALENDAR)
                         .where(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId)
                         .and(EDUCATOR_CALENDAR.ID.eq(calendarId)))
-                                .fetchOptional().orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_CALENDAR_NOT_EXIST));
+                                .fetchOptional().orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_NOT_EXIST));
 
         request.getPayload().forEach((note)-> dbEducatorCalendar.getDsl().select()
                 .from(EDUCATOR_SESSION_NOTE_MAP)

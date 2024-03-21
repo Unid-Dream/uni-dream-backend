@@ -1,13 +1,10 @@
 package unid.monoServerApp.api.user.profile.student.schedule;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +28,11 @@ import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
 import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.UniErrorCode;
+import pwh.springWebStarter.response.UniErrorCode;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -245,8 +238,8 @@ public class StudentScheduleService {
         //创建支付订单
         //查询educator收费
         EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
-        Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.Business.EDUCATOR_NOT_EXIST));
-        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.Business.EDUCATOR_HOURLY_RATE_IS_NULL));
+        Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.EDUCATOR_NOT_EXIST));
+        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_HOURLY_RATE_IS_NULL));
         //当前学生是否已经提交过该时间段订单
         dbEducatorCalendar.getDsl()
                 .select()
@@ -260,7 +253,7 @@ public class StudentScheduleService {
                 .ifPresentOrElse(
                         value->{
                                 StaticLog.info(" 当前订单尚未处理, 无法重复提交 studentProfileId = {}, educatorCalendarId = ",studentProfileId,request.getEducatorCalendarId());
-                                throw Exceptions.business(UniErrorCode.Business.STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST);
+                                throw Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST);
                             },
                         ()->{}
                 );

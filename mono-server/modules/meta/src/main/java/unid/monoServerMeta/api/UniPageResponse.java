@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class UniPageResponse<T> {
     @Schema(
             description = "previous page cursor string | null = no previous page (current is first page) | pass this value to API to query previous page"

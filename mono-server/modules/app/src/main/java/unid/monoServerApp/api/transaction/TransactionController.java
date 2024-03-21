@@ -1,6 +1,5 @@
 package unid.monoServerApp.api.transaction;
 
-import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,14 +11,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
+import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
+import pwh.springWebStarter.response.UniErrorCode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -31,6 +32,26 @@ import java.util.UUID;
 public class TransactionController {
 
     private final TransactionService transactionService;
+
+
+    @GetMapping("admin/test")
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get One"
+    )
+    public @Valid UnifiedResponse<Void> get(
+            @RequestParam(required = false) String id
+    ) {
+        Optional.ofNullable(id).orElseThrow(()->Exceptions.notFound("测试 not found"));
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
+
 
     @GetMapping("student/transaction/{id}")
     @ACL(
