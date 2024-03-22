@@ -60,6 +60,7 @@ import unid.jooqMono.model.tables.PricingTable;
 import unid.jooqMono.model.tables.SchoolExtensionTable;
 import unid.jooqMono.model.tables.SchoolIdentityTable;
 import unid.jooqMono.model.tables.SchoolTable;
+import unid.jooqMono.model.tables.SessionOpLogTable;
 import unid.jooqMono.model.tables.SessionRescheduleTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyAnswerMapTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyMapTable;
@@ -650,6 +651,11 @@ public class Public extends SchemaImpl {
     public final SchoolIdentityTable SCHOOL_IDENTITY = SchoolIdentityTable.SCHOOL_IDENTITY;
 
     /**
+     * The table <code>public.session_op_log</code>.
+     */
+    public final SessionOpLogTable SESSION_OP_LOG = SessionOpLogTable.SESSION_OP_LOG;
+
+    /**
      * The table <code>public.session_reschedule</code>.
      */
     public final SessionRescheduleTable SESSION_RESCHEDULE = SessionRescheduleTable.SESSION_RESCHEDULE;
@@ -966,6 +972,7 @@ public class Public extends SchemaImpl {
             SchoolTable.SCHOOL,
             SchoolExtensionTable.SCHOOL_EXTENSION,
             SchoolIdentityTable.SCHOOL_IDENTITY,
+            SessionOpLogTable.SESSION_OP_LOG,
             SessionRescheduleTable.SESSION_RESCHEDULE,
             StudentBookingSurveyAnswerMapTable.STUDENT_BOOKING_SURVEY_ANSWER_MAP,
             StudentBookingSurveyMapTable.STUDENT_BOOKING_SURVEY_MAP,

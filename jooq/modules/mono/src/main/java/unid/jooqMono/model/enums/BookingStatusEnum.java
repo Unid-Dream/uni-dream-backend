@@ -46,7 +46,11 @@ public enum BookingStatusEnum implements EnumType {
 
     ATTEND("ATTEND"),
 
-    ABSENT("ABSENT");
+    ABSENT("ABSENT"),
+
+    PAID("PAID"),
+
+    RESCHEDULE("RESCHEDULE");
 
     private final String literal;
 

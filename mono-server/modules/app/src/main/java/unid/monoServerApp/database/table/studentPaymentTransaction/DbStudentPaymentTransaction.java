@@ -10,6 +10,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.jooqMono.model.tables.StudentPaymentTransactionTable;
 import unid.jooqMono.model.tables.daos.StudentPaymentTransactionDao;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
@@ -23,6 +24,7 @@ import unid.monoServerApp.database.table.user.DbUser;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Component
 public class DbStudentPaymentTransaction extends Db<StudentPaymentTransactionTable, StudentPaymentTransactionDao> {
@@ -58,6 +60,7 @@ public class DbStudentPaymentTransaction extends Db<StudentPaymentTransactionTab
                 );
         return q.from(alias);
     }
+
 
     public SelectJoinStep<Record> getQueryForApiList(
             StudentPaymentTransactionTable alias,
@@ -98,6 +101,8 @@ public class DbStudentPaymentTransaction extends Db<StudentPaymentTransactionTab
         return transaction.getCodExpiry() != null && transaction.getCodExpiry().plusMinutes(2L).isAfter(now);
     }
 
+
+
     @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
     @Data
     @NoArgsConstructor
@@ -109,8 +114,6 @@ public class DbStudentPaymentTransaction extends Db<StudentPaymentTransactionTab
         private DbStudentProfile.SimpleResult studentProfile;
         private DbEducatorCalendar.SimpleResult session;
         private DbEvent.SimpleResult event;
-
-
     }
 
     @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)

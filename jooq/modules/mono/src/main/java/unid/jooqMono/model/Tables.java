@@ -51,6 +51,7 @@ import unid.jooqMono.model.tables.PricingTable;
 import unid.jooqMono.model.tables.SchoolExtensionTable;
 import unid.jooqMono.model.tables.SchoolIdentityTable;
 import unid.jooqMono.model.tables.SchoolTable;
+import unid.jooqMono.model.tables.SessionOpLogTable;
 import unid.jooqMono.model.tables.SessionRescheduleTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyAnswerMapTable;
 import unid.jooqMono.model.tables.StudentBookingSurveyMapTable;
@@ -632,6 +633,11 @@ public class Tables {
      * The table <code>public.school_identity</code>.
      */
     public static final SchoolIdentityTable SCHOOL_IDENTITY = SchoolIdentityTable.SCHOOL_IDENTITY;
+
+    /**
+     * The table <code>public.session_op_log</code>.
+     */
+    public static final SessionOpLogTable SESSION_OP_LOG = SessionOpLogTable.SESSION_OP_LOG;
 
     /**
      * The table <code>public.session_reschedule</code>.

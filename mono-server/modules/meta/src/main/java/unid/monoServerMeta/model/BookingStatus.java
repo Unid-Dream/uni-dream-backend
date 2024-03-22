@@ -20,6 +20,10 @@ public enum BookingStatus implements NamedEnum {
 
     ABSENT("ABSENT"),
 
+    PAID("PAID"),
+
+    RESCHEDULE("RESCHEDULE"),
+
     ;
     private final String value;
 

@@ -38,9 +38,6 @@ public class OpportunityController {
             authed = true,
             allowedRoles = UserRoleEnum.STUDENT
     )
-    @Parameters({
-        @Parameter(name = "unidtoken", in = ParameterIn.HEADER, required = true),
-    })
     @Operation(
             summary = "List"
     )

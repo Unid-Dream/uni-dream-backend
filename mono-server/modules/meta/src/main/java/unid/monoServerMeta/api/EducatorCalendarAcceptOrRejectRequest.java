@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
-public class EducatorCalendarRejectRequest implements Serializable {
+public class EducatorCalendarAcceptOrRejectRequest implements Serializable {
 
     private UUID educatorCalendarId;
     private List<RejectSession> sessions;

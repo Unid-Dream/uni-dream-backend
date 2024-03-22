@@ -24,7 +24,9 @@ import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNo
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
-import unid.monoServerMeta.api.EducatorCalendarRejectRequest;
+import unid.monoServerMeta.api.EducatorCalendarAcceptOrRejectRequest;
+import unid.monoServerMeta.api.StudentSessionTransactionPayload;
+import unid.monoServerMeta.model.I18n;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.jooq.impl.DSL.count;
 import static unid.jooqMono.model.Tables.*;
 
 @Component
@@ -80,7 +83,8 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
 
 
 
-    public SelectJoinStep<Record> getSimpleQuery(EducatorCalendarTable alias) {
+
+        public SelectJoinStep<Record> getSimpleQuery(EducatorCalendarTable alias) {
          return  DSL.select(
                         alias.asterisk(),
                         DSL.multiset(
@@ -187,7 +191,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
 
     public void validateRejectStudentSession(
             @NotNull UUID educatorProfileId,
-            @NotNull EducatorCalendarRejectRequest request
+            @NotNull EducatorCalendarAcceptOrRejectRequest request
     ){
         getDsl().selectCount()
                 .from(STUDENT_PAYMENT_TRANSACTION)
@@ -196,7 +200,7 @@ public class DbEducatorCalendar extends Db<EducatorCalendarTable, EducatorCalend
                 .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.AVAILABLE))
                 .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.in(
                         request.getSessions().stream().map(
-                                EducatorCalendarRejectRequest.RejectSession::getStudentProfileId
+                                EducatorCalendarAcceptOrRejectRequest.RejectSession::getStudentProfileId
                         ).collect(Collectors.toList())
                 )).fetchOptionalInto(Integer.class)
                 .ifPresent(value->{

@@ -1,37 +1,44 @@
 package unid.monoServerApp.api.user.profile.educator.calendar;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
+import org.jooq.Condition;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.enums.*;
 import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
-import unid.monoServerApp.api.EventLoggable;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorCalendar.DbSessionReschedule;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
+import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
+import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.EducatorCalendarMapper;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
+import unid.monoServerApp.model.SessionLogger;
+import unid.monoServerApp.service.SessionLoggerService;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.*;
 import pwh.springWebStarter.response.UniErrorCode;
-import unid.monoServerMeta.model.EventType;
+import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.TransactionItem;
+import unid.monoServerMeta.model.SessionOpType;
 
 import java.time.OffsetDateTime;
 import java.util.*;
 
+import static org.jooq.impl.DSL.case_;
 import static org.jooq.impl.DSL.count;
 import static unid.jooqMono.model.Tables.*;
 import static pwh.springWebStarter.response.UniErrorCode.EDUCATOR_CAN_NOT_ACCEPT;
@@ -48,6 +55,8 @@ public class EducatorCalendarService {
     private final StudentPaymentTransactionMapper studentPaymentTransactionMapper;
     private final DbUser dbUser;
     private final DbSessionReschedule dbSessionReschedule;
+    private final DbSessionOpLog dbSessionOpLog;
+    private final SessionLoggerService sessionLoggerService;
 
     public DbEducatorCalendar.Result get(UUID id) {
         var table = dbEducatorCalendar.getTable();
@@ -141,7 +150,6 @@ public class EducatorCalendarService {
         return response;
     }
 
-    @EventLoggable(eventType = EventType.AVAILABLE_SESSION)
     public EducatorCalendarTimeSlotResponse markAvailable(UUID profileId, EducatorCalendarRequest.TimeSlotPayload payload) {
         sessionService.initDatabaseSession();
         OffsetDateTime startDateTimeUtc = OffsetDateTime.parse(payload.getStartDateTimeUtc());
@@ -168,17 +176,22 @@ public class EducatorCalendarService {
     }
 
 
-    void acceptOrDenyBooking(
+    public void acceptOrDenyBooking(
             UUID educatorProfileId,
-            EducatorCalendarRejectRequest request,
+            EducatorCalendarAcceptOrRejectRequest request,
             boolean accept
     ) {
         sessionService.initDatabaseSession();
-//        dbEducatorCalendar.validateRejectStudentSession(educatorProfileId,request);
+        DbEducatorCalendar.Result calendar = dbEducatorCalendar.getDsl()
+                .select().from(EDUCATOR_CALENDAR).where(EDUCATOR_CALENDAR.ID.eq(request.getEducatorCalendarId()))
+                .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_NOT_EXIST));
+        BookingStatusEnum fromStatus = calendar.getBookingStatus();
         if (!accept) {
             //reject student apply session
             //检查这些apply session 是否合法。也就是判断这些是否存在
-            //检查的条件包括：是否为当前老师；
+            //查询当前educator calendar
+
             request.getSessions().forEach((session) -> {
                 StudentPaymentTransactionPojo pojo = dbStudentPaymentTransaction.getDsl().select()
                         .from(STUDENT_PAYMENT_TRANSACTION)
@@ -189,7 +202,15 @@ public class EducatorCalendarService {
                 pojo.setRejectReason(session.getReason());
                 pojo.setProcessStatus(BookingStatusEnum.REJECTED);
                 dbStudentPaymentTransaction.getDao().update(pojo);
+
+                sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                        .status(BookingStatus.REJECTED)
+                        .userId(RequestHolder.get().getUser().getUserId())
+                        .transactionId(pojo.getTransactionItemRefId())
+                        .timeUtc(OffsetDateTime.now())
+                        .opType(SessionOpType.REJECT).build());
             });
+
             return;
         }
         if (request.getSessions().size() != 1) {
@@ -207,8 +228,12 @@ public class EducatorCalendarService {
             studentPaymentTransactionPojo.setProcessStatus(BookingStatusEnum.ACCEPTED);
             dbStudentPaymentTransaction.getDao().update(studentPaymentTransactionPojo);
             //将EducatorCalendar的状态改为Accept
-            //给student 发送educator accept email
-
+            sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                    .userId(RequestHolder.get().getUser().getUserId())
+                    .status(BookingStatus.ACCEPTED)
+                    .transactionId(studentPaymentTransactionPojo.getTransactionItemRefId())
+                    .timeUtc(OffsetDateTime.now())
+                    .opType(SessionOpType.ACCEPT).build());
         });
 
     }
@@ -351,108 +376,19 @@ public class EducatorCalendarService {
         pojo.setProcessStatus(BookingStatusEnum.ATTEND);
     }
 
-    public UniPageResponse<StudentSessionTransactionPayload> getPage(CalendarSessionPageRequest request) {
-        List<StudentSessionTransactionPayload> payload = dbEducatorCalendar.getDsl()
-                .select(
-                        STUDENT_PAYMENT_TRANSACTION.asterisk(),
-                        STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
-                        EDUCATOR_CALENDAR.asterisk(),
-                        DSL.multiset(
-                                DSL.select(
-                                                STUDENT_PROFILE.asterisk(),
-                                                USER.asterisk(),
-                                                DSL.multiset(
-                                                        DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                                ).as(StudentSessionTransactionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
-                                                DSL.multiset(
-                                                        DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                                ).as(StudentSessionTransactionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
-                                                DSL.multiset(
-                                                        DSL.select(
-                                                                        TAG.asterisk(),
-                                                                        DSL.multiset(
-                                                                                DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                                        ).as(StudentSessionTransactionPayload.Country.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                                                )
-                                                                .from(TAG)
-                                                                .where(TAG.ID.eq(STUDENT_PROFILE.COUNTRY_ID))
-                                                ).as(StudentSessionTransactionPayload.StudentProfile.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.Country.class)),
-                                                DSL.multiset(
-                                                        DSL.select(
-                                                                        TAG.asterisk(),
-                                                                        DSL.multiset(
-                                                                                DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                                        ).as(StudentSessionTransactionPayload.Country.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                                                )
-                                                                .from(TAG)
-                                                                .where(TAG.ID.eq(STUDENT_PROFILE.SECONDARY_SCHOOL_ID))
-                                                ).as(StudentSessionTransactionPayload.StudentProfile.Fields.secondarySchool).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.StudentProfile.SecondarySchool.class))
-                                        )
-                                        .from(
-                                                STUDENT_PROFILE,USER
-                                        ).where(
-                                                STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(STUDENT_PROFILE.ID)
-                                                        .and(STUDENT_PROFILE.USER_ID.eq(USER.ID))
-                                        )
-                        ).as(StudentSessionTransactionPayload.Fields.studentProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.StudentProfile.class)),
-                        DSL.multiset(
-                                DSL.select(
-                                                EDUCATOR_PROFILE.asterisk(),
-                                                USER.asterisk(),
-                                                DSL.multiset(
-                                                        DSL.select(
-                                                                        TAG.asterisk(),
-                                                                        DSL.multiset(
-                                                                                DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                                        ).as(StudentSessionTransactionPayload.Country.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                                                )
-                                                                .from(TAG)
-                                                                .where(TAG.ID.eq(EDUCATOR_PROFILE.COUNTRY_ID))
-                                                ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.Country.class)),
-                                                DSL.multiset(
-                                                        DSL.select(
-                                                                        TAG.asterisk(),
-                                                                        DSL.multiset(
-                                                                                DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                                        ).as(StudentSessionTransactionPayload.Country.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                                                )
-                                                                .from(TAG)
-                                                                .where(TAG.ID.eq(EDUCATOR_PROFILE.UNIVERSITY_ID))
-                                                ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.university).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.University.class)),
-                                                DSL.multiset(
-                                                        DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                                ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
-                                                DSL.multiset(
-                                                        DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                                ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
-                                        )
-                                        .from(EDUCATOR_PROFILE,USER)
-                                        .where(
-                                                EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)
-                                                .and(EDUCATOR_PROFILE.USER_ID.eq(USER.ID))
-                                        )
-                        ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
-                )
-                .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
-                .from(STUDENT_PAYMENT_TRANSACTION)
-                .leftJoin(EDUCATOR_CALENDAR).on(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
-                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.eq(StudentTransactionItemEnum.EDUCATOR_SCHEDULE))
-                .orderBy(STUDENT_PAYMENT_TRANSACTION.CREATED_ON.desc())
-                .limit(request.getPageSize())
-                .offset((request.getPageNumber() - 1) * request.getPageSize())
-                .fetchInto(StudentSessionTransactionPayload.class);
-        int totalSize = payload.stream()
-                .findFirst()
-                .map(StudentSessionTransactionPayload::getTotal)
-                .orElse(0);
 
-        return new UniPageResponse<>(
-                totalSize,
-                request.getPageNumber(),
-                request.getPageSize(),
-                null,
-                payload
-        );
+
+
+    public SessionEventLogResponse getSessionEventLogs(UUID transactionId) {
+        List<SessionEventLogResponse.SessionEventLogPayload> payload = dbSessionOpLog.getDsl()
+                .select()
+                .from(dbSessionOpLog.getTable())
+                .where(dbSessionOpLog.getTable().TRANSACTION_ID.eq(transactionId))
+                .fetchInto(SessionEventLogResponse.SessionEventLogPayload.class);
+        SessionEventLogResponse response = new SessionEventLogResponse();
+        response.setPayload(payload);
+        return response;
     }
+
 
 }

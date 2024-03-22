@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor
 public class UniPageResponse<T> {
@@ -31,7 +31,7 @@ public class UniPageResponse<T> {
     @Schema(
             description = "total items count of all pages"
     )
-    private @NotNull Integer totalPages;
+    private @Nullable Integer totalPages;
     @Schema(
             description = "them items"
     )

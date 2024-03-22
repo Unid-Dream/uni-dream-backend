@@ -6,27 +6,36 @@ import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.SessionOpTypeEnum;
 import unid.jooqMono.model.enums.StudentTransactionItemEnum;
 import unid.jooqMono.model.tables.pojos.EducatorCalendarPojo;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
+import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.database.table.user.DbUser;
+import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.queue.model.EducatorMeetingRequestPayload;
+import unid.monoServerApp.service.SessionLoggerService;
 import unid.monoServerApp.service.TeamsMeetingService;
 import unid.monoServerApp.util.asiapay.PaydollarSecureUtil;
 import unid.monoServerMeta.api.PaymentTransactionRequest;
 import unid.monoServerMeta.api.PaymentTransactionResponse;
 import unid.monoServerMeta.api.TransactionResponse;
+import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
 import pwh.springWebStarter.response.UniErrorCode;
+import unid.monoServerMeta.model.SessionOpType;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -44,7 +53,8 @@ public class TransactionService {
     private final DbEducatorSessionNoteItem dbEducatorSessionNoteItem;
     private final DbEducatorCalendar dbEducatorCalendar;
     private final TeamsMeetingService teamsMeetingService;
-
+    private final DbSessionOpLog dbSessionOpLog;
+    private final SessionLoggerService sessionLoggerService;
 
     public TransactionResponse get(UUID transactionId) {
         //0.查询 Writing Skill Transaction
@@ -248,19 +258,18 @@ public class TransactionService {
             List<StudentPaymentTransactionPojo> transactionPojoList = dbStudentPaymentTransaction.getDao().fetchByTransactionSerialNumber(ref);
             if(transactionPojoList.isEmpty()){
                 StaticLog.info("AsiaPay success !!! 订单不存在 = {}", ref);
-                return;
             }
             //更新当前订单的支付状态
             for(StudentPaymentTransactionPojo transactionPojo : transactionPojoList){
                 transactionPojo.setPaymentStatus(PaymentStatusEnum.PAID);
                 dbStudentPaymentTransaction.getDao().update(transactionPojo);
-
                 if(transactionPojo.getTransactionItem().equals(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)){
                     //设置educator calendar状态为accept
                     EducatorCalendarPojo calendarPojo =  dbEducatorCalendar.getDao().fetchOneById(transactionPojo.getTransactionItemRefId());
                     if(calendarPojo == null){
                         continue;
                     }
+                    BookingStatusEnum fromStatus = calendarPojo.getBookingStatus();
                     calendarPojo.setBookingStatus(BookingStatusEnum.ACCEPTED);
                     dbEducatorCalendar.getDao().update(calendarPojo);
                     //创建meeting url
@@ -269,6 +278,13 @@ public class TransactionService {
                     payload.setEducatorProfileId(calendarPojo.getEducatorProfileId());
 
                     teamsMeetingService.createMeetingWithStudent(payload);
+
+                    sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                            .userId(transactionPojo.getStudentProfileId())
+                            .status(BookingStatus.PAID)
+                            .transactionId(transactionPojo.getTransactionItemRefId())
+                            .timeUtc(OffsetDateTime.now())
+                            .opType(SessionOpType.PAY).build());
                 }
             }
 
@@ -279,7 +295,7 @@ public class TransactionService {
             // Transaction Rejected
             // Update your database for Transaction Rejected
         }
-
         StaticLog.info("*********************************************************************************************************************");
     }
+
 }

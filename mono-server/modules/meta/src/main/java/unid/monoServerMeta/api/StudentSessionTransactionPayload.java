@@ -11,7 +11,9 @@ import unid.monoServerMeta.model.PaymentStatus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -20,9 +22,9 @@ import java.util.UUID;
 @FieldNameConstants
 @Validated
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class StudentSessionTransactionPayload {
+public class StudentSessionTransactionPayload implements Serializable {
     @NotNull
-    private UUID id;
+    private UUID transactionId;
     @NotNull
     private StudentProfile studentProfile;
     @NotNull
@@ -31,17 +33,12 @@ public class StudentSessionTransactionPayload {
     private OffsetDateTime startTimeUtc;
     @NotNull
     private OffsetDateTime endTimeUtc;
+    @NotNull
+    private BookingStatus status;
 
-    @NotNull
-    private PaymentStatus paymentStatus;
-    @NotNull
-    private BookingStatus processStatus;
-    @Nullable
-    private String rejectReason;
-    @NotNull
-    private BookingStatus bookingStatus;
-    @NotNull
     private OffsetDateTime submissionTime;
+
+
 
 
     @JsonIgnore
@@ -49,9 +46,10 @@ public class StudentSessionTransactionPayload {
 
     @Data
     @FieldNameConstants
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class StudentProfile{
         @NotNull
-        private UUID id;
+        private UUID profileId;
         @NotNull
         private I18n firstNameI18n;
         @NotNull
@@ -59,9 +57,9 @@ public class StudentSessionTransactionPayload {
         @Nullable
         private String profilePicture;
         @NotNull
-        private SecondarySchool secondarySchool;
+        private TagResponse secondarySchool;
         @NotNull
-        private Country country;
+        private TagResponse country;
         @NotNull
         private String email;
         @NotNull
@@ -69,52 +67,41 @@ public class StudentSessionTransactionPayload {
         @NotNull
         private String timezone;
 
-        @Data
-        @FieldNameConstants
-        public static class SecondarySchool{
-            private UUID id;
-            private I18n i18n;
-        }
     }
 
 
 
     @Data
     @FieldNameConstants
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class EducatorProfile{
-        private UUID id;
+        private UUID profileId;
         private I18n firstNameI18n;
         private I18n lastNameI18n;
         @Nullable
         private String profilePicture;
         @NotNull
-        private University university;
+        private TagResponse university;
         @NotNull
-        private Country country;
+        private TagResponse country;
         @NotNull
         private String email;
         @NotNull
         private String phone;
         @NotNull
         private String timezone;
-        @Data
-        @FieldNameConstants
-        public static class University{
-            private UUID id;
-            private I18n i18n;
-        }
+
+        private List<TagResponse> expertises;
+        private List<TagResponse> languages;
+
     }
-
-
-
 
     @Data
     @FieldNameConstants
-    public static class Country{
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public static class TagResponse{
         private UUID id;
         private I18n i18n;
     }
-
-
 
 }

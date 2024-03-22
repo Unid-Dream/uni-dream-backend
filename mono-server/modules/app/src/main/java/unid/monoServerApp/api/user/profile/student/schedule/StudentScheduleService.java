@@ -10,25 +10,28 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import unid.jooqMono.model.enums.BookingStatusEnum;
-import unid.jooqMono.model.enums.CurrencyEnum;
-import unid.jooqMono.model.enums.PaymentStatusEnum;
-import unid.jooqMono.model.enums.StudentTransactionItemEnum;
+import unid.jooqMono.model.enums.*;
 import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
+import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.learningHub.DbLearningHub;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
+import unid.monoServerApp.model.SessionLogger;
+import unid.monoServerApp.service.SessionLoggerService;
 import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
+import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
 import pwh.springWebStarter.response.UniErrorCode;
+import unid.monoServerMeta.model.SessionOpType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -55,7 +58,7 @@ public class StudentScheduleService {
     private final DbStudentProfile dbStudentProfile;
     private final DbEducatorCalendar dbEducatorCalendar;
     private final RedisTemplate<String, String> redisTemplateRefCache;
-
+    private final SessionLoggerService sessionLoggerService;
 
     public JSONObject page(UUID studentProfileId,
                      OffsetDateTime startDateTimeUtc,
@@ -233,7 +236,8 @@ public class StudentScheduleService {
                 .set("result", list);
     }
 
-    //预定educator时间槽
+
+
     public ScheduleTransactionResponse create(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
         //创建支付订单
         //查询educator收费
@@ -258,8 +262,6 @@ public class StudentScheduleService {
                         ()->{}
                 );
 
-
-
         StudentPaymentTransactionPojo studentPaymentTransactionPojo = new StudentPaymentTransactionPojo()
                 .setTransactionItemRefId(request.getEducatorCalendarId())
                 .setStudentProfileId(studentProfileId)
@@ -270,7 +272,22 @@ public class StudentScheduleService {
                 .setProcessStatus(BookingStatusEnum.PENDING)
                 .setTransactionSubmitTime(LocalDateTime.now());
         studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("ER",redisTemplateRefCache));
+
+        //查询当前educator calendar
+        DbEducatorCalendar.Result calendar = dbEducatorCalendar.getDsl()
+                .select().from(EDUCATOR_CALENDAR).where(EDUCATOR_CALENDAR.ID.eq(studentPaymentTransactionPojo.getTransactionItemRefId()))
+                .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_NOT_EXIST));
+
         dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
+
+        sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                .userId(RequestHolder.get().getUser().getUserId())
+                .status(BookingStatus.PENDING)
+                .transactionId(studentPaymentTransactionPojo.getTransactionItemRefId())
+                .timeUtc(OffsetDateTime.now())
+                .opType(SessionOpType.REQUEST).build());
+
         return studentPaymentTransactionMapper.toResponse(studentPaymentTransactionPojo);
     }
 

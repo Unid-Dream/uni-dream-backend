@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
-import unid.monoServerApp.api.EventLoggable;
+import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,22 +73,21 @@ public class EducatorCalendarController {
     }
 
 
-    @GetMapping("admin/calendar/session/page")
+
+
+    @GetMapping("admin/calendar/session/{eventId}/eventLog")
     @Transactional
     @ACL(
-//            authed = true,
-//            allowedRoles = {UserRoleEnum.ADMIN,UserRoleEnum.ROOT}
             noAuthed = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Query  Calendar Page"
+            summary = "Query Calendar Page"
     )
-    public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getPage(
-            @ParameterObject @Valid CalendarSessionPageRequest request) {
-        return UnifiedResponse.of(educatorCalendarService.getPage(request));
+    public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
+            @PathVariable("eventId") UUID eventId) {
+        return UnifiedResponse.of(educatorCalendarService.getSessionEventLogs(eventId));
     }
-
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
     @Transactional
@@ -147,7 +145,7 @@ public class EducatorCalendarController {
     )
     public @Valid UnifiedResponse<Void> accept(
             @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
-            @RequestBody @Valid EducatorCalendarRejectRequest request) {
+            @RequestBody @Valid EducatorCalendarAcceptOrRejectRequest request) {
         educatorCalendarService.acceptOrDenyBooking(educatorProfileId,request,true);
         return UnifiedResponse.of(null);
     }
@@ -207,7 +205,7 @@ public class EducatorCalendarController {
     public @Valid UnifiedResponse<Void> deny(
             @PathVariable("profileId") @ACL.ProfileId UUID profileId,
             @RequestBody @Valid
-            EducatorCalendarRejectRequest request) {
+            EducatorCalendarAcceptOrRejectRequest request) {
 //        dbEducatorCalendar.validateMarking(payload.getDate(), payload.getHourStart(), payload.getHourEnd());
         educatorCalendarService.acceptOrDenyBooking(profileId, request, false);
         return UnifiedResponse.of(null);
