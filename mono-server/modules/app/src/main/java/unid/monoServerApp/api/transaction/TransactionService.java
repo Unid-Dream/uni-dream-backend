@@ -257,6 +257,66 @@ public class TransactionService {
 
             //根据回调的 orderRef,更新支付状态
             //查询当前支付的订单
+            var studentPaymentTransactionTable = dbStudentPaymentTransaction.getTable();
+            var educatorCalendarTable = dbEducatorCalendar.getTable();
+
+
+            dbStudentPaymentTransaction.getDsl()
+                    .selectFrom(studentPaymentTransactionTable)
+                    .where(studentPaymentTransactionTable.TRANSACTION_SERIAL_NUMBER.eq(ref))
+                    .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
+                    .ifPresent(
+                            (transaction) -> {
+                                StaticLog.info("[ref={}] AsiaPay success !!! 订单ID = {}", ref,transaction.getId());
+                                transaction.setPaymentStatus(PaymentStatusEnum.PAID);
+                                dbStudentPaymentTransaction.getDao().update(transaction);
+                                StaticLog.info("[ref={}] AsiaPay success !!! 订单ID = {}, 订单数据更新成功 !!", ref,transaction.getId());
+                                //如果是educator_calendar
+                                if(transaction.getTransactionItem().equals(StudentTransactionItemEnum.EDUCATOR_SCHEDULE)){
+                                    StaticLog.info("[ref={}] AsiaPay success !!! 订单ID = {}, 当前订单为 educator schedule !!", ref,transaction.getId());
+                                    dbEducatorCalendar.getDsl()
+                                            .selectFrom(educatorCalendarTable)
+                                            .where(educatorCalendarTable.ID.eq(transaction.getTransactionItemRefId()))
+                                            .fetchOptionalInto(DbEducatorCalendar.Result.class)
+                                            .ifPresent(
+                                                    (calendar)->{
+                                                        StaticLog.info("[ref={}] AsiaPay success !!! 订单ID = {}, 当前订单为 educator schedule !!", ref,transaction.getId());
+                                                        //更新calendar状态
+                                                        calendar.setBookingStatus(BookingStatusEnum.ACCEPTED);
+                                                        dbEducatorCalendar.getDao().update(calendar);
+                                                        //记录操作日志
+                                                        EducatorMeetingRequestPayload payload = new EducatorMeetingRequestPayload();
+                                                        payload.setCalendarId(calendar.getId());
+                                                        payload.setEducatorProfileId(calendar.getEducatorProfileId());
+                                                        //查询student_profile_id对应的userId
+                                                        dbStudentProfile.getDsl().selectFrom(
+                                                                        dbStudentProfile.getTable()
+                                                                ).where(dbStudentProfile.getTable().USER_ID.eq(transaction.getStudentProfileId()))
+                                                                .fetchOptionalInto(DbStudentProfile.Result.class)
+                                                                .ifPresent(
+                                                                        profile-> {
+                                                                            StaticLog.info("[ref={}] AsiaPay success !!! 订单ID = {}, 记录操作日志 !!", ref,transaction.getId());
+                                                                            sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                                                                                    .userId(profile.getUserId())
+                                                                                    .status(BookingStatus.PAID)
+                                                                                    .transactionId(transaction.getTransactionItemRefId())
+                                                                                    .timeUtc(OffsetDateTime.now())
+                                                                                    .opType(SessionOpType.PAY).build());
+                                                                        }
+                                                                );
+
+                                                        teamsMeetingService.createMeetingWithStudent(payload);
+                                                    }
+                                            );
+
+                                }
+                            }
+                    );
+
+
+
+
+
             List<StudentPaymentTransactionPojo> transactionPojoList = dbStudentPaymentTransaction.getDao().fetchByTransactionSerialNumber(ref);
             if(transactionPojoList.isEmpty()){
                 StaticLog.info("AsiaPay success !!! 订单不存在 = {}", ref);
@@ -271,30 +331,9 @@ public class TransactionService {
                     if(calendarPojo == null){
                         continue;
                     }
-                    BookingStatusEnum fromStatus = calendarPojo.getBookingStatus();
                     calendarPojo.setBookingStatus(BookingStatusEnum.ACCEPTED);
                     dbEducatorCalendar.getDao().update(calendarPojo);
                     //创建meeting url
-                    EducatorMeetingRequestPayload payload = new EducatorMeetingRequestPayload();
-                    payload.setCalendarId(calendarPojo.getId());
-                    payload.setEducatorProfileId(calendarPojo.getEducatorProfileId());
-
-                    teamsMeetingService.createMeetingWithStudent(payload);
-
-                    //查询student_profile_id对应的userId
-                    dbStudentProfile.getDsl().selectFrom(
-                            dbStudentProfile.getTable()
-                    ).where(dbStudentProfile.getTable().USER_ID.eq(transactionPojo.getStudentProfileId()))
-                                    .fetchOptionalInto(DbStudentProfile.Result.class)
-                                            .ifPresentOrElse(
-                                                    profile-> sessionLoggerService.async(SessionLogger.OpEvent.builder()
-                                                            .userId(profile.getUserId())
-                                                            .status(BookingStatus.PAID)
-                                                            .transactionId(transactionPojo.getTransactionItemRefId())
-                                                            .timeUtc(OffsetDateTime.now())
-                                                            .opType(SessionOpType.PAY).build()),
-                                                    ()->{}
-                                            );
 
 
 
