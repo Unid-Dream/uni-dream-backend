@@ -1,7 +1,9 @@
 package unid.monoServerApp.api.user.profile.admin;
 
+import cn.hutool.core.collection.ListUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,13 +11,16 @@ import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
+import unid.monoServerApp.database.table.course.DbEvent;
+import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
+import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
+import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.service.SessionLoggerService;
-import unid.monoServerMeta.api.CalendarSessionPageRequest;
-import unid.monoServerMeta.api.StudentSessionTransactionPayload;
-import unid.monoServerMeta.api.UniPageResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.SessionOpType;
@@ -35,6 +40,9 @@ import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 public class CommonOperationService {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final SessionLoggerService sessionLoggerService;
+    private final DbSessionOpLog dbSessionOpLog;
+    private final EducatorSessionCommentService educatorSessionCommentService;
+    private final DbEvent dbEvent;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
@@ -106,7 +114,7 @@ public class CommonOperationService {
         );
     }
 
-    public void cancel(UUID userId, UUID sessionId) {
+    public void cancel(UUID sessionId) {
         var table = dbStudentPaymentTransaction.getTable();
         dbStudentPaymentTransaction.getDsl()
                 .selectFrom(table)
@@ -134,7 +142,28 @@ public class CommonOperationService {
                         STUDENT_PAYMENT_TRANSACTION.ID.as(StudentSessionTransactionPayload.Fields.transactionId),
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
-
+                        //记录日志
+//                        DSL.multiset(
+//                                DSL.select(
+//                                                SESSION_OP_LOG.asterisk()
+////                                                DSL.multiset(
+////                                                        DSL.select(
+////                                                                        USER.asterisk(),
+////                                                                        DSL.multiset(
+////                                                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+////                                                                        ).as(StudentSessionTransactionPayload.EventOpLog.User.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+////                                                                        DSL.multiset(
+////                                                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+////                                                                        ).as(StudentSessionTransactionPayload.EventOpLog.User.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+////                                                                )
+////                                                                .from(USER)
+////                                                                .where(USER.ID.eq(SESSION_OP_LOG.USER_ID))
+////
+////                                                ).as(StudentSessionTransactionPayload.EventOpLog.Fields.user).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EventOpLog.User.class))
+//                                        )
+//                                        .from(SESSION_OP_LOG)
+//                                        .where(SESSION_OP_LOG.TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
+//                        ).as(StudentSessionTransactionPayload.Fields.eventOpLogs).convertFrom(r->r.isEmpty()?null:r.into(StudentSessionTransactionPayload.EventOpLog.class)),
                         //查询educator
                         DSL.case_()
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)),BookingStatusEnum.PENDING)
@@ -214,5 +243,75 @@ public class CommonOperationService {
                 .fetchOptionalInto(StudentSessionTransactionPayload.class)
                 .orElseThrow(()->Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
 
+    }
+
+    public SessionEventLogResponse getSessionEventLogs(UUID transactionId) {
+        var table = dbSessionOpLog.getTable();
+        List<SessionEventLogResponse.SessionEventLogPayload> payload = dbSessionOpLog.getDsl().select(
+                    table.asterisk(),
+                    DSL.multiset(
+                        DSL.select(
+                                        USER.asterisk(),
+                                        DSL.multiset(
+                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                        ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        DSL.multiset(
+                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                        ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                )
+                                .from(USER)
+                                .where(USER.ID.eq(table.USER_ID))
+                    ).as(SessionEventLogResponse.SessionEventLogPayload.Fields.user).convertFrom(r->r.isEmpty()?null:r.get(0).into(SessionEventLogResponse.SessionEventLogPayload.UserPayload.class))
+                )
+                .from(table)
+                .where(table.TRANSACTION_ID.eq(transactionId))
+                .fetchInto(SessionEventLogResponse.SessionEventLogPayload.class);
+        SessionEventLogResponse response = new SessionEventLogResponse();
+        response.setPayload(payload);
+        return response;
+    }
+
+
+    public List<EducatorSessionNoteCommentResponse> getSessionComments(UUID transactionId){
+        var table = dbStudentPaymentTransaction.getTable();
+        return dbStudentPaymentTransaction.getDsl()
+                .selectFrom(table)
+                .where(table.ID.eq(transactionId))
+                .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
+                .map(transaction -> educatorSessionCommentService.getComments(transaction.getTransactionItemRefId()))
+                .orElseGet(ListUtil::empty);
+
+    }
+
+    public UniPageResponse<PromotionEventPayload> getPromotionEventPage(PromotionEventPageRequest request) {
+        var table = dbEvent.getTable();
+        List<PromotionEventPayload> payload = dbEvent.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
+                        ).as(PromotionEventPayload.Fields.titleI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(table.ID))
+                        ).as(PromotionEventPayload.Fields.times).convertFrom(r->r.isEmpty()?null:r.into(PromotionEventPayload.ScheduleTime.class))
+                )
+                .select(count().over().as(PromotionEventPayload.Fields.total))
+                .from(table)
+                .orderBy(table.ID.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(PromotionEventPayload.class);
+        int totalSize = payload.stream()
+                .findFirst()
+                .map(PromotionEventPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                payload
+        );
     }
 }

@@ -3,6 +3,7 @@ package unid.monoServerApp.api.user.profile.admin;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.user.profile.educator.calendar.EducatorCalendarService;
-import unid.monoServerMeta.api.CalendarSessionPageRequest;
-import unid.monoServerMeta.api.StudentSessionTransactionPayload;
-import unid.monoServerMeta.api.UniPageResponse;
+import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,8 +31,9 @@ import java.util.UUID;
 @Slf4j
 public class CommonOperationController {
     private final CommonOperationService commonOperationService;
+    private final EducatorSessionCommentService educatorSessionCommentService;
 
-    @GetMapping("admin/consultationSession/page")
+    @GetMapping("admin/consultation-session/page")
     @ACL(
             noAuthed = true
     )
@@ -45,21 +48,21 @@ public class CommonOperationController {
     }
 
 
-    @GetMapping("admin/consultationSession/{id}")
+    @GetMapping("admin/consultation-session/{id}")
     @ACL(
             noAuthed = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "GEt Consultation Session Detail"
+            summary = "Get Consultation Session Detail"
     )
     public @Valid UnifiedResponse<StudentSessionTransactionPayload> getSessionDetail(
-            @PathVariable("id") UUID id
+            @PathVariable("id") UUID transactionId
     ) {
-        return UnifiedResponse.of(commonOperationService.getSessionDetail(id));
+        return UnifiedResponse.of(commonOperationService.getSessionDetail(transactionId));
     }
 
-    @GetMapping("admin/consultationSession/pending/page")
+    @GetMapping("admin/consultation-session/pending/page")
     @ACL(
             noAuthed = true
     )
@@ -74,7 +77,7 @@ public class CommonOperationController {
     }
 
 
-    @PutMapping("admin/{userId}/consultationSession/{sessionId}/cancel")
+    @PutMapping("admin/consultation-session/{id}/cancel")
     @ACL(
             noAuthed = true
     )
@@ -83,10 +86,58 @@ public class CommonOperationController {
             summary = "Cancel Consultation Session"
     )
     public @Valid UnifiedResponse<Void> cancel(
-            @PathVariable("userId") UUID userId,
-            @PathVariable("sessionId") UUID sessionId
+            @PathVariable("id") UUID transactionId
     ) {
-        commonOperationService.cancel(userId,sessionId);
+        commonOperationService.cancel(transactionId);
         return UnifiedResponse.of(null);
     }
+
+    @GetMapping("admin/consultation-session/{id}/eventLog")
+    @Transactional
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Calendar Page"
+    )
+    public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
+            @PathVariable("id") UUID transactionId) {
+        return UnifiedResponse.of(commonOperationService.getSessionEventLogs(transactionId));
+    }
+
+
+    @GetMapping("admin/consultation-session/{id}/comments")
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "List Comments"
+    )
+    @SneakyThrows
+    public @Valid UnifiedResponse<List<EducatorSessionNoteCommentResponse>> listComments(
+            @PathVariable("id") UUID transactionId
+    ) {
+        var list = commonOperationService.getSessionComments(transactionId);
+        return UnifiedResponse.of(list);
+    }
+
+
+    @GetMapping("admin/promotion-event/page")
+    @ACL(
+            noAuthed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Promotion Event Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<PromotionEventPayload>> getPromotionEventPage(
+            @ParameterObject PromotionEventPageRequest request
+    ) {
+        return UnifiedResponse.of(
+                commonOperationService.getPromotionEventPage(request)
+        );
+    }
+
 }

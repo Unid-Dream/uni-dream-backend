@@ -21,10 +21,9 @@ public class SessionEventLogResponse {
     @FieldNameConstants
     public static class SessionEventLogPayload{
         private UUID id;
-        private OffsetDateTime opTimeUtc;
+        private OffsetDateTime timeUtc;
         private UserPayload user;
-        private BookingStatus fromStatus;
-        private BookingStatus toStatus;
+        private BookingStatus status;
         private SessionOpType opType;
 
 
@@ -32,6 +31,7 @@ public class SessionEventLogResponse {
         @Data
         @FieldNameConstants
         public static class UserPayload{
+            private UUID id;
             private I18n firstNameI18n;
             private I18n lastNameI18n;
             private UserRole userRole;

@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.validation.annotation.Validated;
-import unid.monoServerMeta.model.BookingStatus;
-import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.PaymentStatus;
+import unid.monoServerMeta.model.*;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -33,11 +31,12 @@ public class StudentSessionTransactionPayload implements Serializable {
     private OffsetDateTime startTimeUtc;
     @NotNull
     private OffsetDateTime endTimeUtc;
-    @NotNull
+
     private BookingStatus status;
 
     private OffsetDateTime submissionTime;
 
+    private List<EventOpLog> eventOpLogs;
 
 
 
@@ -102,6 +101,28 @@ public class StudentSessionTransactionPayload implements Serializable {
     public static class TagResponse{
         private UUID id;
         private I18n i18n;
+    }
+
+
+    @Data
+    @FieldNameConstants
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public static class EventOpLog {
+        private UUID id;
+        private OffsetDateTime timeUtc;
+        private User user;
+        private BookingStatus status;
+        private SessionOpType opType;
+
+        @Data
+        @FieldNameConstants
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        public static class User {
+            private UUID id;
+            private I18n firstNameI18n;
+            private I18n lastNameI18n;
+            private UserRole userRole;
+        }
     }
 
 }

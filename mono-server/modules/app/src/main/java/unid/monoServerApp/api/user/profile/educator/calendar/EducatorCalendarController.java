@@ -75,19 +75,7 @@ public class EducatorCalendarController {
 
 
 
-    @GetMapping("admin/calendar/session/{eventId}/eventLog")
-    @Transactional
-    @ACL(
-            noAuthed = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Query Calendar Page"
-    )
-    public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
-            @PathVariable("eventId") UUID eventId) {
-        return UnifiedResponse.of(educatorCalendarService.getSessionEventLogs(eventId));
-    }
+
 
     @PutMapping("educator/user/profile/educator/{profileId}/calendar/available")
     @Transactional

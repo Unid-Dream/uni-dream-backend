@@ -33,12 +33,6 @@ import java.util.*;
 @Slf4j
 public class EducatorSessionCommentController {
     private final EducatorSessionCommentService educatorSessionCommentService;
-    private final EducatorCalendarMapper educatorCalendarMapper;
-    private final DbEducatorCalendar dbEducatorCalendar;
-    private final ObjectMapper objectMapper;
-    private final EmailService emailService;
-    private final DbEducatorSessionNoteMap dbEducatorSessionNoteMap;
-    private final EducatorSessionNoteMapper educatorSessionNoteMapper;
 
     @GetMapping("educator/user/profile/educator/calendar/comment")
     @ACL(
