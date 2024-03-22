@@ -20,6 +20,7 @@ import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.queue.model.EducatorMeetingRequestPayload;
@@ -55,6 +56,7 @@ public class TransactionService {
     private final TeamsMeetingService teamsMeetingService;
     private final DbSessionOpLog dbSessionOpLog;
     private final SessionLoggerService sessionLoggerService;
+    private final DbStudentProfile dbStudentProfile;
 
     public TransactionResponse get(UUID transactionId) {
         //0.查询 Writing Skill Transaction
@@ -279,12 +281,24 @@ public class TransactionService {
 
                     teamsMeetingService.createMeetingWithStudent(payload);
 
-                    sessionLoggerService.async(SessionLogger.OpEvent.builder()
-                            .userId(transactionPojo.getStudentProfileId())
-                            .status(BookingStatus.PAID)
-                            .transactionId(transactionPojo.getTransactionItemRefId())
-                            .timeUtc(OffsetDateTime.now())
-                            .opType(SessionOpType.PAY).build());
+                    //查询student_profile_id对应的userId
+                    dbStudentProfile.getDsl().selectFrom(
+                            dbStudentProfile.getTable()
+                    ).where(dbStudentProfile.getTable().USER_ID.eq(transactionPojo.getStudentProfileId()))
+                                    .fetchOptionalInto(DbStudentProfile.Result.class)
+                                            .ifPresentOrElse(
+                                                    profile-> sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                                                            .userId(profile.getUserId())
+                                                            .status(BookingStatus.PAID)
+                                                            .transactionId(transactionPojo.getTransactionItemRefId())
+                                                            .timeUtc(OffsetDateTime.now())
+                                                            .opType(SessionOpType.PAY).build()),
+                                                    ()->{}
+                                            );
+
+
+
+
                 }
             }
 
