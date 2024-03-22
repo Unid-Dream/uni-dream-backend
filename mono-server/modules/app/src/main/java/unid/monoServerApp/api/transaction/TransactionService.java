@@ -291,7 +291,7 @@ public class TransactionService {
                                                         //查询student_profile_id对应的userId
                                                         dbStudentProfile.getDsl().selectFrom(
                                                                         dbStudentProfile.getTable()
-                                                                ).where(dbStudentProfile.getTable().USER_ID.eq(transaction.getStudentProfileId()))
+                                                                ).where(dbStudentProfile.getTable().ID.eq(transaction.getStudentProfileId()))
                                                                 .fetchOptionalInto(DbStudentProfile.Result.class)
                                                                 .ifPresent(
                                                                         profile-> {
