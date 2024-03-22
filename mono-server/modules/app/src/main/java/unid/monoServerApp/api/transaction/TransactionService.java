@@ -317,7 +317,7 @@ public class TransactionService {
 
 
 
-            List<StudentPaymentTransactionPojo> transactionPojoList = dbStudentPaymentTransaction.getDao().fetchByTransactionSerialNumber(ref);
+            /*List<StudentPaymentTransactionPojo> transactionPojoList = dbStudentPaymentTransaction.getDao().fetchByTransactionSerialNumber(ref);
             if(transactionPojoList.isEmpty()){
                 StaticLog.info("AsiaPay success !!! 订单不存在 = {}", ref);
             }
@@ -339,7 +339,7 @@ public class TransactionService {
 
 
                 }
-            }
+            }*/
 
 
 
