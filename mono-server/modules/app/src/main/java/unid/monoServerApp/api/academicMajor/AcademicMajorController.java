@@ -77,7 +77,7 @@ public class AcademicMajorController {
     }
 
 
-    @GetMapping("educator/academicMajor/tags")
+    @GetMapping(value={"educator/academicMajor/tags","admin/academicMajor/tags"})
     @Transactional
     @ACL(
             authed = true

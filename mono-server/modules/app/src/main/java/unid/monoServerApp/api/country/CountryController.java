@@ -143,7 +143,7 @@ public class CountryController {
     }
 
 
-    @GetMapping(value = {"educator/country/tags"})
+    @GetMapping(value = {"educator/country/tags","admin/country/tags"})
     @ACL(
             authed = true
     )

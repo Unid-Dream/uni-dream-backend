@@ -131,7 +131,7 @@ public class ExpertiseController {
         return this.tags();
     }
 
-    @GetMapping("/educator/expertise/tags")
+    @GetMapping(value= { "/educator/expertise/tags" , "/admin/expertise/tags"})
     @ACL(
             authed = true
     )

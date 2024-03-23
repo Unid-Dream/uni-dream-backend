@@ -132,7 +132,7 @@ public class LanguageController {
         return this.tags();
     }
 
-    @GetMapping("/educator/language/tags")
+    @GetMapping(value = {"/educator/language/tags","/admin/language/tags"})
     @ACL(
             authed = true
     )
