@@ -284,7 +284,10 @@ public class CalendarOperationService {
                                 DSL.select().from(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
                         ).as(CourseEventPayload.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                         DSL.multiset(
-                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.EVENT_ID.eq(table.ID))
+                                DSL.select(
+                                        EVENT_SCHEDULE_TIME.START_TIME.as(CourseEventPayload.Duration.Fields.startTimeUtc),
+                                        EVENT_SCHEDULE_TIME.END_TIME.as(CourseEventPayload.Duration.Fields.endTimeUtc)
+                                ).from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.EVENT_ID.eq(table.ID))
                         ).as(CourseEventPayload.Fields.duration).convertFrom(r -> r.isEmpty() ? null : r.into(CourseEventPayload.Duration.class))
                 )
                 .select(count().over().as(CourseEventPayload.Fields.total))
