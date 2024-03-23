@@ -47,12 +47,31 @@ public class StudentProfileController {
             summary = "Query Student Profile Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentProfilePayload>> page(
-            @PathVariable @ACL.UserId UUID userId,
+            @PathVariable("userId") @ACL.UserId UUID userId,
             @ParameterObject StudentProfilePageRequest request
     ) {
 
         return UnifiedResponse.of(
                 studentProfileService.page(request)
+        );
+    }
+
+    @GetMapping(value = {"admin/{userId}/student-profile/{id}"})
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get Student Profile Detail"
+    )
+    public @Valid UnifiedResponse<StudentProfilePayload> get(
+            @PathVariable("userId") @ACL.UserId UUID userId,
+            @PathVariable("id") UUID id
+    ) {
+
+        return UnifiedResponse.of(
+                null
         );
     }
 

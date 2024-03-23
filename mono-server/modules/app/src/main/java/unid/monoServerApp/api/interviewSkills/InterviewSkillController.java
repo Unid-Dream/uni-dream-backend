@@ -97,7 +97,7 @@ public class InterviewSkillController {
             summary = "Query Student Writing Skill Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<InterviewSkillPayload>> query(
-            @PathVariable UUID userId,
+            @PathVariable("userId") UUID userId,
             @ParameterObject InterviewSkillPageRequest request
     ) {
         return UnifiedResponse.of(
