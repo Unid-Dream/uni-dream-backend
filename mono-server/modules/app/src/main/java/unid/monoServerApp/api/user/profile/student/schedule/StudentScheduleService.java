@@ -88,7 +88,7 @@ public class StudentScheduleService {
                 )
                 .from(STUDENT_PAYMENT_TRANSACTION)
                 .leftJoin(EVENT).on(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EVENT.ID))
-                .leftJoin(EVENT_SCHEDULE_TIME).on(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(EVENT.ID))
+                .leftJoin(EVENT_SCHEDULE_TIME).on(EVENT_SCHEDULE_TIME.EVENT_ID.eq(EVENT.ID))
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId)
                         .and(EVENT_SCHEDULE_TIME.START_TIME.ge(startDateTimeUtc.toLocalDateTime())
                                 .and(endDateTimeUtc == null?DSL.noCondition():EVENT_SCHEDULE_TIME.START_TIME.le(endDateTimeUtc.toLocalDateTime()))

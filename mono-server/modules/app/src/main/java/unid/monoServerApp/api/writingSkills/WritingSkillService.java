@@ -5,9 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
@@ -26,6 +30,7 @@ import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.ReviewStatus;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,8 +50,9 @@ public class WritingSkillService {
     private final I18nMapper i18nMapper;
     private final StudentUploadedMapper studentUploadedMapper;
     private final RedisTemplate<String, String> redisTemplateRefCache;
+    private final DbStudentUploadedWriting dbStudentUploadedWriting;
 
-    public  WritingSkillAssessmentResponse query(UUID studentProfileId) {
+    public WritingSkillAssessmentResponse query(UUID studentProfileId) {
         List<DbStudentUploadedWriting.Result> results = dslContext.select(
                         multiset(
                                 dslContext.select()
@@ -84,7 +90,7 @@ public class WritingSkillService {
                                         )
                         ).as(DbStudentUploadedWriting.Result.Fields.grammarAndExpression).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbStudentUploadedSupervisorReview.Result.class))
                 )
-                .from(STUDENT_UPLOADED_WRITING,STUDENT_PAYMENT_TRANSACTION)
+                .from(STUDENT_UPLOADED_WRITING, STUDENT_PAYMENT_TRANSACTION)
                 .where(
                         STUDENT_UPLOADED_WRITING.PAYMENT_TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID)
                 )
@@ -92,7 +98,7 @@ public class WritingSkillService {
                 .fetchInto(DbStudentUploadedWriting.Result.class);
 
         List<WritingSkillAssessmentResponse.Item> list = Lists.newArrayList();
-        for(DbStudentUploadedWriting.Result result : results){
+        for (DbStudentUploadedWriting.Result result : results) {
             WritingSkillAssessmentResponse.Item response = new WritingSkillAssessmentResponse.Item();
             response.setTopicI18n(i18nMapper.toModel(result.getTopicI18n()));
             response.setFileUrl(result.getUploadedFile());
@@ -117,6 +123,82 @@ public class WritingSkillService {
         return response;
     }
 
+    public UniPageResponse<WritingSkillPayload> query(WritingSkillPageRequest request) {
+        var table = dbStudentUploadedWriting.getTable();
+        List<WritingSkillPayload> payload = dbStudentUploadedWriting.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(WritingSkillPayload.Fields.submissionTime),
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(WritingSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(WritingSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentProfile.class))
+                )
+                .select(count().over().as(WritingSkillPayload.Fields.total))
+                .from(table)
+                .orderBy(table.CREATED_ON.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(WritingSkillPayload.class);
+
+        int totalSize = payload.stream()
+                .findFirst()
+                .map(WritingSkillPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                payload
+        );
+    }
+
+
+    public WritingSkillPayload get(UUID id) {
+        var table = dbStudentUploadedWriting.getTable();
+        return dbStudentUploadedWriting.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(WritingSkillPayload.Fields.submissionTime),
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(WritingSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(WritingSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentProfile.class))
+                )
+                .from(table)
+                .where(table.ID.eq(id))
+                .fetchOneInto(WritingSkillPayload.class);
+    }
 
     public WritingTopicResponse query() {
         DbWritingTopic.Result record = dslContext.select(
@@ -128,7 +210,7 @@ public class WritingSkillService {
                 )
                 .from(WRITING_TOPIC)
                 .fetchOptional()
-                .orElseThrow(()->Exceptions.notFound("Writing Topic Not Found")).into(DbWritingTopic.Result.class);
+                .orElseThrow(() -> Exceptions.notFound("Writing Topic Not Found")).into(DbWritingTopic.Result.class);
         return writingTopicMapper.toResponse(record);
     }
 
@@ -142,29 +224,28 @@ public class WritingSkillService {
                 .fetchOptionalInto(DbWritingTopic.Result.class)
                 .orElseThrow(() -> Exceptions.notFound("Writing Skill Interview Not Found"));
         //1. 创建交易记录(student_payment_transaction)
-        var transaction = writingTopicMapper.merge(record,studentProfileId);
+        var transaction = writingTopicMapper.merge(record, studentProfileId);
         //创建订单流水号
-        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("IS",redisTemplateRefCache));
-        UUID transactionId =  dslContext
+        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("IS", redisTemplateRefCache));
+        UUID transactionId = dslContext
                 .insertInto(STUDENT_PAYMENT_TRANSACTION)
                 .set(dslContext.newRecord(STUDENT_PAYMENT_TRANSACTION, transaction))
                 .returning(STUDENT_PAYMENT_TRANSACTION.ID) // 指定要返回的字段，这里是ID字段
                 .fetchOptionalInto(StudentPaymentTransactionPojo.class)
-                .orElseThrow(()-> Exceptions.notFound("STUDENT_PAYMENT_TRANSACTION INSERT FAILURE"))
+                .orElseThrow(() -> Exceptions.notFound("STUDENT_PAYMENT_TRANSACTION INSERT FAILURE"))
                 .getId();
         //2. 保存writing_skill记录
-        UUID uploadId =  dslContext
+        UUID uploadId = dslContext
                 .insertInto(STUDENT_UPLOADED_WRITING)
-                .set(dslContext.newRecord(STUDENT_UPLOADED_WRITING, writingTopicMapper.merge(request,studentProfileId,transactionId)))
+                .set(dslContext.newRecord(STUDENT_UPLOADED_WRITING, writingTopicMapper.merge(request, studentProfileId, transactionId)))
                 .returning(STUDENT_UPLOADED_WRITING.ID) // 指定要返回的字段，这里是ID字段
                 .fetchOptionalInto(StudentUploadedWritingPojo.class)
-                .orElseThrow(()-> Exceptions.notFound("Student Uploaded Writing INSERT FAILURE"))
+                .orElseThrow(() -> Exceptions.notFound("Student Uploaded Writing INSERT FAILURE"))
                 .getId();
         transaction.setTransactionItemRefId(uploadId);
         dslContext.newRecord(STUDENT_PAYMENT_TRANSACTION, transaction).update();
         return transactionId;
     }
-
 
 
 }

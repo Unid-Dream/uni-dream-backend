@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @FieldNameConstants
 @Validated
-public class PromotionEventPageRequest {
+public class CourseEventPageRequest {
     @NotNull
     private Integer pageNumber;
     @NotNull

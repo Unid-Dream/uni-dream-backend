@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -15,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
-import unid.monoServerMeta.api.WritingSkillAssessmentResponse;
-import unid.monoServerMeta.api.WritingSkillRequest;
-import unid.monoServerMeta.api.WritingTopicResponse;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -54,7 +53,6 @@ public class WritingSkillController {
             matchingSessionProfileId = true,
             allowedRoles = {UserRoleEnum.STUDENT}
     )
-    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"
@@ -64,6 +62,44 @@ public class WritingSkillController {
     ) {
         return UnifiedResponse.of(writingSkillService.query(studentProfileId));
     }
+
+
+    @GetMapping("admin/{userId}/writingSkill/page")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Student Writing Skill Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<WritingSkillPayload>> query(
+            @PathVariable UUID userId,
+            @ParameterObject WritingSkillPageRequest request
+    ) {
+        return UnifiedResponse.of(
+                writingSkillService.query(request)
+        );
+    }
+
+    @GetMapping("admin/{userId}/writingSkill/{id}")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Student Writing Skill Page"
+    )
+    public @Valid UnifiedResponse<WritingSkillPayload> get(
+            @PathVariable("userId") UUID userId,
+            @PathVariable("id") UUID id
+    ) {
+        return UnifiedResponse.of(
+                writingSkillService.get(id)
+        );
+    }
+
 
 
     @PostMapping("student/writingSkill/{studentProfileId}")

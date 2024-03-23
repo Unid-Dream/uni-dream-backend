@@ -12,9 +12,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
-import javax.validation.constraints.NotNull;
-
-import unid.jooqMono.model.enums.ScheduleEventTypeEnum;
 
 
 /**
@@ -33,11 +30,10 @@ public class EventScheduleTimePojo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID                  id;
-    private LocalDateTime         startTime;
-    private LocalDateTime         endTime;
-    private UUID                  refEventId;
-    private ScheduleEventTypeEnum eventType;
+    private UUID          id;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private UUID          eventId;
 
     public EventScheduleTimePojo() {}
 
@@ -45,23 +41,20 @@ public class EventScheduleTimePojo implements Serializable {
         this.id = value.id;
         this.startTime = value.startTime;
         this.endTime = value.endTime;
-        this.refEventId = value.refEventId;
-        this.eventType = value.eventType;
+        this.eventId = value.eventId;
     }
 
-    @ConstructorProperties({ "id", "startTime", "endTime", "refEventId", "eventType" })
+    @ConstructorProperties({ "id", "startTime", "endTime", "eventId" })
     public EventScheduleTimePojo(
-        @Nonnull UUID                  id,
-        @Nullable LocalDateTime         startTime,
-        @Nullable LocalDateTime         endTime,
-        @Nullable UUID                  refEventId,
-        @Nonnull ScheduleEventTypeEnum eventType
+        @Nonnull UUID          id,
+        @Nullable LocalDateTime startTime,
+        @Nullable LocalDateTime endTime,
+        @Nullable UUID          eventId
     ) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.refEventId = refEventId;
-        this.eventType = eventType;
+        this.eventId = eventId;
     }
 
     /**
@@ -113,35 +106,18 @@ public class EventScheduleTimePojo implements Serializable {
     }
 
     /**
-     * Getter for <code>public.event_schedule_time.ref_event_id</code>.
+     * Getter for <code>public.event_schedule_time.event_id</code>.
      */
     @Nullable
-    public UUID getRefEventId() {
-        return this.refEventId;
+    public UUID getEventId() {
+        return this.eventId;
     }
 
     /**
-     * Setter for <code>public.event_schedule_time.ref_event_id</code>.
+     * Setter for <code>public.event_schedule_time.event_id</code>.
      */
-    public EventScheduleTimePojo setRefEventId(@Nullable UUID refEventId) {
-        this.refEventId = refEventId;
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.event_schedule_time.event_type</code>.
-     */
-    @NotNull
-    @Nonnull
-    public ScheduleEventTypeEnum getEventType() {
-        return this.eventType;
-    }
-
-    /**
-     * Setter for <code>public.event_schedule_time.event_type</code>.
-     */
-    public EventScheduleTimePojo setEventType(@Nonnull ScheduleEventTypeEnum eventType) {
-        this.eventType = eventType;
+    public EventScheduleTimePojo setEventId(@Nullable UUID eventId) {
+        this.eventId = eventId;
         return this;
     }
 
@@ -152,8 +128,7 @@ public class EventScheduleTimePojo implements Serializable {
         sb.append(id);
         sb.append(", ").append(startTime);
         sb.append(", ").append(endTime);
-        sb.append(", ").append(refEventId);
-        sb.append(", ").append(eventType);
+        sb.append(", ").append(eventId);
 
         sb.append(")");
         return sb.toString();

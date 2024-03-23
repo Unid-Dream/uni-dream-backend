@@ -1,22 +1,23 @@
 package unid.monoServerApp.api.user.profile.admin;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.BookingStatusEnum;
+import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
-import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
+import unid.jooqMono.model.tables.pojos.EventPojo;
+import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.course.DbEventScheduleTime;
-import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
@@ -25,6 +26,7 @@ import unid.monoServerApp.mapper.CourseEventMapper;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.service.SessionLoggerService;
+import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
@@ -32,6 +34,7 @@ import unid.monoServerMeta.model.SessionOpType;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.any;
@@ -42,7 +45,7 @@ import static unid.jooqMono.model.Tables.STUDENT_PAYMENT_TRANSACTION;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class CommonOperationService {
+public class CalendarOperationService {
     private final DbStudentPaymentTransaction dbStudentPaymentTransaction;
     private final SessionLoggerService sessionLoggerService;
     private final DbSessionOpLog dbSessionOpLog;
@@ -52,14 +55,15 @@ public class CommonOperationService {
     private final I18nMapper i18nMapper;
     private final CourseEventMapper courseEventMapper;
     private final DbEventScheduleTime dbEventScheduleTime;
+    private final SessionService sessionService;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
     //从页面的角度来看：status (null: 查询全部, pending: )
-    public UniPageResponse<StudentSessionTransactionPayload> getSessionPage(CalendarSessionPageRequest request, BookingStatusEnum status){
-        var statusCondition = DSL.noCondition() ;
+    public UniPageResponse<StudentSessionTransactionPayload> getSessionPage(CalendarSessionPageRequest request, BookingStatusEnum status) {
+        var statusCondition = DSL.noCondition();
 
-        if(status == BookingStatusEnum.PENDING){
+        if (status == BookingStatusEnum.PENDING) {
             statusCondition = DSL.and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING)
                     .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)));
         }
@@ -70,36 +74,36 @@ public class CommonOperationService {
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)),BookingStatusEnum.PENDING)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)),BookingStatusEnum.ACCEPTED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)),BookingStatusEnum.RESERVED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)),BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.RESERVED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)), BookingStatusEnum.REJECTED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(
                                 DSL.select(
                                         STUDENT_PROFILE.ID.as(StudentSessionTransactionPayload.StudentProfile.Fields.profileId),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                ).from(USER,STUDENT_PROFILE).where(USER.ID.eq(STUDENT_PROFILE.USER_ID).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(STUDENT_PROFILE.ID)))
-                        ).as(StudentSessionTransactionPayload.Fields.studentProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.StudentProfile.class)),
+                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                ).from(USER, STUDENT_PROFILE).where(USER.ID.eq(STUDENT_PROFILE.USER_ID).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(STUDENT_PROFILE.ID)))
+                        ).as(StudentSessionTransactionPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.StudentProfile.class)),
                         DSL.multiset(
                                 DSL.select(
                                         EDUCATOR_PROFILE.ID.as(StudentSessionTransactionPayload.EducatorProfile.Fields.profileId),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                ).from(USER,EDUCATOR_PROFILE).where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)))
-                        ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                ).from(USER, EDUCATOR_PROFILE).where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)))
+                        ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
                 )
                 .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
                                 .and(statusCondition)
@@ -130,7 +134,7 @@ public class CommonOperationService {
                 .where(table.ID.eq(sessionId))
                 .fetchOptionalInto(DbStudentPaymentTransaction.Result.class)
                 .ifPresentOrElse(
-                        (pojo)->{
+                        (pojo) -> {
                             //统计记录操作日志
                             pojo.setProcessStatus(BookingStatusEnum.CANCELLED);
                             dbStudentPaymentTransaction.getDao().update(pojo);
@@ -141,7 +145,7 @@ public class CommonOperationService {
                                     .timeUtc(OffsetDateTime.now())
                                     .opType(SessionOpType.CANCEL).build());
                         },
-                        ()-> Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST)
+                        () -> Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST)
                 );
     }
 
@@ -152,33 +156,12 @@ public class CommonOperationService {
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
                         //记录日志
-//                        DSL.multiset(
-//                                DSL.select(
-//                                                SESSION_OP_LOG.asterisk()
-////                                                DSL.multiset(
-////                                                        DSL.select(
-////                                                                        USER.asterisk(),
-////                                                                        DSL.multiset(
-////                                                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-////                                                                        ).as(StudentSessionTransactionPayload.EventOpLog.User.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
-////                                                                        DSL.multiset(
-////                                                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-////                                                                        ).as(StudentSessionTransactionPayload.EventOpLog.User.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-////                                                                )
-////                                                                .from(USER)
-////                                                                .where(USER.ID.eq(SESSION_OP_LOG.USER_ID))
-////
-////                                                ).as(StudentSessionTransactionPayload.EventOpLog.Fields.user).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EventOpLog.User.class))
-//                                        )
-//                                        .from(SESSION_OP_LOG)
-//                                        .where(SESSION_OP_LOG.TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
-//                        ).as(StudentSessionTransactionPayload.Fields.eventOpLogs).convertFrom(r->r.isEmpty()?null:r.into(StudentSessionTransactionPayload.EventOpLog.class)),
                         //查询educator
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)),BookingStatusEnum.PENDING)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)),BookingStatusEnum.ACCEPTED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)),BookingStatusEnum.RESERVED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)),BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.RESERVED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)), BookingStatusEnum.REJECTED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(
                                 DSL.select(
@@ -188,20 +171,20 @@ public class CommonOperationService {
                                                         TAG.ID,
                                                         DSL.multiset(
                                                                 DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
                                                 ).from(TAG).where(TAG.ID.eq(STUDENT_PROFILE.COUNTRY_ID))
-                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.TagResponse.class)),
+                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.country).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.TagResponse.class)),
                                         //TODO:secondary school
 
                                         STUDENT_PROFILE.ID.as(StudentSessionTransactionPayload.StudentProfile.Fields.profileId),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                ).from(USER,STUDENT_PROFILE).where(USER.ID.eq(STUDENT_PROFILE.USER_ID).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(STUDENT_PROFILE.ID)))
-                        ).as(StudentSessionTransactionPayload.Fields.studentProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.StudentProfile.class)),
+                                        ).as(StudentSessionTransactionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                ).from(USER, STUDENT_PROFILE).where(USER.ID.eq(STUDENT_PROFILE.USER_ID).and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(STUDENT_PROFILE.ID)))
+                        ).as(StudentSessionTransactionPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.StudentProfile.class)),
                         DSL.multiset(
                                 DSL.select(
                                         //查询country
@@ -210,67 +193,67 @@ public class CommonOperationService {
                                                         TAG.ID,
                                                         DSL.multiset(
                                                                 DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
                                                 ).from(TAG).where(TAG.ID.eq(EDUCATOR_PROFILE.COUNTRY_ID))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.TagResponse.class)),
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.country).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.TagResponse.class)),
                                         //查询expertise
                                         DSL.multiset(
                                                 DSL.select(
                                                         TAG.ID,
                                                         DSL.multiset(
                                                                 DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
                                                 ).from(TAG).where(TAG.ID.eq(any(EDUCATOR_PROFILE.EXPERTISE_ID)))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.expertises).convertFrom(r->r.isEmpty()?null:r.into(StudentSessionTransactionPayload.TagResponse.class)),
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.expertises).convertFrom(r -> r.isEmpty() ? null : r.into(StudentSessionTransactionPayload.TagResponse.class)),
                                         //查询languages
                                         DSL.multiset(
                                                 DSL.select(
                                                         TAG.ID,
                                                         DSL.multiset(
                                                                 DSL.select().from(I18N).where(I18N.ID.eq(TAG.DESCRIPTION_I18N_ID))
-                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                                        ).as(StudentSessionTransactionPayload.TagResponse.Fields.i18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
                                                 ).from(TAG).where(TAG.ID.eq(any(EDUCATOR_PROFILE.LANGUAGE_ID)))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.languages).convertFrom(r->r.isEmpty()?null:r.into(StudentSessionTransactionPayload.TagResponse.class)),
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.languages).convertFrom(r -> r.isEmpty() ? null : r.into(StudentSessionTransactionPayload.TagResponse.class)),
                                         //TODO:university
 
                                         EDUCATOR_PROFILE.asterisk(),
                                         EDUCATOR_PROFILE.ID.as(StudentSessionTransactionPayload.EducatorProfile.Fields.profileId),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                                         DSL.multiset(
                                                 DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                ).from(USER,EDUCATOR_PROFILE).where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)))
-                        ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
+                                        ).as(StudentSessionTransactionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                ).from(USER, EDUCATOR_PROFILE).where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)))
+                        ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
                 )
                 .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
                 ).and(STUDENT_PAYMENT_TRANSACTION.ID.eq(id))
                 .fetchOptionalInto(StudentSessionTransactionPayload.class)
-                .orElseThrow(()->Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
+                .orElseThrow(() -> Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_NOT_EXIST));
 
     }
 
     public SessionEventLogResponse getSessionEventLogs(UUID transactionId) {
         var table = dbSessionOpLog.getTable();
         List<SessionEventLogResponse.SessionEventLogPayload> payload = dbSessionOpLog.getDsl().select(
-                    table.asterisk(),
-                    DSL.multiset(
-                        DSL.select(
-                                        USER.asterisk(),
-                                        DSL.multiset(
-                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
-                                        DSL.multiset(
-                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                )
-                                .from(USER)
-                                .where(USER.ID.eq(table.USER_ID))
-                    ).as(SessionEventLogResponse.SessionEventLogPayload.Fields.user).convertFrom(r->r.isEmpty()?null:r.get(0).into(SessionEventLogResponse.SessionEventLogPayload.UserPayload.class))
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.select(
+                                                USER.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(SessionEventLogResponse.SessionEventLogPayload.UserPayload.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(USER)
+                                        .where(USER.ID.eq(table.USER_ID))
+                        ).as(SessionEventLogResponse.SessionEventLogPayload.Fields.user).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(SessionEventLogResponse.SessionEventLogPayload.UserPayload.class))
                 )
                 .from(table)
                 .where(table.TRANSACTION_ID.eq(transactionId))
@@ -281,7 +264,7 @@ public class CommonOperationService {
     }
 
 
-    public List<EducatorSessionNoteCommentResponse> getSessionComments(UUID transactionId){
+    public List<EducatorSessionNoteCommentResponse> getSessionComments(UUID transactionId) {
         var table = dbStudentPaymentTransaction.getTable();
         return dbStudentPaymentTransaction.getDsl()
                 .selectFrom(table)
@@ -292,27 +275,27 @@ public class CommonOperationService {
 
     }
 
-    public UniPageResponse<PromotionEventPayload> getPromotionEventPage(PromotionEventPageRequest request) {
+    public UniPageResponse<CourseEventPayload> page(CourseEventPageRequest request) {
         var table = dbEvent.getTable();
-        List<PromotionEventPayload> payload = dbEvent.getDsl()
+        List<CourseEventPayload> payload = dbEvent.getDsl()
                 .select(
                         table.asterisk(),
                         DSL.multiset(
                                 DSL.select().from(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
-                        ).as(PromotionEventPayload.Fields.titleI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        ).as(CourseEventPayload.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
                         DSL.multiset(
-                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(table.ID))
-                        ).as(PromotionEventPayload.Fields.times).convertFrom(r->r.isEmpty()?null:r.into(PromotionEventPayload.ScheduleTime.class))
+                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.EVENT_ID.eq(table.ID))
+                        ).as(CourseEventPayload.Fields.duration).convertFrom(r -> r.isEmpty() ? null : r.into(CourseEventPayload.Duration.class))
                 )
-                .select(count().over().as(PromotionEventPayload.Fields.total))
+                .select(count().over().as(CourseEventPayload.Fields.total))
                 .from(table)
                 .orderBy(table.ID.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
-                .fetchInto(PromotionEventPayload.class);
+                .fetchInto(CourseEventPayload.class);
         int totalSize = payload.stream()
                 .findFirst()
-                .map(PromotionEventPayload::getTotal)
+                .map(CourseEventPayload::getTotal)
                 .orElse(0);
 
         return new UniPageResponse<>(
@@ -325,37 +308,102 @@ public class CommonOperationService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public PromotionEventPayload createPromotionEvent(PromotionEventPayload payload) {
-        DbEvent.Result result = new DbEvent.Result();
-        courseEventMapper.merge(result,payload);
+    public EventPojo create(CourseEventPayload payload) {
+        sessionService.initDatabaseSession();
+
+        DbEvent.Result event = new DbEvent.Result();
+        courseEventMapper.merge(event, payload);
+        //默认状态
+        event.setEventStatus(EventStatusEnum.OPEN);
 
         var i18nTable = dbI18N.getTable();
         dbI18N.getDsl().insertInto(i18nTable)
                 .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getTitleI18n())))
                 .returning(i18nTable.ID)
                 .fetchOptionalInto(DbI18N.Result.class)
-                .ifPresent(i18n-> result.setTitleI18nId(i18n.getId()));
+                .ifPresent(i18n -> event.setTitleI18nId(i18n.getId()));
 
         dbI18N.getDsl().insertInto(i18nTable)
                 .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getDescriptionI18n())))
                 .returning(i18nTable.ID)
                 .fetchOptionalInto(DbI18N.Result.class)
-                .ifPresent(i18n-> result.setDescriptionI18nId(i18n.getId()));
+                .ifPresent(i18n -> event.setDescriptionI18nId(i18n.getId()));
 
         dbI18N.getDsl().insertInto(i18nTable)
                 .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getAgendaI18n())))
                 .returning(i18nTable.ID)
                 .fetchOptionalInto(DbI18N.Result.class)
-                .ifPresent(i18n-> result.setAgendaI18nId(i18n.getId()));
+                .ifPresent(i18n -> event.setAgendaI18nId(i18n.getId()));
 
-//        dbEventScheduleTime.getDsl()
-//                .insertInto()
+        dbEvent.getDao().insert(event);
 
+        payload.getDuration().forEach(timeUtc -> dbEventScheduleTime.getDao().insert(
+                new DbEventScheduleTime.Result()
+                        .setStartTime(timeUtc.getStartTimeUtc().toLocalDateTime())
+                        .setEndTime(timeUtc.getEndTimeUtc().toLocalDateTime())
+                        .setEventId(event.getId())
+        ));
 
-        throw Exceptions.business(UniErrorCode.INNTERAL_SYSTEM_ERROR);
+        return event;
     }
 
-    public PromotionEventPayload getPromotionEventDetail(UUID eventId) {
-        return null;
+
+    public CourseEventPayload get(UUID eventId) {
+        var table = dbEvent.getTable();
+        return dbEvent.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
+                        ).as(CourseEventPayload.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.DESCRIPTION_I18N_ID))
+                        ).as(CourseEventPayload.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.AGENDA_I18N_ID))
+                        ).as(CourseEventPayload.Fields.agendaI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.ID.eq(table.ID))
+                        ).as(CourseEventPayload.Fields.duration).convertFrom(r -> r.isEmpty() ? null : r.into(CourseEventPayload.Duration.class))
+                )
+                .from(table)
+                .where(table.ID.eq(eventId))
+                .fetchOptionalInto(CourseEventPayload.class)
+                .orElseThrow(() -> Exceptions.business(UniErrorCode.COURSE_EVENT_NOT_EXIST));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public EventPojo update(CourseEventPayload payload) {
+        sessionService.initDatabaseSession();
+        var table = dbEvent.getTable();
+
+        DbEvent.Result event = dbEvent.getDsl()
+                .selectFrom(table)
+                .where(table.ID.eq(payload.getId()))
+                .fetchOptionalInto(DbEvent.Result.class)
+                .orElseThrow(() -> Exceptions.business(UniErrorCode.COURSE_EVENT_NOT_EXIST));
+        courseEventMapper.merge(event, payload);
+
+        Optional.ofNullable(
+                event.getTitleI18nId()
+        ).ifPresent(i18nId -> dbI18N.getDao().update(
+                i18nMapper.toPojo(payload.getTitleI18n()).setId(i18nId)
+        ));
+
+        Optional.ofNullable(
+                event.getDescriptionI18nId()
+        ).ifPresent(i18nId -> dbI18N.getDao().update(
+                i18nMapper.toPojo(payload.getDescriptionI18n()).setId(i18nId)
+        ));
+
+        Optional.ofNullable(
+                event.getAgendaI18nId()
+        ).ifPresent(i18nId -> dbI18N.getDao().update(
+                i18nMapper.toPojo(payload.getAgendaI18n()).setId(i18nId)
+        ));
+
+        dbEvent.getDao().update(event);
+
+        return event;
     }
 }

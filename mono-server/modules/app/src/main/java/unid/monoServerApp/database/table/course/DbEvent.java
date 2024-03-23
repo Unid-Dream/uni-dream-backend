@@ -57,7 +57,7 @@ public class DbEvent extends Db<EventTable, EventDao> {
                                 DSL.select().from(I18N).where(I18N.ID.eq(EVENT.AGENDA_I18N_ID))
                         ).as(SimpleResult.Fields.agendaI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbI18N.Result.class)),
                         DSL.multiset(
-                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(EVENT.ID))
+                                DSL.select().from(EVENT_SCHEDULE_TIME).where(EVENT_SCHEDULE_TIME.EVENT_ID.eq(EVENT.ID))
                         ).as(SimpleResult.Fields.eventScheduleTimes).convertFrom(r->r.isEmpty()?null:r.into(DbEventScheduleTime.Result.class)),
                         DSL.multiset(
                                 dbEducatorProfile.getSimpleQuery(dbEducatorProfile.getTable())

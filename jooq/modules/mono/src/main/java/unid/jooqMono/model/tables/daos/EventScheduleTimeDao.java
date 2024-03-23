@@ -15,7 +15,6 @@ import javax.annotation.processing.Generated;
 import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
 
-import unid.jooqMono.model.enums.ScheduleEventTypeEnum;
 import unid.jooqMono.model.tables.EventScheduleTimeTable;
 import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
 import unid.jooqMono.model.tables.records.EventScheduleTimeRecord;
@@ -114,36 +113,19 @@ public class EventScheduleTimeDao extends DAOImpl<EventScheduleTimeRecord, Event
     }
 
     /**
-     * Fetch records that have <code>ref_event_id BETWEEN lowerInclusive AND
+     * Fetch records that have <code>event_id BETWEEN lowerInclusive AND
      * upperInclusive</code>
      */
     @Nonnull
-    public List<EventScheduleTimePojo> fetchRangeOfRefEventId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.REF_EVENT_ID, lowerInclusive, upperInclusive);
+    public List<EventScheduleTimePojo> fetchRangeOfEventId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>ref_event_id IN (values)</code>
+     * Fetch records that have <code>event_id IN (values)</code>
      */
     @Nonnull
-    public List<EventScheduleTimePojo> fetchByRefEventId(UUID... values) {
-        return fetch(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.REF_EVENT_ID, values);
-    }
-
-    /**
-     * Fetch records that have <code>event_type BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    @Nonnull
-    public List<EventScheduleTimePojo> fetchRangeOfEventType(ScheduleEventTypeEnum lowerInclusive, ScheduleEventTypeEnum upperInclusive) {
-        return fetchRange(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_TYPE, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>event_type IN (values)</code>
-     */
-    @Nonnull
-    public List<EventScheduleTimePojo> fetchByEventType(ScheduleEventTypeEnum... values) {
-        return fetch(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_TYPE, values);
+    public List<EventScheduleTimePojo> fetchByEventId(UUID... values) {
+        return fetch(EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_ID, values);
     }
 }

@@ -29,9 +29,9 @@ import java.util.UUID;
 @Validated
 @Tag(name = "Common Operation")
 @Slf4j
-public class CommonOperationController {
-    private final CommonOperationService commonOperationService;
-    private final EducatorSessionCommentService educatorSessionCommentService;
+public class CalendarOperationController {
+    private final CalendarOperationService calendarOperationService;
+
 
     @GetMapping("admin/{userId}/consultation-session/page")
     @ACL(
@@ -47,7 +47,7 @@ public class CommonOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
-        return UnifiedResponse.of(commonOperationService.getSessionPage(request,null));
+        return UnifiedResponse.of(calendarOperationService.getSessionPage(request,null));
     }
 
 
@@ -65,7 +65,7 @@ public class CommonOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
-        return UnifiedResponse.of(commonOperationService.getSessionDetail(transactionId));
+        return UnifiedResponse.of(calendarOperationService.getSessionDetail(transactionId));
     }
 
     @GetMapping("admin/{userId}/consultation-session/pending/page")
@@ -82,7 +82,7 @@ public class CommonOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
-        return UnifiedResponse.of(commonOperationService.getSessionPage(request, BookingStatusEnum.PENDING));
+        return UnifiedResponse.of(calendarOperationService.getSessionPage(request, BookingStatusEnum.PENDING));
     }
 
 
@@ -100,7 +100,7 @@ public class CommonOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
-        commonOperationService.cancel(transactionId);
+        calendarOperationService.cancel(transactionId);
         return UnifiedResponse.of(null);
     }
 
@@ -118,7 +118,7 @@ public class CommonOperationController {
     public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId) {
-        return UnifiedResponse.of(commonOperationService.getSessionEventLogs(transactionId));
+        return UnifiedResponse.of(calendarOperationService.getSessionEventLogs(transactionId));
     }
 
 
@@ -137,7 +137,7 @@ public class CommonOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
-        var list = commonOperationService.getSessionComments(transactionId);
+        var list = calendarOperationService.getSessionComments(transactionId);
         return UnifiedResponse.of(list);
     }
 
@@ -152,12 +152,12 @@ public class CommonOperationController {
     @Operation(
             summary = "Query Promotion Event Page"
     )
-    public @Valid UnifiedResponse<UniPageResponse<PromotionEventPayload>> getPromotionEventPage(
+    public @Valid UnifiedResponse<UniPageResponse<CourseEventPayload>> getPromotionEventPage(
             @PathVariable("userId")  @ACL.UserId UUID userId,
-            @ParameterObject PromotionEventPageRequest request
+            @ParameterObject CourseEventPageRequest request
     ) {
         return UnifiedResponse.of(
-                commonOperationService.getPromotionEventPage(request)
+                calendarOperationService.page(request)
         );
     }
 
@@ -171,12 +171,12 @@ public class CommonOperationController {
     @Operation(
             summary = "Get Promotion Event Detail"
     )
-    public @Valid UnifiedResponse<PromotionEventPayload> getPromotionEventDetail(
+    public @Valid UnifiedResponse<CourseEventPayload> getPromotionEventDetail(
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID eventId
     ) {
         return UnifiedResponse.of(
-                commonOperationService.getPromotionEventDetail(eventId)
+                calendarOperationService.get(eventId)
         );
     }
 
@@ -191,12 +191,36 @@ public class CommonOperationController {
     @Operation(
             summary = "Create Promotion Event"
     )
-    public @Valid UnifiedResponse<PromotionEventPayload> createPromotionEvent(
+    public @Valid UnifiedResponse<CourseEventPayload> createPromotionEvent(
             @PathVariable("userId") @ACL.UserId UUID userId,
-            @RequestBody PromotionEventPayload payload
+            @RequestBody CourseEventPayload payload
     ) {
-        commonOperationService.createPromotionEvent(payload);
-        return UnifiedResponse.of( null );
+        return UnifiedResponse.of(
+                calendarOperationService.get(
+                        calendarOperationService.create(payload).getId()
+                )
+        );
+    }
+
+    @PutMapping("admin/{userId}/promotion-event")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update Promotion Event"
+    )
+    public @Valid UnifiedResponse<CourseEventPayload> update(
+            @PathVariable("userId") @ACL.UserId UUID userId,
+            @RequestBody CourseEventPayload payload
+    ) {
+        return UnifiedResponse.of(
+                calendarOperationService.get(
+                        calendarOperationService.update(payload).getId()
+                )
+        );
     }
 
 }

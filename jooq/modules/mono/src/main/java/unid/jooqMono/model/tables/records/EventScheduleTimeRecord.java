@@ -11,15 +11,13 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
-import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record5;
-import org.jooq.Row5;
+import org.jooq.Record4;
+import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
 
-import unid.jooqMono.model.enums.ScheduleEventTypeEnum;
 import unid.jooqMono.model.tables.EventScheduleTimeTable;
 import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
 
@@ -36,7 +34,7 @@ import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTimeRecord> implements Record5<UUID, LocalDateTime, LocalDateTime, UUID, ScheduleEventTypeEnum> {
+public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTimeRecord> implements Record4<UUID, LocalDateTime, LocalDateTime, UUID> {
 
     private static final long serialVersionUID = 1L;
 
@@ -89,36 +87,19 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     }
 
     /**
-     * Setter for <code>public.event_schedule_time.ref_event_id</code>.
+     * Setter for <code>public.event_schedule_time.event_id</code>.
      */
-    public EventScheduleTimeRecord setRefEventId(@Nullable UUID value) {
+    public EventScheduleTimeRecord setEventId(@Nullable UUID value) {
         set(3, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.event_schedule_time.ref_event_id</code>.
+     * Getter for <code>public.event_schedule_time.event_id</code>.
      */
     @Nullable
-    public UUID getRefEventId() {
+    public UUID getEventId() {
         return (UUID) get(3);
-    }
-
-    /**
-     * Setter for <code>public.event_schedule_time.event_type</code>.
-     */
-    public EventScheduleTimeRecord setEventType(@Nonnull ScheduleEventTypeEnum value) {
-        set(4, value);
-        return this;
-    }
-
-    /**
-     * Getter for <code>public.event_schedule_time.event_type</code>.
-     */
-    @NotNull
-    @Nonnull
-    public ScheduleEventTypeEnum getEventType() {
-        return (ScheduleEventTypeEnum) get(4);
     }
 
     // -------------------------------------------------------------------------
@@ -132,19 +113,19 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     }
 
     // -------------------------------------------------------------------------
-    // Record5 type implementation
+    // Record4 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row5<UUID, LocalDateTime, LocalDateTime, UUID, ScheduleEventTypeEnum> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<UUID, LocalDateTime, LocalDateTime, UUID> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row5<UUID, LocalDateTime, LocalDateTime, UUID, ScheduleEventTypeEnum> valuesRow() {
-        return (Row5) super.valuesRow();
+    public Row4<UUID, LocalDateTime, LocalDateTime, UUID> valuesRow() {
+        return (Row4) super.valuesRow();
     }
 
     @Override
@@ -168,13 +149,7 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     @Override
     @Nonnull
     public Field<UUID> field4() {
-        return EventScheduleTimeTable.EVENT_SCHEDULE_TIME.REF_EVENT_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<ScheduleEventTypeEnum> field5() {
-        return EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_TYPE;
+        return EventScheduleTimeTable.EVENT_SCHEDULE_TIME.EVENT_ID;
     }
 
     @Override
@@ -198,13 +173,7 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     @Override
     @Nullable
     public UUID component4() {
-        return getRefEventId();
-    }
-
-    @Override
-    @Nonnull
-    public ScheduleEventTypeEnum component5() {
-        return getEventType();
+        return getEventId();
     }
 
     @Override
@@ -228,13 +197,7 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     @Override
     @Nullable
     public UUID value4() {
-        return getRefEventId();
-    }
-
-    @Override
-    @Nonnull
-    public ScheduleEventTypeEnum value5() {
-        return getEventType();
+        return getEventId();
     }
 
     @Override
@@ -261,25 +224,17 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     @Override
     @Nonnull
     public EventScheduleTimeRecord value4(@Nullable UUID value) {
-        setRefEventId(value);
+        setEventId(value);
         return this;
     }
 
     @Override
     @Nonnull
-    public EventScheduleTimeRecord value5(@Nonnull ScheduleEventTypeEnum value) {
-        setEventType(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public EventScheduleTimeRecord values(@Nonnull UUID value1, @Nullable LocalDateTime value2, @Nullable LocalDateTime value3, @Nullable UUID value4, @Nonnull ScheduleEventTypeEnum value5) {
+    public EventScheduleTimeRecord values(@Nonnull UUID value1, @Nullable LocalDateTime value2, @Nullable LocalDateTime value3, @Nullable UUID value4) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
-        value5(value5);
         return this;
     }
 
@@ -297,15 +252,14 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
     /**
      * Create a detached, initialised EventScheduleTimeRecord
      */
-    @ConstructorProperties({ "id", "startTime", "endTime", "refEventId", "eventType" })
-    public EventScheduleTimeRecord(@Nonnull UUID id, @Nullable LocalDateTime startTime, @Nullable LocalDateTime endTime, @Nullable UUID refEventId, @Nonnull ScheduleEventTypeEnum eventType) {
+    @ConstructorProperties({ "id", "startTime", "endTime", "eventId" })
+    public EventScheduleTimeRecord(@Nonnull UUID id, @Nullable LocalDateTime startTime, @Nullable LocalDateTime endTime, @Nullable UUID eventId) {
         super(EventScheduleTimeTable.EVENT_SCHEDULE_TIME);
 
         setId(id);
         setStartTime(startTime);
         setEndTime(endTime);
-        setRefEventId(refEventId);
-        setEventType(eventType);
+        setEventId(eventId);
     }
 
     /**
@@ -318,8 +272,7 @@ public class EventScheduleTimeRecord extends UpdatableRecordImpl<EventScheduleTi
             setId(value.getId());
             setStartTime(value.getStartTime());
             setEndTime(value.getEndTime());
-            setRefEventId(value.getRefEventId());
-            setEventType(value.getEventType());
+            setEventId(value.getEventId());
         }
     }
 }

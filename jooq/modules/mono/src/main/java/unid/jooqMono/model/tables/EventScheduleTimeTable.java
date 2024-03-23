@@ -14,7 +14,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -26,7 +26,6 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Keys;
 import unid.jooqMono.model.Public;
-import unid.jooqMono.model.enums.ScheduleEventTypeEnum;
 import unid.jooqMono.model.tables.records.EventScheduleTimeRecord;
 
 
@@ -75,14 +74,9 @@ public class EventScheduleTimeTable extends TableImpl<EventScheduleTimeRecord> {
     public final TableField<EventScheduleTimeRecord, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>public.event_schedule_time.ref_event_id</code>.
+     * The column <code>public.event_schedule_time.event_id</code>.
      */
-    public final TableField<EventScheduleTimeRecord, UUID> REF_EVENT_ID = createField(DSL.name("ref_event_id"), SQLDataType.UUID, this, "");
-
-    /**
-     * The column <code>public.event_schedule_time.event_type</code>.
-     */
-    public final TableField<EventScheduleTimeRecord, ScheduleEventTypeEnum> EVENT_TYPE = createField(DSL.name("event_type"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(unid.jooqMono.model.enums.ScheduleEventTypeEnum.class), this, "");
+    public final TableField<EventScheduleTimeRecord, UUID> EVENT_ID = createField(DSL.name("event_id"), SQLDataType.UUID, this, "");
 
     private EventScheduleTimeTable(Name alias, Table<EventScheduleTimeRecord> aliased) {
         this(alias, aliased, null);
@@ -160,12 +154,12 @@ public class EventScheduleTimeTable extends TableImpl<EventScheduleTimeRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row5<UUID, LocalDateTime, LocalDateTime, UUID, ScheduleEventTypeEnum> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<UUID, LocalDateTime, LocalDateTime, UUID> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

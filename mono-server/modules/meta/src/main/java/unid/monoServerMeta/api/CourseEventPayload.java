@@ -22,7 +22,7 @@ import java.util.UUID;
 @Validated
 @Schema
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class PromotionEventPayload {
+public class CourseEventPayload {
     @NotNull
     private UUID id;
     @NotNull
@@ -36,9 +36,7 @@ public class PromotionEventPayload {
     private UUID educatorProfileId;
     private I18n agendaI18n;
     private List<UUID> academicMajorIds;
-
-
-    private List<ScheduleTime> times;
+    private List<Duration> duration;
 
     @JsonIgnore
     private Integer total;
@@ -46,7 +44,7 @@ public class PromotionEventPayload {
     @Data
     @Schema
     @FieldNameConstants
-    public static class ScheduleTime{
+    public static class Duration{
         private OffsetDateTime startTimeUtc;
         private OffsetDateTime endTimeUtc;
     }

@@ -15,10 +15,11 @@ import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record14;
-import org.jooq.Row14;
+import org.jooq.Record15;
+import org.jooq.Row15;
 import org.jooq.impl.UpdatableRecordImpl;
 
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.StudentUploadedWritingTable;
 import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
 
@@ -35,7 +36,7 @@ import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUploadedWritingRecord> implements Record14<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> {
+public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUploadedWritingRecord> implements Record15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> {
 
     private static final long serialVersionUID = 1L;
 
@@ -278,6 +279,22 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         return (String) get(13);
     }
 
+    /**
+     * Setter for <code>public.student_uploaded_writing.review_type</code>.
+     */
+    public StudentUploadedWritingRecord setReviewType(@Nullable ReviewTypeEnum value) {
+        set(14, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.student_uploaded_writing.review_type</code>.
+     */
+    @Nullable
+    public ReviewTypeEnum getReviewType() {
+        return (ReviewTypeEnum) get(14);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -289,19 +306,19 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     }
 
     // -------------------------------------------------------------------------
-    // Record14 type implementation
+    // Record15 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> valuesRow() {
-        return (Row14) super.valuesRow();
+    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> valuesRow() {
+        return (Row15) super.valuesRow();
     }
 
     @Override
@@ -390,6 +407,12 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
 
     @Override
     @Nonnull
+    public Field<ReviewTypeEnum> field15() {
+        return StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.REVIEW_TYPE;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -470,6 +493,12 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     @Nullable
     public String component14() {
         return getRecommendation();
+    }
+
+    @Override
+    @Nullable
+    public ReviewTypeEnum component15() {
+        return getReviewType();
     }
 
     @Override
@@ -554,6 +583,12 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     @Nullable
     public String value14() {
         return getRecommendation();
+    }
+
+    @Override
+    @Nullable
+    public ReviewTypeEnum value15() {
+        return getReviewType();
     }
 
     @Override
@@ -656,7 +691,14 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
 
     @Override
     @Nonnull
-    public StudentUploadedWritingRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull UUID value3, @Nonnull UUID value4, @Nullable String value5, @Nullable UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable OffsetDateTime value9, @Nullable String value10, @Nullable OffsetDateTime value11, @Nullable String value12, @Nullable String[] value13, @Nullable String value14) {
+    public StudentUploadedWritingRecord value15(@Nullable ReviewTypeEnum value) {
+        setReviewType(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public StudentUploadedWritingRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull UUID value3, @Nonnull UUID value4, @Nullable String value5, @Nullable UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable OffsetDateTime value9, @Nullable String value10, @Nullable OffsetDateTime value11, @Nullable String value12, @Nullable String[] value13, @Nullable String value14, @Nullable ReviewTypeEnum value15) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -671,6 +713,7 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         value12(value12);
         value13(value13);
         value14(value14);
+        value15(value15);
         return this;
     }
 
@@ -688,8 +731,8 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     /**
      * Create a detached, initialised StudentUploadedWritingRecord
      */
-    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation" })
-    public StudentUploadedWritingRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation) {
+    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType" })
+    public StudentUploadedWritingRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType) {
         super(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING);
 
         setId(id);
@@ -706,6 +749,7 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         setUpdatedBy(updatedBy);
         setRecommendedActivity(recommendedActivity);
         setRecommendation(recommendation);
+        setReviewType(reviewType);
     }
 
     /**
@@ -729,6 +773,7 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
             setUpdatedBy(value.getUpdatedBy());
             setRecommendedActivity(value.getRecommendedActivity());
             setRecommendation(value.getRecommendation());
+            setReviewType(value.getReviewType());
         }
     }
 }

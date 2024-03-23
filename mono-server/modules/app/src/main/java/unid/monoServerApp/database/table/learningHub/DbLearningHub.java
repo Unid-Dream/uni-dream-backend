@@ -54,7 +54,7 @@ public class DbLearningHub {
                         multiset(
                                 select()
                                         .from(EVENT_SCHEDULE_TIME)
-                                        .where(EVENT_SCHEDULE_TIME.REF_EVENT_ID.eq(EVENT.ID))
+                                        .where(EVENT_SCHEDULE_TIME.EVENT_ID.eq(EVENT.ID))
                         ).as(LearningHubResponse.Fields.schedules).convertFrom(r -> r.isEmpty() ? null : r.into(LearningHubResponse.EventTime.class))
                 )
                 .from(EVENT)
