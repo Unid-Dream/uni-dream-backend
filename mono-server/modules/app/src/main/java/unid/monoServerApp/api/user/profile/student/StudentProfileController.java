@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,7 @@ import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.database.service.TagAppendService;
 import unid.monoServerApp.mapper.StudentProfileMapper;
-import unid.monoServerMeta.api.StudentProfileRequest;
-import unid.monoServerMeta.api.StudentProfileResponse;
-import unid.monoServerMeta.api.StudentProfileSchoolReportPayload;
-import unid.monoServerMeta.api.StudentProfileSchoolReportRequest;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -36,6 +34,31 @@ public class StudentProfileController {
     private final StudentProfileService studentProfileService;
     private final StudentProfileMapper studentProfileMapper;
     private final TagAppendService tagAppendService;
+
+
+
+    @GetMapping(value = {"admin/{userId}/student-profile/page"})
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Student Profile Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<StudentProfilePayload>> page(
+            @PathVariable @ACL.UserId UUID userId,
+            @ParameterObject StudentProfilePageRequest request
+    ) {
+
+        return UnifiedResponse.of(
+                studentProfileService.page(request)
+        );
+    }
+
+
+
+
 
     @GetMapping(value = {"student/user/{userId}/profile/student"})
     @ACL(

@@ -9,11 +9,13 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
+import unid.jooqMono.model.tables.pojos.StudentUploadedSupervisorReviewPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.i18n.DbI18N;
@@ -21,10 +23,7 @@ import unid.monoServerApp.database.table.skill.DbStudentUploadedInterview;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedSupervisorReview;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedWriting;
 import unid.monoServerApp.database.table.skill.DbWritingTopic;
-import unid.monoServerApp.mapper.CommonMapper;
-import unid.monoServerApp.mapper.I18nMapper;
-import unid.monoServerApp.mapper.StudentUploadedMapper;
-import unid.monoServerApp.mapper.WritingTopicMapper;
+import unid.monoServerApp.mapper.*;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
@@ -51,6 +50,9 @@ public class WritingSkillService {
     private final StudentUploadedMapper studentUploadedMapper;
     private final RedisTemplate<String, String> redisTemplateRefCache;
     private final DbStudentUploadedWriting dbStudentUploadedWriting;
+    private final DbStudentUploadedSupervisorReview dbStudentUploadedSupervisorReview;
+    private final StudentUploadedSupervisorReviewMapper studentUploadedSupervisorReviewMapper;
+
 
     public WritingSkillAssessmentResponse query(UUID studentProfileId) {
         List<DbStudentUploadedWriting.Result> results = dslContext.select(
@@ -149,7 +151,8 @@ public class WritingSkillService {
                         ).as(WritingSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentProfile.class))
                 )
                 .select(count().over().as(WritingSkillPayload.Fields.total))
-                .from(table)
+                .from(table, STUDENT_PAYMENT_TRANSACTION)
+                .where(table.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID).and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID)))
                 .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
@@ -169,6 +172,30 @@ public class WritingSkillService {
         );
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public WritingSkillPayload update(WritingSkillPayload payload) {
+        var table = dbStudentUploadedWriting.getTable();
+
+        StudentUploadedSupervisorReviewPojo grammarAndExpression = studentUploadedSupervisorReviewMapper.toPojo(payload.getGrammarAndExpression());
+        StudentUploadedSupervisorReviewPojo composition = studentUploadedSupervisorReviewMapper.toPojo(payload.getComposition());
+        StudentUploadedSupervisorReviewPojo content = studentUploadedSupervisorReviewMapper.toPojo(payload.getContent());
+
+        dbStudentUploadedSupervisorReview.getDao().insert(grammarAndExpression);
+        dbStudentUploadedSupervisorReview.getDao().insert(composition);
+        dbStudentUploadedSupervisorReview.getDao().insert(content);
+
+        dbStudentUploadedWriting.getDsl()
+                .update(table)
+                .set(table.COMPOSITION_REVIEW_ID,composition.getId())
+                .set(table.GRAMMAR_AND_EXPRESSION_REVIEW_ID,grammarAndExpression.getId())
+                .set(table.CONTENT_REVIEW_ID,content.getId())
+                .set(table.REVIEW_TYPE, ReviewTypeEnum.REVIEWED)
+                .where(table.ID.eq(payload.getId()))
+                .execute();
+
+        return payload;
+    }
+
 
     public WritingSkillPayload get(UUID id) {
         var table = dbStudentUploadedWriting.getTable();
@@ -176,6 +203,54 @@ public class WritingSkillService {
                 .select(
                         table.asterisk(),
                         table.CREATED_ON.as(WritingSkillPayload.Fields.submissionTime),
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.GRAMMAR_AND_EXPRESSION_REVIEW_ID)
+                                )
+                        ).as(WritingSkillPayload.Fields.grammarAndExpression).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.COMPOSITION_REVIEW_ID)
+                                )
+                        ).as(WritingSkillPayload.Fields.composition).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.CONTENT_REVIEW_ID)
+                                )
+                        ).as(WritingSkillPayload.Fields.content).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
                         DSL.case_()
                                 .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
                                 .otherwise(ReviewTypeEnum.PENDING)

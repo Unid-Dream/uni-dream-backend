@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row14;
+import org.jooq.Row15;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -28,6 +28,7 @@ import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Keys;
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.records.StudentUploadedInterviewRecord;
 
 
@@ -136,6 +137,11 @@ public class StudentUploadedInterviewTable extends TableImpl<StudentUploadedInte
      * The column <code>public.student_uploaded_interview.recommendation</code>.
      */
     public final TableField<StudentUploadedInterviewRecord, String> RECOMMENDATION = createField(DSL.name("recommendation"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.student_uploaded_interview.review_type</code>.
+     */
+    public final TableField<StudentUploadedInterviewRecord, ReviewTypeEnum> REVIEW_TYPE = createField(DSL.name("review_type"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.ReviewTypeEnum.class), this, "");
 
     private StudentUploadedInterviewTable(Name alias, Table<StudentUploadedInterviewRecord> aliased) {
         this(alias, aliased, null);
@@ -268,12 +274,12 @@ public class StudentUploadedInterviewTable extends TableImpl<StudentUploadedInte
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row15 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row14<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 }

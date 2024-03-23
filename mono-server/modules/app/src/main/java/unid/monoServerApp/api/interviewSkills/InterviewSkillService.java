@@ -4,23 +4,29 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
+import unid.jooqMono.model.tables.pojos.StudentUploadedSupervisorReviewPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbInterviewTopic;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedInterview;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedSupervisorReview;
-import unid.monoServerApp.database.table.skill.DbStudentUploadedWriting;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.mapper.InterviewTopicMapper;
 import unid.monoServerApp.mapper.StudentUploadedMapper;
+import unid.monoServerApp.mapper.StudentUploadedSupervisorReviewMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.model.I18n;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +46,9 @@ public class InterviewSkillService {
     private final I18nMapper i18nMapper;
     private final StudentUploadedMapper studentUploadedMapper;
     private final RedisTemplate<String, String> redisTemplateRefCache;
-
+    private final DbStudentUploadedInterview dbStudentUploadedInterview;
+    private final DbStudentUploadedSupervisorReview dbStudentUploadedSupervisorReview;
+    private final StudentUploadedSupervisorReviewMapper studentUploadedSupervisorReviewMapper;
 
     public InterviewTopicResponse query() {
         DbInterviewTopic.Result record = dslContext.select(
@@ -56,6 +64,142 @@ public class InterviewSkillService {
                 .into(DbInterviewTopic.Result.class);
         return interviewTopicMapper.toResponse(record);
     }
+
+
+    public UniPageResponse<InterviewSkillPayload> query(InterviewSkillPageRequest request){
+        var table = dbStudentUploadedInterview.getTable();
+        List<InterviewSkillPayload> payload = dbStudentUploadedInterview.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(InterviewSkillPayload.Fields.submissionTime),
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(InterviewSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(InterviewSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentProfile.class))
+                )
+                .select(count().over().as(InterviewSkillPayload.Fields.total))
+                .from(table, STUDENT_PAYMENT_TRANSACTION)
+//                .where(table.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID).and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID)))
+                .orderBy(table.CREATED_ON.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(InterviewSkillPayload.class);
+
+        int totalSize = payload.stream()
+                .findFirst()
+                .map(InterviewSkillPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                payload
+        );
+    }
+
+
+
+    public InterviewSkillPayload get(UUID id) {
+        var table = dbStudentUploadedInterview.getTable();
+        return dbStudentUploadedInterview.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(InterviewSkillPayload.Fields.submissionTime),
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.CONTENT_REVIEW_ID)
+                                )
+                        ).as(InterviewSkillPayload.Fields.content).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.CHARISMA_REVIEW_ID)
+                                )
+                        ).as(InterviewSkillPayload.Fields.charisma).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
+                        DSL.multiset(
+                                DSL.select(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID,
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_SCORE.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.score),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                ).from(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW
+                                ).where(
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(table.CLARITY_REVIEW_ID)
+                                )
+                        ).as(InterviewSkillPayload.Fields.clarity).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentUploadedSupervisorReview.class)),
+
+
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(InterviewSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(InterviewSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentProfile.class))
+                )
+                .from(table)
+                .where(table.ID.eq(id))
+                .fetchOneInto(InterviewSkillPayload.class);
+    }
+
+
+
+
+
+
+
+
 
     public InterviewSkillAssessmentResponse query(UUID studentProfileId) {
         List<DbStudentUploadedInterview.Result> results = dslContext.select(
@@ -160,7 +304,29 @@ public class InterviewSkillService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
+    public InterviewSkillPayload update(InterviewSkillPayload payload) {
+        var table = dbStudentUploadedInterview.getTable();
 
+        StudentUploadedSupervisorReviewPojo content = studentUploadedSupervisorReviewMapper.toPojo(payload.getContent());
+        StudentUploadedSupervisorReviewPojo charisma = studentUploadedSupervisorReviewMapper.toPojo(payload.getCharisma());
+        StudentUploadedSupervisorReviewPojo clarity = studentUploadedSupervisorReviewMapper.toPojo(payload.getClarity());
+
+        dbStudentUploadedSupervisorReview.getDao().insert(content);
+        dbStudentUploadedSupervisorReview.getDao().insert(charisma);
+        dbStudentUploadedSupervisorReview.getDao().insert(clarity);
+
+        dbStudentUploadedInterview.getDsl()
+                .update(table)
+                .set(table.CHARISMA_REVIEW_ID,charisma.getId())
+                .set(table.CLARITY_REVIEW_ID,charisma.getId())
+                .set(table.CONTENT_REVIEW_ID,content.getId())
+                .set(table.REVIEW_TYPE, ReviewTypeEnum.REVIEWED)
+                .where(table.ID.eq(payload.getId()))
+                .execute();
+
+        return payload;
+    }
 }
 
 

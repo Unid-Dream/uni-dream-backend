@@ -4,20 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
-import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.ReviewStatus;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @FieldNameConstants
-public class WritingSkillPayload {
+public class InterviewSkillPayload {
 
     @NotNull
     private UUID id;
@@ -26,9 +22,9 @@ public class WritingSkillPayload {
     private StudentProfile studentProfile;
     private OffsetDateTime submissionTime;
     private ReviewStatus status;
-    private StudentUploadedSupervisorReview grammarAndExpression;
+    private StudentUploadedSupervisorReview clarity;
     private StudentUploadedSupervisorReview content;
-    private StudentUploadedSupervisorReview composition;
+    private StudentUploadedSupervisorReview charisma;
 
 
 

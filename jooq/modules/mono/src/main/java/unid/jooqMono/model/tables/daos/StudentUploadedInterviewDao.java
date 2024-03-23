@@ -15,6 +15,7 @@ import javax.annotation.processing.Generated;
 import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
 
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.StudentUploadedInterviewTable;
 import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
 import unid.jooqMono.model.tables.records.StudentUploadedInterviewRecord;
@@ -306,5 +307,22 @@ public class StudentUploadedInterviewDao extends DAOImpl<StudentUploadedIntervie
     @Nonnull
     public List<StudentUploadedInterviewPojo> fetchByRecommendation(String... values) {
         return fetch(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.RECOMMENDATION, values);
+    }
+
+    /**
+     * Fetch records that have <code>review_type BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentUploadedInterviewPojo> fetchRangeOfReviewType(ReviewTypeEnum lowerInclusive, ReviewTypeEnum upperInclusive) {
+        return fetchRange(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>review_type IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentUploadedInterviewPojo> fetchByReviewType(ReviewTypeEnum... values) {
+        return fetch(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE, values);
     }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.any;
-import static unid.jooqMono.model.Tables.I18N;
-import static unid.jooqMono.model.Tables.STUDENT_PROFILE_SCHOOL_REPORT;
+import static org.jooq.impl.DSL.count;
+import static unid.jooqMono.model.Tables.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -258,5 +259,39 @@ public class StudentProfileService {
         return Optional.ofNullable(
                 dbStudentProfile.getDao().fetchOneByUserId(userId)
         ).orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
+    }
+
+    public UniPageResponse<StudentProfilePayload> page(StudentProfilePageRequest request) {
+        var table = dbStudentProfile.getTable();
+        List<StudentProfilePayload> payload = dbStudentProfile.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                        ).as(StudentProfilePayload.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                        ).as(StudentProfilePayload.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                )
+                .select(count().over().as(WritingSkillPayload.Fields.total))
+                .from(table,USER)
+                .where(table.USER_ID.eq(USER.ID))
+                .orderBy(table.CREATED_ON.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(StudentProfilePayload.class);
+
+        int totalSize = payload.stream()
+                .findFirst()
+                .map(StudentProfilePayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                payload
+        );
     }
 }

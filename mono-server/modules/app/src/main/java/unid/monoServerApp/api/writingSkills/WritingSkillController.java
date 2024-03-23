@@ -101,6 +101,27 @@ public class WritingSkillController {
     }
 
 
+    @PutMapping("admin/{userId}/writingSkill")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update Student Writing Skill Review"
+    )
+    public @Valid UnifiedResponse<WritingSkillPayload> update(
+            @PathVariable("userId") UUID userId,
+            @RequestBody WritingSkillPayload payload
+    ) {
+        return UnifiedResponse.of(
+                writingSkillService.get(
+                        writingSkillService.update(payload).getId()
+                )
+        );
+    }
+
+
 
     @PostMapping("student/writingSkill/{studentProfileId}")
     @ACL(
