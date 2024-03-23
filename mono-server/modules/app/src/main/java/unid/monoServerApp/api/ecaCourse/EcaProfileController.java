@@ -46,11 +46,10 @@ public class EcaProfileController {
     }
 
 
-    @PostMapping("/student/ecaProfile/{studentProfileId}")
+    @PostMapping(value = {"/student/ecaProfile/{studentProfileId}"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT,
-            matchingSessionProfileId = true
+            allowedRoles = {UserRoleEnum.STUDENT}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -67,11 +66,10 @@ public class EcaProfileController {
     }
 
 
-    @GetMapping("/student/ecaProfile/{studentProfileId}")
+    @GetMapping(value= { "/student/ecaProfile/{studentProfileId}","/admin/ecaProfile/{studentProfileId}"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT,
-            matchingSessionProfileId = true
+            allowedRoles =  { UserRoleEnum.STUDENT, UserRoleEnum.ADMIN }
     )
     
     @ResponseStatus(HttpStatus.OK)

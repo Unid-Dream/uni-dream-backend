@@ -5,6 +5,7 @@ import org.mapstruct.*;
 import unid.jooqMono.model.tables.pojos.AcademicSubjectPojo;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerMeta.api.AcademicSubjectPayload;
 import unid.monoServerMeta.api.AcademicSubjectRequest;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
 import unid.monoServerMeta.model.I18n;
@@ -27,6 +28,9 @@ public interface AcademicSubjectMapper {
     void merge(@MappingTarget DbAcademicSubject.Result data, AcademicSubjectRequest source);
 
     void merge(@MappingTarget AcademicSubjectPojo data, AcademicSubjectRequest source);
+
+    void merge(@MappingTarget AcademicSubjectPojo data, AcademicSubjectPayload source);
+
 
     @Mappings({
             @Mapping(source = DbAcademicSubject.Result.Columns.createdOn, target = AcademicSubjectResponse.BaseResponseFields.createdOnUtc),

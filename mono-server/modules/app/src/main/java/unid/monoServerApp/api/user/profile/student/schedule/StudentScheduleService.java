@@ -60,26 +60,55 @@ public class StudentScheduleService {
     private final RedisTemplate<String, String> redisTemplateRefCache;
     private final SessionLoggerService sessionLoggerService;
 
+    public UniPageResponse<StudentHistoryPayload> page(
+            UUID profileId,
+            StudentHistoryPageRequest request
+    ) {
+        var table = dbStudentPaymentTransaction.getTable();
+
+        dbStudentPaymentTransaction.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.select(
+                                        DSL.multiset(
+                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                        ).as(StudentHistoryPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                        DSL.multiset(
+                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                        ).as(StudentHistoryPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                ).from(USER)
+                        ).as(StudentHistoryPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentHistoryPayload.StudentProfile.class))
+                )
+                .from(table)
+                .where(table.ID.eq(profileId))
+                .fetchOptionalInto(StudentHistoryPayload.class);
+
+
+        return null;
+    }
+
+
     public JSONObject page(UUID studentProfileId,
-                     OffsetDateTime startDateTimeUtc,
-                     OffsetDateTime endDateTimeUtc,
-                     Integer pageNumber,
-                     Integer pageSize,
-                     UUID transactionId){
+                           OffsetDateTime startDateTimeUtc,
+                           OffsetDateTime endDateTimeUtc,
+                           Integer pageNumber,
+                           Integer pageSize,
+                           UUID transactionId) {
         //查询这个时间段session
         List<UUID> sessionTimeCondition = dbStudentPaymentTransaction.getDsl()
                 .select(
                         STUDENT_PAYMENT_TRANSACTION.ID
                 )
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
                                 .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc)
-                                        .and(endDateTimeUtc == null?DSL.noCondition():EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc))
+                                        .and(endDateTimeUtc == null ? DSL.noCondition() : EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc))
                                 )
                 )
                 .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
-                .and(transactionId == null?DSL.noCondition():STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId))
+                .and(transactionId == null ? DSL.noCondition() : STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId))
                 .fetchInto(UUID.class);
         //查询这个时间段的 course event
         List<UUID> courseTimeCondition = dbStudentPaymentTransaction.getDsl()
@@ -91,29 +120,28 @@ public class StudentScheduleService {
                 .leftJoin(EVENT_SCHEDULE_TIME).on(EVENT_SCHEDULE_TIME.EVENT_ID.eq(EVENT.ID))
                 .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId)
                         .and(EVENT_SCHEDULE_TIME.START_TIME.ge(startDateTimeUtc.toLocalDateTime())
-                                .and(endDateTimeUtc == null?DSL.noCondition():EVENT_SCHEDULE_TIME.START_TIME.le(endDateTimeUtc.toLocalDateTime()))
+                                .and(endDateTimeUtc == null ? DSL.noCondition() : EVENT_SCHEDULE_TIME.START_TIME.le(endDateTimeUtc.toLocalDateTime()))
                         ))
-                        .fetchInto(UUID.class);
+                .fetchInto(UUID.class);
         sessionTimeCondition.addAll(courseTimeCondition);
 
         //查询 sessionQ
         var sessionQ = DSL.multiset(
                 dbEducatorCalendar.getSimpleQuery(dbEducatorCalendar.getTable())
                         .where(dbEducatorCalendar.getTable().ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
-        ).as(DbStudentPaymentTransaction.Result.Fields.session).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEducatorCalendar.SimpleResult.class));
+        ).as(DbStudentPaymentTransaction.Result.Fields.session).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbEducatorCalendar.SimpleResult.class));
 
         //查询 courseQ
         var courseQ = DSL.multiset(
                 dbEvent.getSimpleQuery(dbEvent.getTable()).where(EVENT.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
-        ).as(DbStudentPaymentTransaction.Result.Fields.event).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbEvent.SimpleResult.class));
+        ).as(DbStudentPaymentTransaction.Result.Fields.event).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbEvent.SimpleResult.class));
 
         //查询 student
         var studentQ = DSL.multiset(
                 dbStudentProfile
                         .getSimpleQuery(dbStudentProfile.getTable())
                         .where(STUDENT_PROFILE.ID.eq(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID))
-        ).as(DbStudentPaymentTransaction.Result.Fields.studentProfile).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbStudentProfile.SimpleResult.class));
-
+        ).as(DbStudentPaymentTransaction.Result.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbStudentProfile.SimpleResult.class));
 
 
         Integer total = dbStudentPaymentTransaction.getDsl()
@@ -147,16 +175,12 @@ public class StudentScheduleService {
     }
 
 
-
-
-
-
     @Deprecated
     public JSONObject pageXXXX(UUID profileId,
-                           OffsetDateTime startDateTimeUtc,
-                           OffsetDateTime endDateTimeUtc,
-                           Integer pageNumber,
-                           Integer pageSize){
+                               OffsetDateTime startDateTimeUtc,
+                               OffsetDateTime endDateTimeUtc,
+                               Integer pageNumber,
+                               Integer pageSize) {
 
         var educatorQ = dslContext.select(
                 multiset(
@@ -172,7 +196,7 @@ public class StudentScheduleService {
                 EDUCATOR_PROFILE.CREATED_ON.as(BaseResponse.BaseResponseFields.createdOnUtc),
                 EDUCATOR_PROFILE.UPDATED_ON.as(BaseResponse.BaseResponseFields.updatedOnUtc),
                 EDUCATOR_PROFILE.ID
-        ).from(EDUCATOR_PROFILE,USER,EDUCATOR_CALENDAR).where(EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)));
+        ).from(EDUCATOR_PROFILE, USER, EDUCATOR_CALENDAR).where(EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID)));
 
         var calendarQ = dslContext.select(
                 EDUCATOR_CALENDAR.DATE,
@@ -183,12 +207,12 @@ public class StudentScheduleService {
                 EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID
         ).from(EDUCATOR_CALENDAR);
 
-        Integer totalRecords =  dslContext
+        Integer totalRecords = dslContext
                 .selectCount()
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(EDUCATOR_CALENDAR.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
                 .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId))
-                .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc).and(endDateTimeUtc == null? DSL.noCondition():EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc)))
+                .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc).and(endDateTimeUtc == null ? DSL.noCondition() : EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc)))
                 .fetchOptionalInto(Integer.class).orElse(0);
 
 
@@ -214,14 +238,14 @@ public class StudentScheduleService {
                         ).as(StudentScheduleResponse.Fields.learningHubResponse).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(LearningHubResponse.class)),
                         multiset(
                                 select(I18N.fields())
-                                        .from(EVENT,I18N)
+                                        .from(EVENT, I18N)
                                         .where(I18N.ID.eq(EVENT.TITLE_I18N_ID).and(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EVENT.ID)))
                         ).as(StudentScheduleResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
 
-                ).from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                ).from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
                 .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(profileId))
-                .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc).and(endDateTimeUtc == null? DSL.noCondition():EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc)))
+                .and(EDUCATOR_CALENDAR.START_TIME_UTC.ge(startDateTimeUtc).and(endDateTimeUtc == null ? DSL.noCondition() : EDUCATOR_CALENDAR.START_TIME_UTC.le(endDateTimeUtc)))
                 .orderBy(EDUCATOR_CALENDAR.START_TIME_UTC.desc())
                 .limit(pageSize)
                 .offset((pageNumber - 1) * pageSize)
@@ -237,17 +261,16 @@ public class StudentScheduleService {
     }
 
 
-
     public ScheduleTransactionResponse create(UUID studentProfileId, StudentBookingEducatorCalendarRequest request) {
         //创建支付订单
         //查询educator收费
-        EducatorProfilePojo educatorProfilePojo =  dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
-        Optional.ofNullable(educatorProfilePojo).orElseThrow(()-> Exceptions.business(UniErrorCode.EDUCATOR_NOT_EXIST));
-        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_HOURLY_RATE_IS_NULL));
+        EducatorProfilePojo educatorProfilePojo = dbEducatorProfile.getDao().fetchOneById(request.getEducatorProfileId());
+        Optional.ofNullable(educatorProfilePojo).orElseThrow(() -> Exceptions.business(UniErrorCode.EDUCATOR_NOT_EXIST));
+        Optional.ofNullable(educatorProfilePojo.getHourlyRate()).orElseThrow(() -> Exceptions.business(UniErrorCode.EDUCATOR_HOURLY_RATE_IS_NULL));
         //当前学生是否已经提交过该时间段订单
         dbEducatorCalendar.getDsl()
                 .select()
-                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID))
                 .and(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId))
                 .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(request.getEducatorProfileId()))
@@ -255,11 +278,12 @@ public class StudentScheduleService {
                 .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING))
                 .fetchOptional()
                 .ifPresentOrElse(
-                        value->{
-                                StaticLog.info(" 当前订单尚未处理, 无法重复提交 studentProfileId = {}, educatorCalendarId = ",studentProfileId,request.getEducatorCalendarId());
-                                throw Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST);
-                            },
-                        ()->{}
+                        value -> {
+                            StaticLog.info(" 当前订单尚未处理, 无法重复提交 studentProfileId = {}, educatorCalendarId = ", studentProfileId, request.getEducatorCalendarId());
+                            throw Exceptions.business(UniErrorCode.STUDENT_PAYMENT_TRANSACTION_IS_ALREADY_EXIST);
+                        },
+                        () -> {
+                        }
                 );
 
         StudentPaymentTransactionPojo studentPaymentTransactionPojo = new StudentPaymentTransactionPojo()
@@ -271,13 +295,13 @@ public class StudentScheduleService {
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
                 .setProcessStatus(BookingStatusEnum.PENDING)
                 .setTransactionSubmitTime(LocalDateTime.now());
-        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("ER",redisTemplateRefCache));
+        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("ER", redisTemplateRefCache));
 
         //查询当前educator calendar
         DbEducatorCalendar.Result calendar = dbEducatorCalendar.getDsl()
                 .select().from(EDUCATOR_CALENDAR).where(EDUCATOR_CALENDAR.ID.eq(studentPaymentTransactionPojo.getTransactionItemRefId()))
                 .fetchOptionalInto(DbEducatorCalendar.Result.class)
-                .orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_NOT_EXIST));
+                .orElseThrow(() -> Exceptions.business(UniErrorCode.EDUCATOR_CALENDAR_NOT_EXIST));
 
         dbStudentPaymentTransaction.getDao().insert(studentPaymentTransactionPojo);
 

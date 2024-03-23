@@ -36,8 +36,7 @@ public class StudentProfileController {
     private final TagAppendService tagAppendService;
 
 
-
-    @GetMapping(value = {"admin/{userId}/student-profile/page"})
+    @GetMapping(value = {"admin/student/profile/page"})
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -47,42 +46,17 @@ public class StudentProfileController {
             summary = "Query Student Profile Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentProfilePayload>> page(
-            @PathVariable("userId") @ACL.UserId UUID userId,
             @ParameterObject StudentProfilePageRequest request
     ) {
-
         return UnifiedResponse.of(
                 studentProfileService.page(request)
         );
     }
 
-    @GetMapping(value = {"admin/{userId}/student-profile/{id}"})
-    @ACL(
-            authed = true,
-            allowedRoles = {UserRoleEnum.ADMIN}
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Get Student Profile Detail"
-    )
-    public @Valid UnifiedResponse<StudentProfilePayload> get(
-            @PathVariable("userId") @ACL.UserId UUID userId,
-            @PathVariable("id") UUID id
-    ) {
-
-        return UnifiedResponse.of(
-                null
-        );
-    }
-
-
-
-
-
     @GetMapping(value = {"student/user/{userId}/profile/student"})
     @ACL(
             authed = true,
-            matchingSessionUserId = true,
+//            matchingSessionUserId = true,
             allowedRoles = {UserRoleEnum.STUDENT}
     )
     @ResponseStatus(HttpStatus.OK)
@@ -101,17 +75,17 @@ public class StudentProfileController {
         );
     }
 
-    @GetMapping(value = {"educator/user/{profileId}/profile/student"})
+    @GetMapping(value = {"educator/user/{profileId}/profile/student","admin/student/{profileId}/profile"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.EDUCATOR
+            allowedRoles = {UserRoleEnum.EDUCATOR,UserRoleEnum.ADMIN}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get One"
     )
     public @Valid UnifiedResponse<StudentProfileResponse> getByProfileId(
-            @PathVariable @ACL.UserId UUID profileId
+            @PathVariable UUID profileId
     ) {
         var result = studentProfileService.getByProfileId(profileId);
         StudentProfileResponse response = studentProfileMapper.toResponse(result);

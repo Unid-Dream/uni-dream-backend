@@ -198,19 +198,21 @@ public class StudentScheduleController {
 
 
 
-    @GetMapping("student/session/history/{profileId}")
+    @GetMapping(value = {"student/session/history/{profileId}","admin/session/history/{profileId}"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT,
-            matchingSessionProfileId = true
+            allowedRoles = {UserRoleEnum.STUDENT,UserRoleEnum.ADMIN}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Student Session History"
     )
     @Hidden
-    public @Valid UnifiedResponse<JSONObject> getStudentSessionHistory(
-            @PathVariable("profileId") @ACL.ProfileId UUID profileId) {
-        return UnifiedResponse.of(null);
+    public @Valid UnifiedResponse<UniPageResponse<StudentHistoryPayload>> getStudentSessionHistory(
+            @PathVariable("profileId") UUID profileId,
+            @ParameterObject StudentHistoryPageRequest request) {
+        return UnifiedResponse.of(
+                studentScheduleService.page(profileId,request)
+        );
     }
 }

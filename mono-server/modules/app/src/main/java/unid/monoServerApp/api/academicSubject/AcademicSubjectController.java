@@ -27,89 +27,46 @@ import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.AcademicSubjectMapper;
-import unid.monoServerMeta.api.AcademicSubjectRequest;
-import unid.monoServerMeta.api.AcademicSubjectResponse;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/academicSubject")
+@RequestMapping("api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Validated
 @Tag(name = "Academic Subjects")
 @Slf4j
-@Hidden
 public class AcademicSubjectController {
     private final AcademicSubjectService academicSubjectService;
     private final AcademicSubjectMapper academicSubjectMapper;
     private final DbAcademicSubject dbAcademicSubject;
     private final ObjectMapper objectMapper;
 
-    @GetMapping
+
+    @GetMapping("admin/{userId}/academicSubject/page")
     @ACL(
             authed = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Query"
+            summary = "Page"
     )
-    public @Valid UnifiedResponse<PaginationResponse<AcademicSubjectResponse>> list(
+    public @Valid UnifiedResponse<UniPageResponse<AcademicSubjectPayload>> page(
+            @PathVariable("userId") UUID userId,
             @Valid
             @ParameterObject
-            PaginationRequest payload
+            AcademicSubjectPageRequest request
     ) {
-        var table = AcademicSubjectPagination.TABLE;
-        var dslContext = dbAcademicSubject.getDsl();
-        var extraConditionOnFirstPage = DSL.noCondition();
-        if (StringUtils.isBlank(payload.getPage())) {
-            extraConditionOnFirstPage = dbAcademicSubject.validateCondition(table);
-        }
-        var result = PaginatedQuery.init(
-                        dslContext,
-                        objectMapper,
-                        payload,
-                        RequestHolder.get().getAuthToken(),
-                        Constant.PAGINATION_MIN_SIZE,
-                        Constant.PAGINATION_MAX_SIZE
-                )
-                .select(dsl -> dbAcademicSubject.getQuery(table))
-                .conditions(AcademicSubjectPagination.conditionVisitor)
-                .extraConditions(extraConditionOnFirstPage)
-                .sortBy(
-                        AcademicSubjectPagination.orderingVisitor,
-                        null,
-                        null,
-                        null,
-                        uniqueSort -> {
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.CREATED_ON,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(OffsetDateTime::parse)
-                                                    .build()
-                                    )
-                            );
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.ID,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(UUID::fromString)
-                                                    .build()
-                                    )
-                            );
-                        }
-                )
-                .fetch();
         return UnifiedResponse.of(
-                PaginationResponse.asResult(result, academicSubjectMapper.toResponse(result.getResult().into(DbAcademicSubject.Result.class)))
+                academicSubjectService.page(request)
         );
     }
 
-    @GetMapping("{id}")
+
+    @GetMapping("admin/{userId}/academicSubject/{id}")
     @ACL(
             authed = true
     )
@@ -117,16 +74,15 @@ public class AcademicSubjectController {
     @Operation(
             summary = "Get One"
     )
-    public @Valid UnifiedResponse<AcademicSubjectResponse> get(
-            @PathVariable("id") UUID id
-    ) {
-        var result = academicSubjectService.get(id);
+    public @Valid UnifiedResponse<AcademicSubjectPayload> get(
+            @PathVariable("userId") UUID userId,
+            @PathVariable("id") UUID id) {
         return UnifiedResponse.of(
-                academicSubjectMapper.toResponse(result)
+                academicSubjectService.get(id)
         );
     }
 
-    @PostMapping
+    @PostMapping("admin/{userId}/academicSubject")
     @Transactional
     @ACL(
             authed = true,
@@ -136,20 +92,18 @@ public class AcademicSubjectController {
     @Operation(
             summary = "Create One"
     )
-    public @Valid UnifiedResponse<AcademicSubjectResponse> create(
+    public @Valid UnifiedResponse<AcademicSubjectPayload> create(
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
-            AcademicSubjectRequest payload
+            AcademicSubjectPayload payload
     ) {
-        var result = academicSubjectService.get(
-                academicSubjectService.create(payload)
-                        .getId()
-        );
+        var pojo = academicSubjectService.create(payload);
         return UnifiedResponse.of(
-                academicSubjectMapper.toResponse(result)
+                academicSubjectService.get(pojo.getId())
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/admin/{userId}/academicSubject")
     @Transactional
     @ACL(
             authed = true,
@@ -160,16 +114,16 @@ public class AcademicSubjectController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<AcademicSubjectResponse> update(
-            @PathVariable("id") UUID id,
-            @RequestBody @Valid
-            AcademicSubjectRequest payload
+            @PathVariable("userId") UUID userId,
+            @RequestBody @Valid AcademicSubjectPayload payload
     ) {
-        var result = academicSubjectService.get(
-                academicSubjectService.update(id, payload)
-                        .getId()
-        );
+//        var result = academicSubjectService.get(
+//                academicSubjectService.update(id, payload)
+//                        .getId()
+//        );
+        academicSubjectService.update(payload);
         return UnifiedResponse.of(
-                academicSubjectMapper.toResponse(result)
+                null
         );
     }
 }

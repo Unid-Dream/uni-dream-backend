@@ -10,6 +10,7 @@ import unid.jooqMono.model.tables.pojos.AcademicSubjectPojo;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResource;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerMeta.api.AcademicSubjectPayload;
 import unid.monoServerMeta.api.AcademicSubjectRequest;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
@@ -17,7 +18,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-23T15:12:29+0800",
+    date = "2024-03-24T01:03:51+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -111,6 +112,15 @@ public class AcademicSubjectMapperImpl implements AcademicSubjectMapper {
         }
 
         data.setTagId( source.getTagId() );
+    }
+
+    @Override
+    public void merge(AcademicSubjectPojo data, AcademicSubjectPayload source) {
+        if ( source == null ) {
+            return;
+        }
+
+        data.setId( source.getId() );
     }
 
     @Override

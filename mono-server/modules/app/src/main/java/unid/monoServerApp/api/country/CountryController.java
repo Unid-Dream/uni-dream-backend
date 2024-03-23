@@ -34,9 +34,7 @@ import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbInterviewTopic;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.CountryMapper;
-import unid.monoServerMeta.api.CountryRequest;
-import unid.monoServerMeta.api.CountryResponse;
-import unid.monoServerMeta.api.TagResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.Valid;
@@ -60,67 +58,25 @@ public class CountryController {
     private final ObjectMapper objectMapper;
     private final TagService tagService;
 
-//    @GetMapping
-//    @ACL(
-//            authed = true
-//    )
-//    @ResponseStatus(HttpStatus.OK)
-//    @Operation(
-//            summary = "Query"
-//    )
-//    public @Valid UnifiedResponse<PaginationResponse<CountryResponse>> list(
-//            @Valid
-//            @ParameterObject
-//            PaginationRequest payload
-//    ) {
-//        var table = CountryPagination.TABLE;
-//        var dslContext = dbCountry.getDsl();
-//        var extraConditionOnFirstPage = DSL.noCondition();
-//        if (StringUtils.isBlank(payload.getPage())) {
-//            extraConditionOnFirstPage = dbCountry.validateCondition(table);
-//        }
-//        var result = PaginatedQuery.init(
-//                        dslContext,
-//                        objectMapper,
-//                        payload,
-//                        RequestHolder.get().getAuthToken(),
-//                        Constant.PAGINATION_MIN_SIZE,
-//                        Constant.PAGINATION_MAX_SIZE
-//                )
-//                .select(dsl -> dbCountry.getQuery(table))
-//                .conditions(CountryPagination.conditionVisitor)
-//                .extraConditions(extraConditionOnFirstPage)
-//                .sortBy(
-//                        CountryPagination.orderingVisitor,
-//                        null,
-//                        null,
-//                        null,
-//                        uniqueSort -> {
-//                            uniqueSort.add(
-//                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-//                                            table.CREATED_ON,
-//                                            SortOrder.DESC,
-//                                            OrderingVisitor.Seeking.builder()
-//                                                    .whenSeeking(OffsetDateTime::parse)
-//                                                    .build()
-//                                    )
-//                            );
-//                            uniqueSort.add(
-//                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-//                                            table.ID,
-//                                            SortOrder.DESC,
-//                                            OrderingVisitor.Seeking.builder()
-//                                                    .whenSeeking(UUID::fromString)
-//                                                    .build()
-//                                    )
-//                            );
-//                        }
-//                )
-//                .fetch();
-//        return UnifiedResponse.of(
-//                PaginationResponse.asResult(result, countryMapper.toResponse(result.getResult().into(DbCountry.Result.class)))
-//        );
-//    }
+
+    @GetMapping(value = {"admin/{userId}/country/page"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<CountryPayload>> page(
+            @PathVariable("userId") UUID userId,
+            @ParameterObject CountryPageRequest request
+    ) {
+         return UnifiedResponse.of(
+                 countryService.page(request)
+         );
+    }
+
+
     @GetMapping(value = {"student/country/list"})
     @ACL(
             authed = true
@@ -165,25 +121,25 @@ public class CountryController {
         return UnifiedResponse.of(list);
     }
 
-    @GetMapping("{id}")
-    @ACL(
-            authed = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Get One"
-    )
-    @Hidden
-    public @Valid UnifiedResponse<CountryResponse> get(
-            @PathVariable("id") UUID id
-    ) {
-        var result = countryService.get(id);
-        return UnifiedResponse.of(
-                countryMapper.toResponse(result)
-        );
-    }
+//    @GetMapping("{id}")
+//    @ACL(
+//            authed = true
+//    )
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(
+//            summary = "Get One"
+//    )
+//    @Hidden
+//    public @Valid UnifiedResponse<CountryResponse> get(
+//            @PathVariable("id") UUID id
+//    ) {
+//        var result = countryService.get(id);
+//        return UnifiedResponse.of(
+//                countryMapper.toResponse(result)
+//        );
+//    }
 
-    @PostMapping
+    @PostMapping("admin/{userId}/country")
     @Transactional
     @ACL(
             authed = true,
@@ -194,16 +150,15 @@ public class CountryController {
             summary = "Create One"
     )
     @Hidden
-    public @Valid UnifiedResponse<CountryResponse> create(
+    public @Valid UnifiedResponse<CountryPayload> create(
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
-            CountryRequest payload
+            CountryPayload payload
     ) {
-        var result = countryService.get(
-                countryService.create(payload)
-                        .getId()
-        );
         return UnifiedResponse.of(
-                countryMapper.toResponse(result)
+                countryService.get(
+                        countryService.create(payload).getId()
+                )
         );
     }
 
@@ -228,7 +183,7 @@ public class CountryController {
                         .getId()
         );
         return UnifiedResponse.of(
-                countryMapper.toResponse(result)
+                null
         );
     }
 }

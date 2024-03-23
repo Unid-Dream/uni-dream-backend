@@ -2,49 +2,26 @@ package unid.monoServerApp.api.academicMajor;//package unid.monoServerApp.api.co
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.SortOrder;
-import org.jooq.impl.DSL;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pwh.coreRsqlJooq.jooq.PaginatedQuery;
-import pwh.coreRsqlJooq.jooq.PaginatedQuerySorting;
-import pwh.coreRsqlJooq.model.PaginationRequest;
-import pwh.coreRsqlJooq.model.PaginationResponse;
-import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
-import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.academicSubject.AcademicSubjectService;
 import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
-import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.AcademicMajorMapper;
 import unid.monoServerMeta.api.*;
-import unid.monoServerMeta.model.I18n;
-import unid.monoServerMeta.model.PassionMajor;
-import unid.monoServerMeta.model.PassionSubject;
 
-import javax.validation.Valid;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -61,6 +38,83 @@ public class AcademicMajorController {
     private final DbAcademicMajor dbAcademicMajor;
     private final ObjectMapper objectMapper;
     private final TagService tagService;
+
+
+    @GetMapping("admin/{userId}/academicMajor/page")
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    public UnifiedResponse<UniPageResponse<AcademicMajorPayload>> page(
+            @PathVariable("userId") UUID userId,
+            @ParameterObject AcademicMajorPageRequest request
+    ){
+        return UnifiedResponse.of(
+                academicMajorService.page(request)
+        );
+    }
+
+    @PostMapping("admin/{userId}/academicMajor")
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create"
+    )
+    public UnifiedResponse<AcademicMajorPayload> create(
+            @PathVariable("userId") UUID userId,
+            @RequestBody AcademicMajorPayload payload
+    ){
+        return UnifiedResponse.of(
+                academicMajorService.get(academicMajorService.create(payload).getId())
+        );
+    }
+
+
+    @PutMapping("admin/{userId}/academicMajor")
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update"
+    )
+    public UnifiedResponse<AcademicMajorPayload> update(
+            @PathVariable("userId") UUID userId,
+            @ParameterObject AcademicMajorPayload payload
+    ){
+        return UnifiedResponse.of(
+                academicMajorService.get(academicMajorService.update(payload).getId())
+        );
+    }
+
+
+    @GetMapping("admin/{userId}/academicMajor/{id}")
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get One"
+    )
+    public UnifiedResponse<AcademicMajorPayload> get(
+            @PathVariable("userId") UUID userId,
+            @PathVariable("id") UUID id
+    ){
+        return UnifiedResponse.of(
+                academicMajorService.get(id)
+        );
+    }
+
+
 
     @GetMapping("student/academicMajor")
     @Transactional

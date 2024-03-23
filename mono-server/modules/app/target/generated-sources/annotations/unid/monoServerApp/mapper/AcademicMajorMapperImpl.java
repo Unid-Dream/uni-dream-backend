@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import unid.jooqMono.model.tables.pojos.AcademicMajorPojo;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerMeta.api.AcademicMajorPayload;
 import unid.monoServerMeta.api.AcademicMajorRequest;
 import unid.monoServerMeta.api.AcademicMajorResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-23T15:12:30+0800",
+    date = "2024-03-24T01:03:49+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -74,6 +75,30 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
         }
 
         data.setTagId( source.getTagId() );
+    }
+
+    @Override
+    public void merge(AcademicMajorPojo data, AcademicMajorPayload source) {
+        if ( source == null ) {
+            return;
+        }
+
+        data.setId( source.getId() );
+        data.setIconPath( source.getIconPath() );
+    }
+
+    @Override
+    public AcademicMajorPayload toResponse(AcademicMajorPojo data) {
+        if ( data == null ) {
+            return null;
+        }
+
+        AcademicMajorPayload academicMajorPayload = new AcademicMajorPayload();
+
+        academicMajorPayload.setId( data.getId() );
+        academicMajorPayload.setIconPath( data.getIconPath() );
+
+        return academicMajorPayload;
     }
 
     @Override

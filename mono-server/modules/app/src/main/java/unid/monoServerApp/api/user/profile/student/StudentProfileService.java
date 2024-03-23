@@ -261,11 +261,13 @@ public class StudentProfileService {
         ).orElseThrow(() -> Exceptions.notFound("Profile Not Found"));
     }
 
+
     public UniPageResponse<StudentProfilePayload> page(StudentProfilePageRequest request) {
         var table = dbStudentProfile.getTable();
         List<StudentProfilePayload> payload = dbStudentProfile.getDsl()
                 .select(
                         table.asterisk(),
+                        USER.EMAIL.as(StudentProfilePayload.Fields.email),
                         DSL.multiset(
                                 DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
                         ).as(StudentProfilePayload.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
@@ -273,7 +275,7 @@ public class StudentProfileService {
                                 DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
                         ).as(StudentProfilePayload.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
                 )
-                .select(count().over().as(WritingSkillPayload.Fields.total))
+                .select(count().over().as(StudentProfilePayload.Fields.total))
                 .from(table,USER)
                 .where(table.USER_ID.eq(USER.ID))
                 .orderBy(table.CREATED_ON.desc())

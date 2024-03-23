@@ -49,11 +49,16 @@ public enum UniErrorCode{
     STUDENT_PAYMENT_TRANSACTION_FAIL_TO_PAY_ON_ALIPAY(10707, "支付调用失败"),
 
     // ---------------------------------- USER -----------------------------------------------
-    USER_PROFILE_ID_NOT_EXIST(10805, "用户不存在"),
+    USER_PROFILE_ID_NOT_EXIST(10801, "用户不存在"),
 
     // ---------------------------------- Course Event  -----------------------------------------------
 
-    COURSE_EVENT_NOT_EXIST(10805, "学习中文课程不存在"),
+    COURSE_EVENT_NOT_EXIST(10901, "课程不存在"),
+
+    // ---------------------------------- Academic Major -----------------------------------------------
+    ACADEMIC_MAJOR_IS_NOT_EXIST(11001, "Academic Major 不存在!!!"),
+    ACADEMIC_SUBJECT_IS_NOT_EXIST(11002, "Academic Subject 不存在!!!"),
+    ACADEMIC_SUBJECT_MAP_IS_NOT_EXIST(11003, "Academic Subject Map 不存在!!!"),
 
     ;
 

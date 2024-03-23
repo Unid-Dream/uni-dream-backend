@@ -7,6 +7,7 @@ import org.mapstruct.Mappings;
 import unid.jooqMono.model.tables.pojos.AcademicSubjectResourcePojo;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubject;
 import unid.monoServerApp.database.table.academicSubject.DbAcademicSubjectResource;
+import unid.monoServerMeta.api.AcademicSubjectPayload;
 import unid.monoServerMeta.api.AcademicSubjectResourcePayload;
 import unid.monoServerMeta.api.AcademicSubjectResponse;
 
@@ -22,6 +23,8 @@ import java.util.List;
 public interface AcademicSubjectResourceMapper {
 
     AcademicSubjectResourcePojo toPojo(AcademicSubjectResourcePayload data);
+
+    AcademicSubjectResourcePojo toPojo(AcademicSubjectPayload.AcademicSubjectResourcePayload data);
 
     @InheritConfiguration
     @Mappings({

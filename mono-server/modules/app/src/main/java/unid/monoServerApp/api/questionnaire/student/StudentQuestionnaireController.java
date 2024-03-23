@@ -31,10 +31,10 @@ import java.util.UUID;
 public class StudentQuestionnaireController {
     private final StudentQuestionnaireService studentQuestionnaireService;
 
-    @GetMapping(value = {"student/studentMilestone/{studentProfileId}","educator/studentMilestone/{studentProfileId}"})
+    @GetMapping(value = {"student/studentMilestone/{studentProfileId}","educator/studentMilestone/{studentProfileId}","admin/studentMilestone/{studentProfileId}"})
     @ACL(
             authed = true,
-            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR }
+            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR , UserRoleEnum.ADMIN }
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
