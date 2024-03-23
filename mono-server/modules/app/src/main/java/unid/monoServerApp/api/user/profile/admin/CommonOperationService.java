@@ -7,17 +7,22 @@ import org.apache.commons.compress.utils.Lists;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerApp.database.table.course.DbEvent;
+import unid.monoServerApp.database.table.course.DbEventScheduleTime;
 import unid.monoServerApp.database.table.educatorSessionNote.DbEducatorSessionNoteItem;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.http.RequestHolder;
+import unid.monoServerApp.mapper.CourseEventMapper;
+import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.service.SessionLoggerService;
 import unid.monoServerMeta.api.*;
@@ -43,6 +48,10 @@ public class CommonOperationService {
     private final DbSessionOpLog dbSessionOpLog;
     private final EducatorSessionCommentService educatorSessionCommentService;
     private final DbEvent dbEvent;
+    private final DbI18N dbI18N;
+    private final I18nMapper i18nMapper;
+    private final CourseEventMapper courseEventMapper;
+    private final DbEventScheduleTime dbEventScheduleTime;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
@@ -313,5 +322,40 @@ public class CommonOperationService {
                 null,
                 payload
         );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public PromotionEventPayload createPromotionEvent(PromotionEventPayload payload) {
+        DbEvent.Result result = new DbEvent.Result();
+        courseEventMapper.merge(result,payload);
+
+        var i18nTable = dbI18N.getTable();
+        dbI18N.getDsl().insertInto(i18nTable)
+                .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getTitleI18n())))
+                .returning(i18nTable.ID)
+                .fetchOptionalInto(DbI18N.Result.class)
+                .ifPresent(i18n-> result.setTitleI18nId(i18n.getId()));
+
+        dbI18N.getDsl().insertInto(i18nTable)
+                .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getDescriptionI18n())))
+                .returning(i18nTable.ID)
+                .fetchOptionalInto(DbI18N.Result.class)
+                .ifPresent(i18n-> result.setDescriptionI18nId(i18n.getId()));
+
+        dbI18N.getDsl().insertInto(i18nTable)
+                .set(dbI18N.getDsl().newRecord(i18nTable, i18nMapper.toPojo(payload.getAgendaI18n())))
+                .returning(i18nTable.ID)
+                .fetchOptionalInto(DbI18N.Result.class)
+                .ifPresent(i18n-> result.setAgendaI18nId(i18n.getId()));
+
+//        dbEventScheduleTime.getDsl()
+//                .insertInto()
+
+
+        throw Exceptions.business(UniErrorCode.INNTERAL_SYSTEM_ERROR);
+    }
+
+    public PromotionEventPayload getPromotionEventDetail(UUID eventId) {
+        return null;
     }
 }

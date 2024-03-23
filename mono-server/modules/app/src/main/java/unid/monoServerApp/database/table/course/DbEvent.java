@@ -90,4 +90,15 @@ public class DbEvent extends Db<EventTable, EventDao> {
         private DbEducatorProfile.SimpleResult educator;
         private List<DbEventScheduleTime.Result> eventScheduleTimes;
     }
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @FieldNameConstants
+    @ToString(callSuper = true)
+    // (selectively) inherited from related jOOQ generated POJO
+    // expanding foreign keys
+    public static final class Result extends EventPojo implements Serializable {
+    }
 }

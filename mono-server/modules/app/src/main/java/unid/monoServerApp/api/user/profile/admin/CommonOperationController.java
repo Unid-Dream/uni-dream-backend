@@ -33,83 +33,100 @@ public class CommonOperationController {
     private final CommonOperationService commonOperationService;
     private final EducatorSessionCommentService educatorSessionCommentService;
 
-    @GetMapping("admin/consultation-session/page")
+    @GetMapping("admin/{userId}/consultation-session/page")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Consultation Session Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getAllSessionPage(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
         return UnifiedResponse.of(commonOperationService.getSessionPage(request,null));
     }
 
 
-    @GetMapping("admin/consultation-session/{id}")
+    @GetMapping("admin/{userId}/consultation-session/{id}")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get Consultation Session Detail"
     )
     public @Valid UnifiedResponse<StudentSessionTransactionPayload> getSessionDetail(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         return UnifiedResponse.of(commonOperationService.getSessionDetail(transactionId));
     }
 
-    @GetMapping("admin/consultation-session/pending/page")
+    @GetMapping("admin/{userId}/consultation-session/pending/page")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Pending Consultation Session Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getPendingSessionPage(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
         return UnifiedResponse.of(commonOperationService.getSessionPage(request, BookingStatusEnum.PENDING));
     }
 
 
-    @PutMapping("admin/consultation-session/{id}/cancel")
+    @PutMapping("admin/{userId}/consultation-session/{id}/cancel")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Cancel Consultation Session"
     )
     public @Valid UnifiedResponse<Void> cancel(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         commonOperationService.cancel(transactionId);
         return UnifiedResponse.of(null);
     }
 
-    @GetMapping("admin/consultation-session/{id}/eventLog")
+    @GetMapping("admin/{userId}/consultation-session/{id}/eventLog")
     @Transactional
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Calendar Page"
     )
     public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId) {
         return UnifiedResponse.of(commonOperationService.getSessionEventLogs(transactionId));
     }
 
 
-    @GetMapping("admin/consultation-session/{id}/comments")
+    @GetMapping("admin/{userId}/consultation-session/{id}/comments")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -117,6 +134,7 @@ public class CommonOperationController {
     )
     @SneakyThrows
     public @Valid UnifiedResponse<List<EducatorSessionNoteCommentResponse>> listComments(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         var list = commonOperationService.getSessionComments(transactionId);
@@ -124,20 +142,61 @@ public class CommonOperationController {
     }
 
 
-    @GetMapping("admin/promotion-event/page")
+    @GetMapping("admin/{userId}/promotion-event/page")
     @ACL(
-            noAuthed = true
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query Promotion Event Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<PromotionEventPayload>> getPromotionEventPage(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject PromotionEventPageRequest request
     ) {
         return UnifiedResponse.of(
                 commonOperationService.getPromotionEventPage(request)
         );
+    }
+
+    @GetMapping("admin/{userId}/promotion-event/{id}")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get Promotion Event Detail"
+    )
+    public @Valid UnifiedResponse<PromotionEventPayload> getPromotionEventDetail(
+            @PathVariable("userId")  @ACL.UserId UUID userId,
+            @PathVariable("id") UUID eventId
+    ) {
+        return UnifiedResponse.of(
+                commonOperationService.getPromotionEventDetail(eventId)
+        );
+    }
+
+
+    @PostMapping("admin/{userId}/promotion-event")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN,
+            matchingSessionUserId = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create Promotion Event"
+    )
+    public @Valid UnifiedResponse<PromotionEventPayload> createPromotionEvent(
+            @PathVariable("userId") @ACL.UserId UUID userId,
+            @RequestBody PromotionEventPayload payload
+    ) {
+        commonOperationService.createPromotionEvent(payload);
+        return UnifiedResponse.of( null );
     }
 
 }
