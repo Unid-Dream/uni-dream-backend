@@ -3,6 +3,7 @@ package unid.monoServerApp.mapper;
 import org.mapstruct.*;
 import unid.jooqMono.model.tables.pojos.LanguagePojo;
 import unid.monoServerApp.database.table.language.DbLanguage;
+import unid.monoServerMeta.api.LanguagePayload;
 import unid.monoServerMeta.api.LanguageRequest;
 import unid.monoServerMeta.api.LanguageResponse;
 
@@ -21,6 +22,8 @@ public interface LanguageMapper {
     LanguagePojo toPojo(LanguageResponse data);
 
     void merge(@MappingTarget LanguagePojo data, LanguageRequest source);
+
+    void merge(@MappingTarget LanguagePojo data, LanguagePayload source);
 
     void merge(@MappingTarget DbLanguage.Result data, LanguageRequest source);
 

@@ -50,7 +50,9 @@ public enum BookingStatusEnum implements EnumType {
 
     PAID("PAID"),
 
-    RESCHEDULE("RESCHEDULE");
+    RESCHEDULE("RESCHEDULE"),
+
+    REVIEWED("REVIEWED");
 
     private final String literal;
 

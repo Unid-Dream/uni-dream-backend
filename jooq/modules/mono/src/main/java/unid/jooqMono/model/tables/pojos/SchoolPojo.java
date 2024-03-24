@@ -6,6 +6,7 @@ package unid.jooqMono.model.tables.pojos;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -45,6 +46,11 @@ public class SchoolPojo implements Serializable {
     private String          createdBy;
     private OffsetDateTime  updatedOn;
     private String          updatedBy;
+    private BigDecimal      rate;
+    private BigDecimal      population;
+    private BigDecimal      tuition;
+    private String          factor;
+    private String          description;
 
     public SchoolPojo() {}
 
@@ -62,9 +68,14 @@ public class SchoolPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.rate = value.rate;
+        this.population = value.population;
+        this.tuition = value.tuition;
+        this.factor = value.factor;
+        this.description = value.description;
     }
 
-    @ConstructorProperties({ "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "rate", "population", "tuition", "factor", "description" })
     public SchoolPojo(
         @Nonnull UUID            id,
         @Nullable SchoolLevelEnum schoolLevel,
@@ -78,7 +89,12 @@ public class SchoolPojo implements Serializable {
         @Nullable OffsetDateTime  createdOn,
         @Nullable String          createdBy,
         @Nullable OffsetDateTime  updatedOn,
-        @Nullable String          updatedBy
+        @Nullable String          updatedBy,
+        @Nullable BigDecimal      rate,
+        @Nullable BigDecimal      population,
+        @Nullable BigDecimal      tuition,
+        @Nullable String          factor,
+        @Nullable String          description
     ) {
         this.id = id;
         this.schoolLevel = schoolLevel;
@@ -93,6 +109,11 @@ public class SchoolPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.rate = rate;
+        this.population = population;
+        this.tuition = tuition;
+        this.factor = factor;
+        this.description = description;
     }
 
     /**
@@ -303,6 +324,86 @@ public class SchoolPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.school.rate</code>.
+     */
+    @Nullable
+    public BigDecimal getRate() {
+        return this.rate;
+    }
+
+    /**
+     * Setter for <code>public.school.rate</code>.
+     */
+    public SchoolPojo setRate(@Nullable BigDecimal rate) {
+        this.rate = rate;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.population</code>.
+     */
+    @Nullable
+    public BigDecimal getPopulation() {
+        return this.population;
+    }
+
+    /**
+     * Setter for <code>public.school.population</code>.
+     */
+    public SchoolPojo setPopulation(@Nullable BigDecimal population) {
+        this.population = population;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.tuition</code>.
+     */
+    @Nullable
+    public BigDecimal getTuition() {
+        return this.tuition;
+    }
+
+    /**
+     * Setter for <code>public.school.tuition</code>.
+     */
+    public SchoolPojo setTuition(@Nullable BigDecimal tuition) {
+        this.tuition = tuition;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.factor</code>.
+     */
+    @Nullable
+    public String getFactor() {
+        return this.factor;
+    }
+
+    /**
+     * Setter for <code>public.school.factor</code>.
+     */
+    public SchoolPojo setFactor(@Nullable String factor) {
+        this.factor = factor;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Setter for <code>public.school.description</code>.
+     */
+    public SchoolPojo setDescription(@Nullable String description) {
+        this.description = description;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SchoolPojo (");
@@ -320,6 +421,11 @@ public class SchoolPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(rate);
+        sb.append(", ").append(population);
+        sb.append(", ").append(tuition);
+        sb.append(", ").append(factor);
+        sb.append(", ").append(description);
 
         sb.append(")");
         return sb.toString();

@@ -23,6 +23,7 @@ public enum BookingStatus implements NamedEnum {
     PAID("PAID"),
 
     RESCHEDULE("RESCHEDULE"),
+    REVIEWED("REVIEWED"),
 
     ;
     private final String value;

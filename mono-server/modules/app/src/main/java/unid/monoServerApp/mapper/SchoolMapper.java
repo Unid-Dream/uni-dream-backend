@@ -5,10 +5,7 @@ import unid.jooqMono.model.tables.pojos.I18nPojo;
 import unid.jooqMono.model.tables.pojos.SchoolExtensionPojo;
 import unid.jooqMono.model.tables.pojos.SchoolPojo;
 import unid.monoServerApp.database.table.school.DbSchool;
-import unid.monoServerMeta.api.CityResponse;
-import unid.monoServerMeta.api.SchoolMapResponse;
-import unid.monoServerMeta.api.SchoolRequest;
-import unid.monoServerMeta.api.SchoolResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.SchoolLevel;
 
@@ -27,7 +24,12 @@ public interface SchoolMapper {
 
     SchoolPojo toPojo(SchoolResponse data);
 
+    SchoolPojo toPojo(SchoolPayload data);
+
+
     void merge(@MappingTarget SchoolPojo data, SchoolRequest source);
+
+    void merge(@MappingTarget SchoolPojo data, SchoolPayload source);
 
     @Mappings({
             @Mapping(source = DbSchool.Result.Columns.createdOn, target = SchoolResponse.BaseResponseFields.createdOnUtc),

@@ -4,6 +4,7 @@
 package unid.jooqMono.model.tables.daos;
 
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -289,5 +290,90 @@ public class SchoolDao extends DAOImpl<SchoolRecord, SchoolPojo, UUID> {
     @Nonnull
     public List<SchoolPojo> fetchByUpdatedBy(String... values) {
         return fetch(SchoolTable.SCHOOL.UPDATED_BY, values);
+    }
+
+    /**
+     * Fetch records that have <code>rate BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchRangeOfRate(BigDecimal lowerInclusive, BigDecimal upperInclusive) {
+        return fetchRange(SchoolTable.SCHOOL.RATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>rate IN (values)</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchByRate(BigDecimal... values) {
+        return fetch(SchoolTable.SCHOOL.RATE, values);
+    }
+
+    /**
+     * Fetch records that have <code>population BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchRangeOfPopulation(BigDecimal lowerInclusive, BigDecimal upperInclusive) {
+        return fetchRange(SchoolTable.SCHOOL.POPULATION, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>population IN (values)</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchByPopulation(BigDecimal... values) {
+        return fetch(SchoolTable.SCHOOL.POPULATION, values);
+    }
+
+    /**
+     * Fetch records that have <code>tuition BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchRangeOfTuition(BigDecimal lowerInclusive, BigDecimal upperInclusive) {
+        return fetchRange(SchoolTable.SCHOOL.TUITION, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>tuition IN (values)</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchByTuition(BigDecimal... values) {
+        return fetch(SchoolTable.SCHOOL.TUITION, values);
+    }
+
+    /**
+     * Fetch records that have <code>factor BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchRangeOfFactor(String lowerInclusive, String upperInclusive) {
+        return fetchRange(SchoolTable.SCHOOL.FACTOR, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>factor IN (values)</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchByFactor(String... values) {
+        return fetch(SchoolTable.SCHOOL.FACTOR, values);
+    }
+
+    /**
+     * Fetch records that have <code>description BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchRangeOfDescription(String lowerInclusive, String upperInclusive) {
+        return fetchRange(SchoolTable.SCHOOL.DESCRIPTION, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>description IN (values)</code>
+     */
+    @Nonnull
+    public List<SchoolPojo> fetchByDescription(String... values) {
+        return fetch(SchoolTable.SCHOOL.DESCRIPTION, values);
     }
 }

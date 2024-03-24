@@ -32,9 +32,7 @@ import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.language.DbLanguage;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.LanguageMapper;
-import unid.monoServerMeta.api.LanguageRequest;
-import unid.monoServerMeta.api.LanguageResponse;
-import unid.monoServerMeta.api.TagResponse;
+import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.I18n;
 
 import javax.validation.Valid;
@@ -55,69 +53,24 @@ public class LanguageController {
     private final ObjectMapper objectMapper;
     private final TagService tagService;
 
-    @GetMapping("/student/language")
+    @GetMapping("/admin/{userId}/language/page")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"
     )
-    @Hidden
-    public @Valid UnifiedResponse<PaginationResponse<LanguageResponse>> list(
-            @Valid
-            @ParameterObject
-            PaginationRequest payload
-    ) {
-        var table = LanguagePagination.TABLE;
-        var dslContext = dbLanguage.getDsl();
-        var extraConditionOnFirstPage = DSL.noCondition();
-        if (StringUtils.isBlank(payload.getPage())) {
-            extraConditionOnFirstPage = dbLanguage.validateCondition(table);
-        }
-        var result = PaginatedQuery.init(
-                        dslContext,
-                        objectMapper,
-                        payload,
-                        RequestHolder.get().getAuthToken(),
-                        Constant.PAGINATION_MIN_SIZE,
-                        Constant.PAGINATION_MAX_SIZE
-                )
-                .select(dsl -> dbLanguage.getQuery(table))
-                .conditions(LanguagePagination.conditionVisitor)
-                .extraConditions(extraConditionOnFirstPage)
-                .sortBy(
-                        LanguagePagination.orderingVisitor,
-                        null,
-                        null,
-                        null,
-                        uniqueSort -> {
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.CREATED_ON,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(OffsetDateTime::parse)
-                                                    .build()
-                                    )
-                            );
-                            uniqueSort.add(
-                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-                                            table.ID,
-                                            SortOrder.DESC,
-                                            OrderingVisitor.Seeking.builder()
-                                                    .whenSeeking(UUID::fromString)
-                                                    .build()
-                                    )
-                            );
-                        }
-                )
-                .fetch();
+    public UnifiedResponse<UniPageResponse<LanguagePayload>> page(
+            @PathVariable("userId") UUID userId,
+            @ParameterObject LanguagePageRequest request
+    ){
         return UnifiedResponse.of(
-                PaginationResponse.asResult(result, languageMapper.toResponse(result.getResult().into(DbLanguage.Result.class)))
+                languageService.page(request)
         );
     }
+
 
     @GetMapping("/student/language/list")
     @ACL(
@@ -148,7 +101,7 @@ public class LanguageController {
     }
 
 
-    @GetMapping("/student/language/{id}")
+    @GetMapping("/admin/{userId}/language/{id}")
     @ACL(
             authed = true
     )
@@ -156,17 +109,16 @@ public class LanguageController {
     @Operation(
             summary = "Get One"
     )
-    @Hidden
-    public @Valid UnifiedResponse<LanguageResponse> get(
+    public @Valid UnifiedResponse<LanguagePayload> get(
+            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ) {
-        var result = languageService.get(id);
         return UnifiedResponse.of(
-                languageMapper.toResponse(result)
+                languageService.get(id)
         );
     }
 
-    @PostMapping("/student/language/")
+    @PostMapping("/admin/{userId}/language")
     @Transactional
     @ACL(
             authed = true,
@@ -176,21 +128,20 @@ public class LanguageController {
     @Operation(
             summary = "Create One"
     )
-    @Hidden
-    public @Valid UnifiedResponse<LanguageResponse> create(
+    public @Valid UnifiedResponse<LanguagePayload> create(
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
-            LanguageRequest payload
+            LanguagePayload payload
     ) {
-        var result = languageService.get(
-                languageService.create(payload)
-                        .getId()
-        );
         return UnifiedResponse.of(
-                languageMapper.toResponse(result)
+                languageService.get(
+                        languageService.create(payload)
+                                .getId()
+                )
         );
     }
 
-    @PutMapping("/student/language/{id}")
+    @PutMapping("/admin/{userId}/language")
     @Transactional
     @ACL(
             authed = true,
@@ -200,18 +151,16 @@ public class LanguageController {
     @Operation(
             summary = "Update One"
     )
-    @Hidden
-    public @Valid UnifiedResponse<LanguageResponse> update(
-            @PathVariable("id") UUID id,
+    public @Valid UnifiedResponse<LanguagePayload> update(
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
-            LanguageRequest payload
+            LanguagePayload payload
     ) {
-        var result = languageService.get(
-                languageService.update(id, payload)
-                        .getId()
-        );
         return UnifiedResponse.of(
-                languageMapper.toResponse(result)
+                languageService.get(
+                        languageService.update(payload)
+                                .getId()
+                )
         );
     }
 }

@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import unid.jooqMono.model.tables.pojos.LanguagePojo;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.language.DbLanguage;
+import unid.monoServerMeta.api.LanguagePayload;
 import unid.monoServerMeta.api.LanguageRequest;
 import unid.monoServerMeta.api.LanguageResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-23T15:12:30+0800",
+    date = "2024-03-24T12:33:15+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -46,6 +47,15 @@ public class LanguageMapperImpl implements LanguageMapper {
         }
 
         data.setTagId( source.getTagId() );
+    }
+
+    @Override
+    public void merge(LanguagePojo data, LanguagePayload source) {
+        if ( source == null ) {
+            return;
+        }
+
+        data.setId( source.getId() );
     }
 
     @Override

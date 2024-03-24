@@ -13,6 +13,8 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.DeletedTypeEnum;
 import unid.jooqMono.model.enums.SchoolLevelEnum;
 import unid.jooqMono.model.enums.TagCategoryEnum;
@@ -39,7 +41,9 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.multiset;
+import static pwh.springWebStarter.response.UniErrorCode.COUNTRY_IS_NOT_EXIST;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -60,148 +64,90 @@ public class SchoolService {
     private final DSLContext dslContext;
 
 
-    DbSchool.Result get(UUID id) {
+//    DbSchool.Result get(UUID id) {
+//        var table = dbSchool.getTable();
+//        return dbSchool.getQuery(table)
+//                .where(table.ID.eq(id).and(dbSchool.validateCondition(table)))
+//                .fetchOptional().orElseThrow(() -> Exceptions.notFound("School Not Found"))
+//                .into(DbSchool.Result.class);
+//    }
+
+    SchoolPayload get(UUID id){
         var table = dbSchool.getTable();
-        return dbSchool.getQuery(table)
-                .where(table.ID.eq(id).and(dbSchool.validateCondition(table)))
-                .fetchOptional().orElseThrow(() -> Exceptions.notFound("School Not Found"))
-                .into(DbSchool.Result.class);
+        return dbSchool.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.select(
+                                        COUNTRY.asterisk(),
+                                        DSL.multiset(
+                                                DSL.selectFrom(I18N).where(I18N.ID.eq(COUNTRY.NAME_I18N_ID))
+                                        ).as(SchoolPayload.Country.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                ).from(COUNTRY).where(COUNTRY.ID.eq(table.COUNTRY_ID))
+                        ).as(SchoolPayload.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(SchoolPayload.Country.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.NAME_I18N_ID))
+                        ).as(SchoolPayload.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                )
+                .select(count().over().as(SchoolPayload.Fields.total))
+                .from(table)
+                .where(table.ID.eq(id))
+                .fetchOptional()
+                .orElseThrow(() -> Exceptions.business(COUNTRY_IS_NOT_EXIST))
+                .into(SchoolPayload.class);
     }
 
-    SchoolPojo create(SchoolRequest payload) {
+    @Transactional(rollbackFor = Exception.class)
+    SchoolPojo create(SchoolPayload payload) {
         sessionService.initDatabaseSession();
         var nameI18n = i18nMapper.toPojo(payload.getNameI18n());
-        dbI18N.getDao().insert(nameI18n);
-        var addressI18n = i18nMapper.toPojo(payload.getDetailedAddressI18n());
-        dbI18N.getDao().insert(addressI18n);
-        var cityTable = dbCity.getTable();
-        var city = dbCity.getQuery(cityTable)
-                .where(
-                        cityTable.ID.eq(payload.getCityId())
-                                .and(dbCity.validateCondition(cityTable))
-                ).fetchOptional()
-                .orElseThrow(() -> Exceptions.notFound("School City Not Found"))
-                .into(DbCity.Result.class);
-        var pojo = new SchoolPojo()
-                .setCityId(city.getId())
-                .setCountryId(city.getCountryId())
-                .setNameI18nId(nameI18n.getId())
-                .setDetailedAddressI18nId(addressI18n.getId())
-                .setTagId(payload.getTagId());
-        schoolMapper.merge(pojo, payload);
+        SchoolPojo pojo = schoolMapper.toPojo(payload);
+        pojo.setNameI18nId(nameI18n.getId());
+        pojo.setCountryId(payload.getCountry().getId());
         dbSchool.getDao().insert(pojo);
         return pojo;
     }
 
-    SchoolPojo update(UUID id, SchoolRequest payload) {
-        sessionService.initDatabaseSession();
-        var school = get(id);
-        var nameI18n = Optional.ofNullable(dbI18N.getDao().fetchOneById(school.getNameI18nId()))
-                .orElseThrow(() -> Exceptions.notFound("Name Not Found"));
-        i18nMapper.merge(nameI18n, payload.getNameI18n());
-        dbI18N.getDao().update(nameI18n);
-        var addressI18n = Optional.ofNullable(dbI18N.getDao().fetchOneById(school.getDetailedAddressI18nId()))
-                .orElseThrow(() -> Exceptions.notFound("Address Not Found"));
-        i18nMapper.merge(addressI18n, payload.getDetailedAddressI18n());
-        dbI18N.getDao().update(addressI18n);
-        var cityTable = dbCity.getTable();
-        var city = dbCity.getQuery(cityTable)
-                .where(
-                        cityTable.ID.eq(payload.getCityId())
-                                .and(dbCity.validateCondition(cityTable))
-                ).fetchOptional()
-                .orElseThrow(() -> Exceptions.notFound("School City Not Found"))
-                .into(DbCity.Result.class);
-        schoolMapper.merge(school, payload);
-        dbSchool.getDao().update(school.setCountryId(city.getCountryId()));
-        return school;
+    @Transactional(rollbackFor = Exception.class)
+    SchoolPojo update(SchoolPayload payload){
+        SchoolPojo pojo = dbSchool.getDao().fetchOneById(payload.getId());
+        if(pojo == null){
+            throw Exceptions.business(COUNTRY_IS_NOT_EXIST);
+        }
+        pojo.setCountryId(payload.getCountry().getId());
+        schoolMapper.merge(pojo,payload);
+        var name = dbI18N.getDao().fetchOneById(
+                payload.getId()
+        );
+        i18nMapper.merge(name,payload.getNameI18n());
+        dbI18N.getDao().update(name);
+        return pojo;
     }
 
 
-    /** insert University data hub **/
-//    @PostConstruct
-    public void readDataHub(){
-//        List<SchoolPojo> list = dbSchool.getDsl().select().from(SchoolTable.SCHOOL).fetchInto(SchoolPojo.class);
-
-        /*for(SchoolPojo obj : list){
-            //查询city
-            CityPojo city = dbCity.getDao().fetchOneById(obj.getCityId());
-            //查询city i18n
-            I18nPojo cityI18n = dbI18N.getDao().fetchOneById(city.getNameI18nId());
-            //删除 city, city i18n
-            dbCity.getDao().deleteById(city.getId());
-            dbI18N.getDao().deleteById(cityI18n.getId());
-
-            //查询country
-            CountryPojo country = dbCountry.getDao().fetchOneById(obj.getCountryId());
-            //查询country i18n
-            I18nPojo countryI18n = dbI18N.getDao().fetchOneById(country.getNameI18nId());
-            //删除 countryI18n,country
-            dbCountry.getDao().deleteById(obj.getCountryId());
-            dbI18N.getDao().deleteById(countryI18n.getId());
-
-
-            //查询tag
-            TagPojo tag = dbTag.getDao().fetchOneById(obj.getTagId());
-            //查询tag i18n
-            I18nPojo tagI18n = dbI18N.getDao().fetchOneById(tag.getDescriptionI18nId());
-            //删除 tag, tag i18n
-            dbTag.getDao().deleteById(tag.getId());
-            dbI18N.getDao().deleteById(tagI18n.getId());
-
-            //删除 school
-
-            //删除 school_extension
-
-         }*/
-
-        ExcelReader reader = ExcelUtil.getReader("/Users/apple/Documents/school.xlsx");
-        List<Map<String, Object>> readAll = reader.readAll();
-        List<SchoolBatchRQ> list = Lists.newArrayList();
-        for(Map<String,Object> row : readAll){
-            SchoolBatchRQ batchRQ = new SchoolBatchRQ();
-            JSONObject jsonObject = new JSONObject(row);
-
-            I18n countryI18n = new I18n();
-            countryI18n.setEnglish(jsonObject.getStr("Country"));
-            batchRQ.setCountryI18n(countryI18n);
-            I18n cityI18n = new I18n();
-            cityI18n.setEnglish(jsonObject.getStr("City"));
-            batchRQ.setCityI18n(cityI18n);
-
-            I18n nameI18n = new I18n();
-            nameI18n.setEnglish(jsonObject.getStr("University Name"));
-            batchRQ.setNameI18n(nameI18n);
-
-            I18n tagI18n = new I18n();
-            tagI18n.setEnglish(jsonObject.getStr("Uni Tag (Short Form)"));
-            batchRQ.setTagI18n(tagI18n);
-
-            batchRQ.setAcceptanceRate(jsonObject.getStr("Acceptance Rate"));
-            batchRQ.setUFactor(jsonObject.getStr("The U-Factor"));
-            batchRQ.setUndergradPopulation(jsonObject.getStr("Undergrad population"));
-            batchRQ.setLat(jsonObject.getStr("Latitude"));
-            batchRQ.setLng(jsonObject.getStr("Longitude"));
-            batchRQ.setTuition(jsonObject.getStr("Tuition (excluding room & board) in USD"));
-
-            list.add(batchRQ);
-        }
-
-        for(SchoolBatchRQ batchRQ : list){
-            //根据大学名称查询,对于的数据
-            SchoolPojo school = dbSchool.getDsl().select(SCHOOL.fields())
-                    .from(SCHOOL)
-                    .leftJoin(I18N).on(SCHOOL.NAME_I18N_ID.eq(I18N.ID))
-                    .where(I18N.ENGLISH.eq(batchRQ.getNameI18n().getEnglish()))
-                    .fetchOptional().orElseThrow(()->Exceptions.notFound(" School Not Found"))
-                    .into(SchoolPojo.class);
-            school.setLatitude(batchRQ.getLat());
-            school.setLongitude(batchRQ.getLng());
-            dbSchool.getDao().update(school);
-        }
-
-        System.out.println(readAll);
-    }
+//    SchoolPojo update(UUID id, SchoolRequest payload) {
+//        sessionService.initDatabaseSession();
+//        var school = get(id);
+//        var nameI18n = Optional.ofNullable(dbI18N.getDao().fetchOneById(school.getNameI18nId()))
+//                .orElseThrow(() -> Exceptions.notFound("Name Not Found"));
+//        i18nMapper.merge(nameI18n, payload.getNameI18n());
+//        dbI18N.getDao().update(nameI18n);
+//        var addressI18n = Optional.ofNullable(dbI18N.getDao().fetchOneById(school.getDetailedAddressI18nId()))
+//                .orElseThrow(() -> Exceptions.notFound("Address Not Found"));
+//        i18nMapper.merge(addressI18n, payload.getDetailedAddressI18n());
+//        dbI18N.getDao().update(addressI18n);
+//        var cityTable = dbCity.getTable();
+//        var city = dbCity.getQuery(cityTable)
+//                .where(
+//                        cityTable.ID.eq(payload.getCityId())
+//                                .and(dbCity.validateCondition(cityTable))
+//                ).fetchOptional()
+//                .orElseThrow(() -> Exceptions.notFound("School City Not Found"))
+//                .into(DbCity.Result.class);
+//        schoolMapper.merge(school, payload);
+//        dbSchool.getDao().update(school.setCountryId(city.getCountryId()));
+//        return school;
+//    }
 
 
 //    @Cacheable(value = CacheTags.SECONDARY_SCHOOL, key = "#schoolLevelEnum", condition = "#schoolLevelEnum == T(unid.jooqMono.model.enums.SchoolLevelEnum).SECONDARY_SCHOOL")
@@ -323,5 +269,43 @@ public class SchoolService {
     }
 
 
+    public UniPageResponse<SchoolPayload> page(UniversityPageRequest request) {
+        var table = dbSchool.getTable();
+        List<SchoolPayload> payload = dbSchool.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                               DSL.select(
+                                       COUNTRY.asterisk(),
+                                       DSL.multiset(
+                                               DSL.selectFrom(I18N).where(I18N.ID.eq(COUNTRY.NAME_I18N_ID))
+                                       ).as(SchoolPayload.Country.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                               ).from(COUNTRY).where(COUNTRY.ID.eq(table.COUNTRY_ID))
+                        ).as(SchoolPayload.Fields.country).convertFrom(r->r.isEmpty()?null:r.get(0).into(SchoolPayload.Country.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.NAME_I18N_ID))
+                        ).as(SchoolPayload.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                )
+                .select(count().over().as(SchoolPayload.Fields.total))
+                .from(table)
+                .leftJoin(I18N).on(table.NAME_I18N_ID.eq(I18N.ID))
+                .where(StrUtil.isEmpty(request.getSearchKey())?DSL.noCondition():I18N.ENGLISH.contains(request.getSearchKey()).or(I18N.CHINESE_TRADITIONAL.contains(request.getSearchKey())).or(I18N.CHINESE_SIMPLIFIED.contains(request.getSearchKey())))
+                .orderBy(table.CREATED_ON.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(SchoolPayload.class);
 
+        int totalSize = payload.stream()
+                .findFirst()
+                .map(SchoolPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                payload
+        );
+    }
 }

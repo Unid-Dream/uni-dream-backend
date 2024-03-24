@@ -4,6 +4,7 @@
 package unid.jooqMono.model.tables;
 
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row18;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -125,6 +126,31 @@ public class SchoolTable extends TableImpl<SchoolRecord> {
      * The column <code>public.school.updated_by</code>.
      */
     public final TableField<SchoolRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.school.rate</code>.
+     */
+    public final TableField<SchoolRecord, BigDecimal> RATE = createField(DSL.name("rate"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public.school.population</code>.
+     */
+    public final TableField<SchoolRecord, BigDecimal> POPULATION = createField(DSL.name("population"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public.school.tuition</code>.
+     */
+    public final TableField<SchoolRecord, BigDecimal> TUITION = createField(DSL.name("tuition"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public.school.factor</code>.
+     */
+    public final TableField<SchoolRecord, String> FACTOR = createField(DSL.name("factor"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.school.description</code>.
+     */
+    public final TableField<SchoolRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     private SchoolTable(Name alias, Table<SchoolRecord> aliased) {
         this(alias, aliased, null);
@@ -255,12 +281,12 @@ public class SchoolTable extends TableImpl<SchoolRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row18 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row13<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row18<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, BigDecimal, BigDecimal, BigDecimal, String, String> fieldsRow() {
+        return (Row18) super.fieldsRow();
     }
 }

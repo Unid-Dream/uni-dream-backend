@@ -4,6 +4,7 @@
 package unid.jooqMono.model.tables;
 
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -15,7 +16,6 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row18;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -149,6 +149,31 @@ public class _AuditLogSchoolTable extends TableImpl<_AuditLogSchoolRecord> {
      */
     public final TableField<_AuditLogSchoolRecord, String> UPDATED_BY = createField(DSL.name("updated_by"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public._audit_log_school.rate</code>.
+     */
+    public final TableField<_AuditLogSchoolRecord, BigDecimal> RATE = createField(DSL.name("rate"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public._audit_log_school.population</code>.
+     */
+    public final TableField<_AuditLogSchoolRecord, BigDecimal> POPULATION = createField(DSL.name("population"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public._audit_log_school.tuition</code>.
+     */
+    public final TableField<_AuditLogSchoolRecord, BigDecimal> TUITION = createField(DSL.name("tuition"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public._audit_log_school.factor</code>.
+     */
+    public final TableField<_AuditLogSchoolRecord, String> FACTOR = createField(DSL.name("factor"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public._audit_log_school.description</code>.
+     */
+    public final TableField<_AuditLogSchoolRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
+
     private _AuditLogSchoolTable(Name alias, Table<_AuditLogSchoolRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -222,15 +247,5 @@ public class _AuditLogSchoolTable extends TableImpl<_AuditLogSchoolRecord> {
     @Nonnull
     public _AuditLogSchoolTable rename(Name name) {
         return new _AuditLogSchoolTable(name, null);
-    }
-
-    // -------------------------------------------------------------------------
-    // Row18 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row18) super.fieldsRow();
     }
 }

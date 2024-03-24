@@ -149,7 +149,6 @@ public class CountryController {
     @Operation(
             summary = "Create One"
     )
-    @Hidden
     public @Valid UnifiedResponse<CountryPayload> create(
             @PathVariable("userId") UUID userId,
             @RequestBody @Valid
@@ -172,7 +171,6 @@ public class CountryController {
     @Operation(
             summary = "Update One"
     )
-    @Hidden
     public @Valid UnifiedResponse<CountryResponse> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid

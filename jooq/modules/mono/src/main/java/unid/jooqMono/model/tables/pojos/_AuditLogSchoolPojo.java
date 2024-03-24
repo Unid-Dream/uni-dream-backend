@@ -6,6 +6,7 @@ package unid.jooqMono.model.tables.pojos;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -51,6 +52,11 @@ public class _AuditLogSchoolPojo implements Serializable {
     private String          createdBy;
     private OffsetDateTime  updatedOn;
     private String          updatedBy;
+    private BigDecimal      rate;
+    private BigDecimal      population;
+    private BigDecimal      tuition;
+    private String          factor;
+    private String          description;
 
     public _AuditLogSchoolPojo() {}
 
@@ -73,9 +79,14 @@ public class _AuditLogSchoolPojo implements Serializable {
         this.createdBy = value.createdBy;
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
+        this.rate = value.rate;
+        this.population = value.population;
+        this.tuition = value.tuition;
+        this.factor = value.factor;
+        this.description = value.description;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "rate", "population", "tuition", "factor", "description" })
     public _AuditLogSchoolPojo(
         @Nonnull Long            auditSeq,
         @Nonnull OffsetDateTime  auditCreatedon,
@@ -94,7 +105,12 @@ public class _AuditLogSchoolPojo implements Serializable {
         @Nullable OffsetDateTime  createdOn,
         @Nullable String          createdBy,
         @Nullable OffsetDateTime  updatedOn,
-        @Nullable String          updatedBy
+        @Nullable String          updatedBy,
+        @Nullable BigDecimal      rate,
+        @Nullable BigDecimal      population,
+        @Nullable BigDecimal      tuition,
+        @Nullable String          factor,
+        @Nullable String          description
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -114,6 +130,11 @@ public class _AuditLogSchoolPojo implements Serializable {
         this.createdBy = createdBy;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
+        this.rate = rate;
+        this.population = population;
+        this.tuition = tuition;
+        this.factor = factor;
+        this.description = description;
     }
 
     /**
@@ -410,6 +431,86 @@ public class _AuditLogSchoolPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_school.rate</code>.
+     */
+    @Nullable
+    public BigDecimal getRate() {
+        return this.rate;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.rate</code>.
+     */
+    public _AuditLogSchoolPojo setRate(@Nullable BigDecimal rate) {
+        this.rate = rate;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_school.population</code>.
+     */
+    @Nullable
+    public BigDecimal getPopulation() {
+        return this.population;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.population</code>.
+     */
+    public _AuditLogSchoolPojo setPopulation(@Nullable BigDecimal population) {
+        this.population = population;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_school.tuition</code>.
+     */
+    @Nullable
+    public BigDecimal getTuition() {
+        return this.tuition;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.tuition</code>.
+     */
+    public _AuditLogSchoolPojo setTuition(@Nullable BigDecimal tuition) {
+        this.tuition = tuition;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_school.factor</code>.
+     */
+    @Nullable
+    public String getFactor() {
+        return this.factor;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.factor</code>.
+     */
+    public _AuditLogSchoolPojo setFactor(@Nullable String factor) {
+        this.factor = factor;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_school.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.description</code>.
+     */
+    public _AuditLogSchoolPojo setDescription(@Nullable String description) {
+        this.description = description;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogSchoolPojo (");
@@ -432,6 +533,11 @@ public class _AuditLogSchoolPojo implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
+        sb.append(", ").append(rate);
+        sb.append(", ").append(population);
+        sb.append(", ").append(tuition);
+        sb.append(", ").append(factor);
+        sb.append(", ").append(description);
 
         sb.append(")");
         return sb.toString();

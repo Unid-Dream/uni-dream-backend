@@ -60,6 +60,16 @@ public enum UniErrorCode{
     ACADEMIC_SUBJECT_IS_NOT_EXIST(11002, "Academic Subject 不存在!!!"),
     ACADEMIC_SUBJECT_MAP_IS_NOT_EXIST(11003, "Academic Subject Map 不存在!!!"),
 
+    // ---------------------------------- Country -----------------------------------------------
+    COUNTRY_IS_NOT_EXIST(12001, "Country 不存在!!!"),
+    // ---------------------------------- Language -----------------------------------------------
+    LANGUAGE_IS_NOT_EXIST(13001, "Language 不存在!!!"),
+
+
+    // ---------------------------------- Description -----------------------------------------------
+    DESCRIPTION_IS_NOT_EXIST(13001, "Description 不存在!!!"),
+
+
     ;
 
     private final String code;

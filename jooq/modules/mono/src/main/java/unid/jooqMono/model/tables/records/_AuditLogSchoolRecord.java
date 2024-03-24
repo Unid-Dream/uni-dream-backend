@@ -5,6 +5,7 @@ package unid.jooqMono.model.tables.records;
 
 
 import java.beans.ConstructorProperties;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -13,9 +14,6 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
-import org.jooq.Field;
-import org.jooq.Record18;
-import org.jooq.Row18;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.enums.SchoolLevelEnum;
@@ -35,7 +33,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogSchoolPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord> implements Record18<Long, OffsetDateTime, String, String, String, UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
+public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord> {
 
     private static final long serialVersionUID = 1L;
 
@@ -333,494 +331,84 @@ public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord
         return (String) get(17);
     }
 
-    // -------------------------------------------------------------------------
-    // Record18 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row18) super.fieldsRow();
-    }
-
-    @Override
-    @Nonnull
-    public Row18<Long, OffsetDateTime, String, String, String, UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row18) super.valuesRow();
-    }
-
-    @Override
-    @Nonnull
-    public Field<Long> field1() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.AUDIT_SEQ;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field2() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.AUDIT_CREATEDON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field3() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.AUDIT_CREATEDBY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field4() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.AUDIT_OPERATION;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field5() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.AUDIT_TYPE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field6() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<SchoolLevelEnum> field7() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.SCHOOL_LEVEL;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field8() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.NAME_I18N_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field9() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.COUNTRY_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field10() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.CITY_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field11() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.LONGITUDE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field12() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.LATITUDE;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field13() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.DETAILED_ADDRESS_I18N_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<UUID> field14() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.TAG_ID;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field15() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.CREATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field16() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.CREATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Field<OffsetDateTime> field17() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.UPDATED_ON;
-    }
-
-    @Override
-    @Nonnull
-    public Field<String> field18() {
-        return _AuditLogSchoolTable._AUDIT_LOG_SCHOOL.UPDATED_BY;
-    }
-
-    @Override
-    @Nonnull
-    public Long component1() {
-        return getAuditSeq();
-    }
-
-    @Override
-    @Nonnull
-    public OffsetDateTime component2() {
-        return getAuditCreatedon();
-    }
-
-    @Override
-    @Nonnull
-    public String component3() {
-        return getAuditCreatedby();
-    }
-
-    @Override
-    @Nonnull
-    public String component4() {
-        return getAuditOperation();
-    }
-
-    @Override
-    @Nonnull
-    public String component5() {
-        return getAuditType();
-    }
-
-    @Override
-    @Nonnull
-    public UUID component6() {
-        return getId();
-    }
-
-    @Override
-    @Nullable
-    public SchoolLevelEnum component7() {
-        return getSchoolLevel();
-    }
-
-    @Override
-    @Nullable
-    public UUID component8() {
-        return getNameI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component9() {
-        return getCountryId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component10() {
-        return getCityId();
-    }
-
-    @Override
-    @Nullable
-    public String component11() {
-        return getLongitude();
-    }
-
-    @Override
-    @Nullable
-    public String component12() {
-        return getLatitude();
-    }
-
-    @Override
-    @Nullable
-    public UUID component13() {
-        return getDetailedAddressI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID component14() {
-        return getTagId();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component15() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component16() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime component17() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String component18() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public Long value1() {
-        return getAuditSeq();
-    }
-
-    @Override
-    @Nonnull
-    public OffsetDateTime value2() {
-        return getAuditCreatedon();
-    }
-
-    @Override
-    @Nonnull
-    public String value3() {
-        return getAuditCreatedby();
-    }
-
-    @Override
-    @Nonnull
-    public String value4() {
-        return getAuditOperation();
-    }
-
-    @Override
-    @Nonnull
-    public String value5() {
-        return getAuditType();
-    }
-
-    @Override
-    @Nonnull
-    public UUID value6() {
-        return getId();
-    }
-
-    @Override
-    @Nullable
-    public SchoolLevelEnum value7() {
-        return getSchoolLevel();
-    }
-
-    @Override
-    @Nullable
-    public UUID value8() {
-        return getNameI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value9() {
-        return getCountryId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value10() {
-        return getCityId();
-    }
-
-    @Override
-    @Nullable
-    public String value11() {
-        return getLongitude();
-    }
-
-    @Override
-    @Nullable
-    public String value12() {
-        return getLatitude();
-    }
-
-    @Override
-    @Nullable
-    public UUID value13() {
-        return getDetailedAddressI18nId();
-    }
-
-    @Override
-    @Nullable
-    public UUID value14() {
-        return getTagId();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value15() {
-        return getCreatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value16() {
-        return getCreatedBy();
-    }
-
-    @Override
-    @Nullable
-    public OffsetDateTime value17() {
-        return getUpdatedOn();
-    }
-
-    @Override
-    @Nullable
-    public String value18() {
-        return getUpdatedBy();
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value1(@Nonnull Long value) {
-        setAuditSeq(value);
+    /**
+     * Setter for <code>public._audit_log_school.rate</code>.
+     */
+    public _AuditLogSchoolRecord setRate(@Nullable BigDecimal value) {
+        set(18, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value2(@Nonnull OffsetDateTime value) {
-        setAuditCreatedon(value);
+    /**
+     * Getter for <code>public._audit_log_school.rate</code>.
+     */
+    @Nullable
+    public BigDecimal getRate() {
+        return (BigDecimal) get(18);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.population</code>.
+     */
+    public _AuditLogSchoolRecord setPopulation(@Nullable BigDecimal value) {
+        set(19, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value3(@Nonnull String value) {
-        setAuditCreatedby(value);
+    /**
+     * Getter for <code>public._audit_log_school.population</code>.
+     */
+    @Nullable
+    public BigDecimal getPopulation() {
+        return (BigDecimal) get(19);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.tuition</code>.
+     */
+    public _AuditLogSchoolRecord setTuition(@Nullable BigDecimal value) {
+        set(20, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value4(@Nonnull String value) {
-        setAuditOperation(value);
+    /**
+     * Getter for <code>public._audit_log_school.tuition</code>.
+     */
+    @Nullable
+    public BigDecimal getTuition() {
+        return (BigDecimal) get(20);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.factor</code>.
+     */
+    public _AuditLogSchoolRecord setFactor(@Nullable String value) {
+        set(21, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value5(@Nonnull String value) {
-        setAuditType(value);
+    /**
+     * Getter for <code>public._audit_log_school.factor</code>.
+     */
+    @Nullable
+    public String getFactor() {
+        return (String) get(21);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_school.description</code>.
+     */
+    public _AuditLogSchoolRecord setDescription(@Nullable String value) {
+        set(22, value);
         return this;
     }
 
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value6(@Nonnull UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value7(@Nullable SchoolLevelEnum value) {
-        setSchoolLevel(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value8(@Nullable UUID value) {
-        setNameI18nId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value9(@Nullable UUID value) {
-        setCountryId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value10(@Nullable UUID value) {
-        setCityId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value11(@Nullable String value) {
-        setLongitude(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value12(@Nullable String value) {
-        setLatitude(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value13(@Nullable UUID value) {
-        setDetailedAddressI18nId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value14(@Nullable UUID value) {
-        setTagId(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value15(@Nullable OffsetDateTime value) {
-        setCreatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value16(@Nullable String value) {
-        setCreatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value17(@Nullable OffsetDateTime value) {
-        setUpdatedOn(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord value18(@Nullable String value) {
-        setUpdatedBy(value);
-        return this;
-    }
-
-    @Override
-    @Nonnull
-    public _AuditLogSchoolRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable SchoolLevelEnum value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable UUID value10, @Nullable String value11, @Nullable String value12, @Nullable UUID value13, @Nullable UUID value14, @Nullable OffsetDateTime value15, @Nullable String value16, @Nullable OffsetDateTime value17, @Nullable String value18) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        value5(value5);
-        value6(value6);
-        value7(value7);
-        value8(value8);
-        value9(value9);
-        value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
-        value15(value15);
-        value16(value16);
-        value17(value17);
-        value18(value18);
-        return this;
+    /**
+     * Getter for <code>public._audit_log_school.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return (String) get(22);
     }
 
     // -------------------------------------------------------------------------
@@ -837,8 +425,8 @@ public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord
     /**
      * Create a detached, initialised _AuditLogSchoolRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public _AuditLogSchoolRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable SchoolLevelEnum schoolLevel, @Nullable UUID nameI18nId, @Nullable UUID countryId, @Nullable UUID cityId, @Nullable String longitude, @Nullable String latitude, @Nullable UUID detailedAddressI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "rate", "population", "tuition", "factor", "description" })
+    public _AuditLogSchoolRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable SchoolLevelEnum schoolLevel, @Nullable UUID nameI18nId, @Nullable UUID countryId, @Nullable UUID cityId, @Nullable String longitude, @Nullable String latitude, @Nullable UUID detailedAddressI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable BigDecimal rate, @Nullable BigDecimal population, @Nullable BigDecimal tuition, @Nullable String factor, @Nullable String description) {
         super(_AuditLogSchoolTable._AUDIT_LOG_SCHOOL);
 
         setAuditSeq(auditSeq);
@@ -859,6 +447,11 @@ public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setRate(rate);
+        setPopulation(population);
+        setTuition(tuition);
+        setFactor(factor);
+        setDescription(description);
     }
 
     /**
@@ -886,6 +479,11 @@ public class _AuditLogSchoolRecord extends TableRecordImpl<_AuditLogSchoolRecord
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setRate(value.getRate());
+            setPopulation(value.getPopulation());
+            setTuition(value.getTuition());
+            setFactor(value.getFactor());
+            setDescription(value.getDescription());
         }
     }
 }

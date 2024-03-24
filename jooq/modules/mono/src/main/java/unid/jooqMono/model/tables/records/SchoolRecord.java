@@ -5,6 +5,7 @@ package unid.jooqMono.model.tables.records;
 
 
 import java.beans.ConstructorProperties;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -14,8 +15,8 @@ import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record13;
-import org.jooq.Row13;
+import org.jooq.Record18;
+import org.jooq.Row18;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.enums.SchoolLevelEnum;
@@ -35,7 +36,7 @@ import unid.jooqMono.model.tables.pojos.SchoolPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements Record13<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> {
+public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements Record18<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, BigDecimal, BigDecimal, BigDecimal, String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -247,6 +248,86 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
         return (String) get(12);
     }
 
+    /**
+     * Setter for <code>public.school.rate</code>.
+     */
+    public SchoolRecord setRate(@Nullable BigDecimal value) {
+        set(13, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.rate</code>.
+     */
+    @Nullable
+    public BigDecimal getRate() {
+        return (BigDecimal) get(13);
+    }
+
+    /**
+     * Setter for <code>public.school.population</code>.
+     */
+    public SchoolRecord setPopulation(@Nullable BigDecimal value) {
+        set(14, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.population</code>.
+     */
+    @Nullable
+    public BigDecimal getPopulation() {
+        return (BigDecimal) get(14);
+    }
+
+    /**
+     * Setter for <code>public.school.tuition</code>.
+     */
+    public SchoolRecord setTuition(@Nullable BigDecimal value) {
+        set(15, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.tuition</code>.
+     */
+    @Nullable
+    public BigDecimal getTuition() {
+        return (BigDecimal) get(15);
+    }
+
+    /**
+     * Setter for <code>public.school.factor</code>.
+     */
+    public SchoolRecord setFactor(@Nullable String value) {
+        set(16, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.factor</code>.
+     */
+    @Nullable
+    public String getFactor() {
+        return (String) get(16);
+    }
+
+    /**
+     * Setter for <code>public.school.description</code>.
+     */
+    public SchoolRecord setDescription(@Nullable String value) {
+        set(17, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.school.description</code>.
+     */
+    @Nullable
+    public String getDescription() {
+        return (String) get(17);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -258,19 +339,19 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
     }
 
     // -------------------------------------------------------------------------
-    // Record13 type implementation
+    // Record18 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row13<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row18<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, BigDecimal, BigDecimal, BigDecimal, String, String> fieldsRow() {
+        return (Row18) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row13<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String> valuesRow() {
-        return (Row13) super.valuesRow();
+    public Row18<UUID, SchoolLevelEnum, UUID, UUID, UUID, String, String, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, BigDecimal, BigDecimal, BigDecimal, String, String> valuesRow() {
+        return (Row18) super.valuesRow();
     }
 
     @Override
@@ -353,6 +434,36 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
 
     @Override
     @Nonnull
+    public Field<BigDecimal> field14() {
+        return SchoolTable.SCHOOL.RATE;
+    }
+
+    @Override
+    @Nonnull
+    public Field<BigDecimal> field15() {
+        return SchoolTable.SCHOOL.POPULATION;
+    }
+
+    @Override
+    @Nonnull
+    public Field<BigDecimal> field16() {
+        return SchoolTable.SCHOOL.TUITION;
+    }
+
+    @Override
+    @Nonnull
+    public Field<String> field17() {
+        return SchoolTable.SCHOOL.FACTOR;
+    }
+
+    @Override
+    @Nonnull
+    public Field<String> field18() {
+        return SchoolTable.SCHOOL.DESCRIPTION;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -427,6 +538,36 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
     @Nullable
     public String component13() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal component14() {
+        return getRate();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal component15() {
+        return getPopulation();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal component16() {
+        return getTuition();
+    }
+
+    @Override
+    @Nullable
+    public String component17() {
+        return getFactor();
+    }
+
+    @Override
+    @Nullable
+    public String component18() {
+        return getDescription();
     }
 
     @Override
@@ -505,6 +646,36 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
     @Nullable
     public String value13() {
         return getUpdatedBy();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal value14() {
+        return getRate();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal value15() {
+        return getPopulation();
+    }
+
+    @Override
+    @Nullable
+    public BigDecimal value16() {
+        return getTuition();
+    }
+
+    @Override
+    @Nullable
+    public String value17() {
+        return getFactor();
+    }
+
+    @Override
+    @Nullable
+    public String value18() {
+        return getDescription();
     }
 
     @Override
@@ -600,7 +771,42 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
 
     @Override
     @Nonnull
-    public SchoolRecord values(@Nonnull UUID value1, @Nullable SchoolLevelEnum value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable UUID value5, @Nullable String value6, @Nullable String value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13) {
+    public SchoolRecord value14(@Nullable BigDecimal value) {
+        setRate(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public SchoolRecord value15(@Nullable BigDecimal value) {
+        setPopulation(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public SchoolRecord value16(@Nullable BigDecimal value) {
+        setTuition(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public SchoolRecord value17(@Nullable String value) {
+        setFactor(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public SchoolRecord value18(@Nullable String value) {
+        setDescription(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public SchoolRecord values(@Nonnull UUID value1, @Nullable SchoolLevelEnum value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable UUID value5, @Nullable String value6, @Nullable String value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13, @Nullable BigDecimal value14, @Nullable BigDecimal value15, @Nullable BigDecimal value16, @Nullable String value17, @Nullable String value18) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -614,6 +820,11 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
         value11(value11);
         value12(value12);
         value13(value13);
+        value14(value14);
+        value15(value15);
+        value16(value16);
+        value17(value17);
+        value18(value18);
         return this;
     }
 
@@ -631,8 +842,8 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
     /**
      * Create a detached, initialised SchoolRecord
      */
-    @ConstructorProperties({ "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy" })
-    public SchoolRecord(@Nonnull UUID id, @Nullable SchoolLevelEnum schoolLevel, @Nullable UUID nameI18nId, @Nullable UUID countryId, @Nullable UUID cityId, @Nullable String longitude, @Nullable String latitude, @Nullable UUID detailedAddressI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy) {
+    @ConstructorProperties({ "id", "schoolLevel", "nameI18nId", "countryId", "cityId", "longitude", "latitude", "detailedAddressI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "rate", "population", "tuition", "factor", "description" })
+    public SchoolRecord(@Nonnull UUID id, @Nullable SchoolLevelEnum schoolLevel, @Nullable UUID nameI18nId, @Nullable UUID countryId, @Nullable UUID cityId, @Nullable String longitude, @Nullable String latitude, @Nullable UUID detailedAddressI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable BigDecimal rate, @Nullable BigDecimal population, @Nullable BigDecimal tuition, @Nullable String factor, @Nullable String description) {
         super(SchoolTable.SCHOOL);
 
         setId(id);
@@ -648,6 +859,11 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
         setCreatedBy(createdBy);
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
+        setRate(rate);
+        setPopulation(population);
+        setTuition(tuition);
+        setFactor(factor);
+        setDescription(description);
     }
 
     /**
@@ -670,6 +886,11 @@ public class SchoolRecord extends UpdatableRecordImpl<SchoolRecord> implements R
             setCreatedBy(value.getCreatedBy());
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
+            setRate(value.getRate());
+            setPopulation(value.getPopulation());
+            setTuition(value.getTuition());
+            setFactor(value.getFactor());
+            setDescription(value.getDescription());
         }
     }
 }

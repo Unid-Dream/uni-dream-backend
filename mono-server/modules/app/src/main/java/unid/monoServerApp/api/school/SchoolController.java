@@ -31,10 +31,7 @@ import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.SchoolMapper;
-import unid.monoServerMeta.api.SchoolMapResponse;
-import unid.monoServerMeta.api.SchoolRequest;
-import unid.monoServerMeta.api.SchoolResponse;
-import unid.monoServerMeta.api.TagResponse;
+import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
@@ -116,6 +113,65 @@ public class SchoolController {
         );
     }
 
+
+    @GetMapping("admin/{userId}/school/page")
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<SchoolPayload>> page(
+            @PathVariable("userId") UUID userId,
+            @ParameterObject
+            @Valid
+            UniversityPageRequest request
+    ) {
+        return UnifiedResponse.of(
+                schoolService.page(request)
+        );
+    }
+
+
+
+    @PostMapping("admin/{userId}/school")
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create"
+    )
+    public @Valid UnifiedResponse<SchoolPayload> create(
+            @PathVariable("userId") UUID userId,
+            @RequestBody SchoolPayload payload
+    ) {
+        return UnifiedResponse.of(
+                schoolService.get(
+                        schoolService.create(payload).getId()
+                )
+        );
+    }
+
+    @GetMapping("admin/{userId}/school/{id}")
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get"
+    )
+    public @Valid UnifiedResponse<SchoolPayload> get(
+            @PathVariable("userId") UUID userId,
+            @PathVariable("id") UUID id
+    ) {
+        return UnifiedResponse.of(
+                schoolService.get(id)
+        );
+    }
+
+
     @GetMapping("student/school/{id}")
     @ACL(
             authed = true
@@ -130,36 +186,37 @@ public class SchoolController {
     ) {
         var result = schoolService.get(id);
         return UnifiedResponse.of(
-                schoolMapper.toResponse(result)
+//                schoolMapper.toResponse(result)
+                null
         );
     }
 
-    @PostMapping("student/school/")
-    @Transactional
-    @ACL(
-            authed = true,
-            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(
-            summary = "Create One"
-    )
-    @Hidden
-    public @Valid UnifiedResponse<SchoolResponse> create(
-            @RequestBody @Valid
-            SchoolRequest payload
-    ) {
-        var result = schoolService.get(
-                schoolService.create(payload)
-                        .getId()
-        );
-        var resp = schoolMapper.toResponse(result);
-        return UnifiedResponse.of(
-                resp
-        );
-    }
+//    @PostMapping("admin/{userId}/university")
+//    @Transactional
+//    @ACL(
+//            authed = true,
+//            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
+//    )
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @Operation(
+//            summary = "Create One"
+//    )
+//    @Hidden
+//    public @Valid UnifiedResponse<SchoolResponse> create(
+//            @RequestBody @Valid
+//            UniversityPayload payload
+//    ) {
+//        var result = schoolService.get(
+//                schoolService.create(payload)
+//                        .getId()
+//        );
+//        var resp = schoolMapper.toResponse(result);
+//        return UnifiedResponse.of(
+//                resp
+//        );
+//    }
 
-    @PutMapping("student/school/{id}")
+    @PutMapping("admin/{userId}/school")
     @Transactional
     @ACL(
             authed = true,
@@ -169,18 +226,16 @@ public class SchoolController {
     @Operation(
             summary = "Update One"
     )
-    @Hidden
-    public @Valid UnifiedResponse<SchoolResponse> update(
-            @PathVariable("id") UUID id,
+    public @Valid UnifiedResponse<SchoolPayload> update(
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
-            SchoolRequest payload
+            SchoolPayload payload
     ) {
-        var result = schoolService.get(
-                schoolService.update(id, payload)
-                        .getId()
-        );
         return UnifiedResponse.of(
-                schoolMapper.toResponse(result)
+                schoolService.get(
+                        schoolService.update(payload)
+                                .getId()
+                )
         );
     }
 
