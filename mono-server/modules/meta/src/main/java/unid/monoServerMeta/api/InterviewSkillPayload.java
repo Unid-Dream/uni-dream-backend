@@ -1,6 +1,7 @@
 package unid.monoServerMeta.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -13,12 +14,16 @@ import java.util.UUID;
 
 @Data
 @FieldNameConstants
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class InterviewSkillPayload {
 
     @NotNull
     private UUID id;
     private String uploadedFile;
-    
+
+
+
+    private I18n topic;
     private StudentProfile studentProfile;
     private OffsetDateTime submissionTime;
     private ReviewStatus status;
@@ -85,4 +90,6 @@ public class InterviewSkillPayload {
         private String improvement;
         private String warpUp;
     }
+
+
 }

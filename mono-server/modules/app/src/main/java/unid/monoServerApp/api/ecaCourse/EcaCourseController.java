@@ -14,10 +14,7 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pwh.coreRsqlJooq.jooq.PaginatedQuery;
 import pwh.coreRsqlJooq.jooq.PaginatedQuerySorting;
 import pwh.coreRsqlJooq.model.PaginationRequest;
@@ -33,6 +30,7 @@ import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerMeta.api.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -61,5 +59,59 @@ public class EcaCourseController {
             EcaCoursePageRequest payload
     ) {
          return UnifiedResponse.of(ecaCourseService.page(payload));
+    }
+
+
+    @PostMapping("/admin/ecaCourse")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Create"
+    )
+    public @Valid UnifiedResponse<Void> create(
+            @Valid
+            @ParameterObject
+            EcaCourseRequest payload
+    ) {
+        ecaCourseService.create(payload);
+        return UnifiedResponse.of(null);
+    }
+
+    @PutMapping("/admin/ecaCourse")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update"
+    )
+    public @Valid UnifiedResponse<Void> update(
+            @Valid
+            @ParameterObject
+            EcaCourseRequest payload
+    ) {
+        ecaCourseService.create(payload);
+        return UnifiedResponse.of(null);
+    }
+
+
+    @GetMapping("/admin/ecaCourse/{id}")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update"
+    )
+    public @Valid UnifiedResponse<Void> get(
+            @PathVariable("id") @NotNull UUID id
+    ) {
+        ecaCourseService.get(id);
+        return UnifiedResponse.of(null);
     }
 }

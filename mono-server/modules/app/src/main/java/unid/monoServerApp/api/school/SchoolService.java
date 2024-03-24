@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.multiset;
 import static pwh.springWebStarter.response.UniErrorCode.COUNTRY_IS_NOT_EXIST;
+import static pwh.springWebStarter.response.UniErrorCode.SCHOOL_LEVEL_IS_NOT_EXIST;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -100,11 +101,26 @@ public class SchoolService {
     @Transactional(rollbackFor = Exception.class)
     SchoolPojo create(SchoolPayload payload) {
         sessionService.initDatabaseSession();
-        var nameI18n = i18nMapper.toPojo(payload.getNameI18n());
+        var name = i18nMapper.toPojo(payload.getNameI18n());
+        dbI18N.getDao().insert(name);
         SchoolPojo pojo = schoolMapper.toPojo(payload);
-        pojo.setNameI18nId(nameI18n.getId());
+        pojo.setNameI18nId(name.getId());
         pojo.setCountryId(payload.getCountry().getId());
         dbSchool.getDao().insert(pojo);
+        //查询TagCategory
+        Optional.ofNullable(pojo.getSchoolLevel())
+                .ifPresent(
+                        schoolLevel -> {
+                            TagPojo tag = new TagPojo()
+                                    .setDescriptionI18nId(name.getId());
+                            if(schoolLevel.equals(SchoolLevelEnum.UNIVERSITY)){
+                                tag.setTagCategory(TagCategoryEnum.UNIVERSITY);
+                            }else{
+                                tag.setTagCategory(TagCategoryEnum.SECONDARY_SCHOOL);
+                            }
+                            dbTag.getDao().insert(tag);
+                        }
+                );
         return pojo;
     }
 
@@ -117,7 +133,7 @@ public class SchoolService {
         pojo.setCountryId(payload.getCountry().getId());
         schoolMapper.merge(pojo,payload);
         var name = dbI18N.getDao().fetchOneById(
-                payload.getId()
+                pojo.getNameI18nId()
         );
         i18nMapper.merge(name,payload.getNameI18n());
         dbI18N.getDao().update(name);
@@ -269,7 +285,7 @@ public class SchoolService {
     }
 
 
-    public UniPageResponse<SchoolPayload> page(UniversityPageRequest request) {
+    public UniPageResponse<SchoolPayload> page(SchoolPageRequest request,SchoolLevelEnum schoolLevel) {
         var table = dbSchool.getTable();
         List<SchoolPayload> payload = dbSchool.getDsl()
                 .select(
@@ -290,6 +306,7 @@ public class SchoolService {
                 .from(table)
                 .leftJoin(I18N).on(table.NAME_I18N_ID.eq(I18N.ID))
                 .where(StrUtil.isEmpty(request.getSearchKey())?DSL.noCondition():I18N.ENGLISH.contains(request.getSearchKey()).or(I18N.CHINESE_TRADITIONAL.contains(request.getSearchKey())).or(I18N.CHINESE_SIMPLIFIED.contains(request.getSearchKey())))
+                .and(table.SCHOOL_LEVEL.eq(schoolLevel))
                 .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())

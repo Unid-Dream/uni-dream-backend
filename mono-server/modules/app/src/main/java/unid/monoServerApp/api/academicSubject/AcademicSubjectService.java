@@ -30,11 +30,13 @@ import unid.monoServerMeta.model.I18n;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.multiset;
+import static pwh.springWebStarter.response.UniErrorCode.ACADEMIC_SUBJECT_MAP_IS_NOT_EXIST;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -63,11 +65,9 @@ public class AcademicSubjectService {
 
 
     AcademicSubjectPayload get(UUID id){
-//        var table = db.getTable();
-
         return dbAcademicSubject.getDsl()
                 .select(
-                        ACADEMIC_MAJOR_SUBJECT_MAP.asterisk(),
+                        ACADEMIC_SUBJECT.asterisk(),
                         DSL.multiset(
                                 DSL.selectFrom(I18N).where(ACADEMIC_SUBJECT.TITLE_I18N_ID.eq(I18N.ID))
                         ).as(AcademicSubjectPayload.Fields.titleI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
@@ -98,11 +98,10 @@ public class AcademicSubjectService {
                                         .where(ACADEMIC_SUBJECT.ID.eq(ACADEMIC_SUBJECT_RESOURCE.ACADEMIC_SUBJECT_ID))
                         ).as(AcademicSubjectPayload.Fields.resources).convertFrom(r->r.isEmpty()?null:r.into(AcademicSubjectPayload.AcademicSubjectResourcePayload.class))
                 )
-                .select(count().over().as(AcademicSubjectPayload.Fields.total))
                 .from(ACADEMIC_MAJOR_SUBJECT_MAP,ACADEMIC_SUBJECT,I18N)
                 .where(
                         ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID.eq(ACADEMIC_SUBJECT.ID).and(ACADEMIC_SUBJECT.TITLE_I18N_ID.eq(I18N.ID))
-                ).and(ACADEMIC_MAJOR_SUBJECT_MAP.ID.eq(id))
+                ).and(ACADEMIC_SUBJECT.ID.eq(id))
                 .fetchOneInto(AcademicSubjectPayload.class);
     }
 
@@ -152,12 +151,17 @@ public class AcademicSubjectService {
         if(resources == null){
             return;
         }
-        resources.forEach(pojo->{
-            I18nPojo i18n = i18nMapper.toPojo(pojo.getTitleI18n());
-            dbI18N.getDao().insert(i18n);
+        var table = dbAcademicSubjectResource.getTable();
 
+        dbAcademicSubjectResource.getDsl().deleteFrom(table)
+                        .where(table.ACADEMIC_SUBJECT_ID.eq(subjectId))
+                                .execute();
+        resources.forEach(resource->{
+            I18nPojo i18n = i18nMapper.toPojo(resource.getTitleI18n());
+            dbI18N.getDao().insert(i18n);
+            //查询 resource id 是否存在
             dbAcademicSubjectResource.getDao()
-                    .update(academicSubjectResourceMapper.toPojo(pojo)
+                    .insert(academicSubjectResourceMapper.toPojo(resource)
                             .setTitleI18nId(i18n.getId())
                             .setAcademicSubjectId(subjectId));
         });
@@ -260,7 +264,7 @@ public class AcademicSubjectService {
     public UniPageResponse<AcademicSubjectPayload> page(AcademicSubjectPageRequest request) {
         List<AcademicSubjectPayload> payload = dbAcademicSubject.getDsl()
                 .select(
-                        ACADEMIC_MAJOR_SUBJECT_MAP.asterisk(),
+                        ACADEMIC_SUBJECT.asterisk(),
                         DSL.multiset(
                                 DSL.selectFrom(I18N).where(ACADEMIC_SUBJECT.TITLE_I18N_ID.eq(I18N.ID))
                         ).as(AcademicSubjectPayload.Fields.titleI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
@@ -319,47 +323,34 @@ public class AcademicSubjectService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(AcademicSubjectPayload payload) {
+    AcademicSubjectPojo update(AcademicSubjectPayload payload) {
         sessionService.initDatabaseSession();
-        AcademicSubjectPojo pojo = dbAcademicSubject.getDao().fetchOneById(
-                Optional.ofNullable(
-                        dbAcademicMajorSubjectMap.getDao().fetchOneById(payload.getId())
-                ).map(AcademicMajorSubjectMapPojo::getAcademicSubjectId)
-                        .orElseThrow(()->Exceptions.business(UniErrorCode.ACADEMIC_SUBJECT_MAP_IS_NOT_EXIST))
+        var subject = dbAcademicSubject.getDao().fetchOneById(payload.getId());
+        Optional.ofNullable(subject).orElseThrow(()->Exceptions.business(UniErrorCode.ACADEMIC_SUBJECT_IS_NOT_EXIST));
+        academicSubjectMapper.merge(subject, payload);
+        dbAcademicSubject.getDao().update(subject);
 
-        );
 
-        academicSubjectMapper.merge(pojo, payload);
+        var academicMajorSubjectMap = dbAcademicMajorSubjectMap.getDsl()
+                        .select().from(ACADEMIC_MAJOR_SUBJECT_MAP)
+                        .where(ACADEMIC_MAJOR_SUBJECT_MAP.ACADEMIC_SUBJECT_ID.eq(subject.getId()))
+                        .fetchOptional().orElseThrow(()->Exceptions.business(ACADEMIC_SUBJECT_MAP_IS_NOT_EXIST))
+                        .into(AcademicMajorSubjectMapPojo.class);
+        academicMajorSubjectMap.setAcademicMajorId(payload.getMajor().getId());
+        dbAcademicMajorSubjectMap.getDao().update(academicMajorSubjectMap);
 
-        Optional.ofNullable(pojo)
-                .orElseThrow(()->Exceptions.business(UniErrorCode.ACADEMIC_SUBJECT_IS_NOT_EXIST));
 
-        Optional.ofNullable(
-                pojo.getTitleI18nId()
-        ).ifPresent(id-> dbI18N.getDao().update(
-                i18nMapper.toPojo(payload.getTitleI18n()).setId(id)
-        ));
+        Optional.ofNullable(subject.getTitleI18nId()).ifPresent((id)->{
+            dbI18N.getDao().update(i18nMapper.toPojo(payload.getTitleI18n()).setId(id));
+        });
 
-        Optional.ofNullable(
-                pojo.getDescriptionI18nId()
-        ).ifPresent(id-> dbI18N.getDao().update(
-                i18nMapper.toPojo(payload.getDescriptionI18n()).setId(id)
-        ));
+        Optional.ofNullable(subject.getDescriptionI18nId()).ifPresent((id)->{
+            dbI18N.getDao().update(i18nMapper.toPojo(payload.getDescriptionI18n()).setId(id));
+        });
 
-        dbAcademicSubject.getDao().update(pojo);
-        //更新 major - subject
-        dbAcademicMajorSubjectMap.getDao().update(
-                new AcademicMajorSubjectMapPojo()
-                        .setAcademicSubjectId(pojo.getId())
-                        .setAcademicMajorId(payload.getMajor().getId())
-        );
+        insertOrUpdateResources(subject.getId(),payload.getResources());
 
-        dbAcademicSubjectResource.getDsl().deleteFrom(
-                dbAcademicSubjectResource.getTable()
-        ).where(dbAcademicSubjectResource.getTable().ACADEMIC_SUBJECT_ID.eq(pojo.getId()))
-                .execute();
-
-        insertOrUpdateResources(pojo.getId(),payload.getResources());
+        return subject;
 
     }
 }

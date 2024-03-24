@@ -125,7 +125,7 @@ public class WritingSkillService {
         return response;
     }
 
-    public UniPageResponse<WritingSkillPayload> query(WritingSkillPageRequest request) {
+    public UniPageResponse<WritingSkillPayload> page(WritingSkillPageRequest request) {
         var table = dbStudentUploadedWriting.getTable();
         List<WritingSkillPayload> payload = dbStudentUploadedWriting.getDsl()
                 .select(
@@ -138,6 +138,7 @@ public class WritingSkillService {
                         DSL.multiset(
                                 DSL.select(
                                                 STUDENT_PROFILE.asterisk(),
+                                                USER.EMAIL,
                                                 DSL.multiset(
                                                         DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
                                                 ).as(WritingSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
@@ -152,7 +153,7 @@ public class WritingSkillService {
                 )
                 .select(count().over().as(WritingSkillPayload.Fields.total))
                 .from(table, STUDENT_PAYMENT_TRANSACTION)
-                .where(table.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID).and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID)))
+                .where(table.PAYMENT_TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
                 .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
@@ -258,6 +259,7 @@ public class WritingSkillService {
                         DSL.multiset(
                                 DSL.select(
                                                 STUDENT_PROFILE.asterisk(),
+                                                USER.EMAIL,
                                                 DSL.multiset(
                                                         DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
                                                 ).as(WritingSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),

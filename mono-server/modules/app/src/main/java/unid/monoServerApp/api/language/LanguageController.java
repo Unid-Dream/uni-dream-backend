@@ -53,7 +53,7 @@ public class LanguageController {
     private final ObjectMapper objectMapper;
     private final TagService tagService;
 
-    @GetMapping("/admin/{userId}/language/page")
+    @GetMapping("/admin/language/page")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN
@@ -101,7 +101,7 @@ public class LanguageController {
     }
 
 
-    @GetMapping("/admin/{userId}/language/{id}")
+    @GetMapping("/admin/language/{id}")
     @ACL(
             authed = true
     )
@@ -118,7 +118,7 @@ public class LanguageController {
         );
     }
 
-    @PostMapping("/admin/{userId}/language")
+    @PostMapping("/admin/language")
     @Transactional
     @ACL(
             authed = true,
@@ -129,7 +129,6 @@ public class LanguageController {
             summary = "Create One"
     )
     public @Valid UnifiedResponse<LanguagePayload> create(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             LanguagePayload payload
     ) {
@@ -141,7 +140,7 @@ public class LanguageController {
         );
     }
 
-    @PutMapping("/admin/{userId}/language")
+    @PutMapping("/admin/language")
     @Transactional
     @ACL(
             authed = true,
@@ -152,7 +151,6 @@ public class LanguageController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<LanguagePayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             LanguagePayload payload
     ) {

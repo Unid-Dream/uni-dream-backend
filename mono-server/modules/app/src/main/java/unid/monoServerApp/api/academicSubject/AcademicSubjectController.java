@@ -113,17 +113,15 @@ public class AcademicSubjectController {
     @Operation(
             summary = "Update One"
     )
-    public @Valid UnifiedResponse<AcademicSubjectResponse> update(
+    public @Valid UnifiedResponse<AcademicSubjectPayload> update(
             @PathVariable("userId") UUID userId,
-            @RequestBody @Valid AcademicSubjectPayload payload
+            @RequestBody @Valid AcademicSubjectPayload req
     ) {
-//        var result = academicSubjectService.get(
-//                academicSubjectService.update(id, payload)
-//                        .getId()
-//        );
-        academicSubjectService.update(payload);
+        var payload = academicSubjectService.get(
+                academicSubjectService.update(req).getId()
+        );
         return UnifiedResponse.of(
-                null
+                payload
         );
     }
 }

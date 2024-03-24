@@ -120,6 +120,12 @@ public class InterviewSkillService {
         return dbStudentUploadedInterview.getDsl()
                 .select(
                         table.asterisk(),
+                        //查询对应的topic
+                        DSL.multiset(
+                            DSL.select()
+                                    .from(I18N)
+                                    .where(table.INTERVIEW_TOPIC_ID.eq(I18N.ID))
+                        ).as(InterviewSkillPayload.Fields.topic).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
                         table.CREATED_ON.as(InterviewSkillPayload.Fields.submissionTime),
                         DSL.multiset(
                                 DSL.select(

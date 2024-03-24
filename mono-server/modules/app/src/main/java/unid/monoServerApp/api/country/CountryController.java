@@ -68,7 +68,6 @@ public class CountryController {
             summary = "Query"
     )
     public @Valid UnifiedResponse<UniPageResponse<CountryPayload>> page(
-            @PathVariable("userId") UUID userId,
             @ParameterObject CountryPageRequest request
     ) {
          return UnifiedResponse.of(
@@ -150,7 +149,6 @@ public class CountryController {
             summary = "Create One"
     )
     public @Valid UnifiedResponse<CountryPayload> create(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             CountryPayload payload
     ) {
@@ -171,17 +169,16 @@ public class CountryController {
     @Operation(
             summary = "Update One"
     )
-    public @Valid UnifiedResponse<CountryResponse> update(
+    public @Valid UnifiedResponse<CountryPayload> update(
             @PathVariable("id") UUID id,
             @RequestBody @Valid
             CountryRequest payload
     ) {
-        var result = countryService.get(
-                countryService.update(id, payload)
-                        .getId()
-        );
         return UnifiedResponse.of(
-                null
+                countryService.get(
+                        countryService.update(id, payload)
+                                .getId()
+                )
         );
     }
 }

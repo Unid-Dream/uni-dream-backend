@@ -36,7 +36,7 @@ public class StudentProfileController {
     private final TagAppendService tagAppendService;
 
 
-    @GetMapping(value = {"admin/student/profile/page"})
+    @GetMapping(value = {"admin/{userId}/student/profile/page"})
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}

@@ -78,7 +78,7 @@ public class WritingSkillController {
             @ParameterObject WritingSkillPageRequest request
     ) {
         return UnifiedResponse.of(
-                writingSkillService.query(request)
+                writingSkillService.page(request)
         );
     }
 

@@ -25,6 +25,7 @@ import pwh.coreRsqlJooq.model.PaginationResponse;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.SchoolLevelEnum;
+import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
@@ -32,8 +33,10 @@ import unid.monoServerApp.database.table.school.DbSchool;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.SchoolMapper;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.model.SchoolLevel;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -123,13 +126,11 @@ public class SchoolController {
             summary = "Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<SchoolPayload>> page(
-            @PathVariable("userId") UUID userId,
-            @ParameterObject
-            @Valid
-            UniversityPageRequest request
+            @ParameterObject @Valid SchoolPageRequest request,
+            @RequestParam @NotNull SchoolLevelEnum schoolLevel
     ) {
         return UnifiedResponse.of(
-                schoolService.page(request)
+                schoolService.page(request,schoolLevel)
         );
     }
 
@@ -144,7 +145,6 @@ public class SchoolController {
             summary = "Create"
     )
     public @Valid UnifiedResponse<SchoolPayload> create(
-            @PathVariable("userId") UUID userId,
             @RequestBody SchoolPayload payload
     ) {
         return UnifiedResponse.of(
@@ -163,7 +163,6 @@ public class SchoolController {
             summary = "Get"
     )
     public @Valid UnifiedResponse<SchoolPayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ) {
         return UnifiedResponse.of(
@@ -172,24 +171,23 @@ public class SchoolController {
     }
 
 
-    @GetMapping("student/school/{id}")
-    @ACL(
-            authed = true
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Get One"
-    )
-    @Hidden
-    public @Valid UnifiedResponse<SchoolResponse> get(
-            @PathVariable("id") UUID id
-    ) {
-        var result = schoolService.get(id);
-        return UnifiedResponse.of(
-//                schoolMapper.toResponse(result)
-                null
-        );
-    }
+//    @GetMapping("student/school/{id}")
+//    @ACL(
+//            authed = true
+//    )
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(
+//            summary = "Get One"
+//    )
+//    @Hidden
+//    public @Valid UnifiedResponse<SchoolResponse> get(
+//            @PathVariable("id") UUID id
+//    ) {
+//        var result = schoolService.get(id);
+//        return UnifiedResponse.of(
+//                null
+//        );
+//    }
 
 //    @PostMapping("admin/{userId}/university")
 //    @Transactional
@@ -227,7 +225,6 @@ public class SchoolController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<SchoolPayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             SchoolPayload payload
     ) {

@@ -67,7 +67,10 @@ public enum UniErrorCode{
 
 
     // ---------------------------------- Description -----------------------------------------------
-    DESCRIPTION_IS_NOT_EXIST(13001, "Description 不存在!!!"),
+    DESCRIPTION_IS_NOT_EXIST(14001, "Description 不存在!!!"),
+
+    // ---------------------------------- School -----------------------------------------------
+    SCHOOL_LEVEL_IS_NOT_EXIST(15001, "School Level 不存在!!!"),
 
 
     ;

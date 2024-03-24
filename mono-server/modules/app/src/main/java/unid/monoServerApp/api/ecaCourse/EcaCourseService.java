@@ -1,14 +1,23 @@
 package unid.monoServerApp.api.ecaCourse;
 
+import cn.hutool.core.convert.Convert;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import unid.jooqMono.model.tables.pojos.EcaCoursePojo;
+import unid.jooqMono.model.tables.pojos.I18nPojo;
 import unid.jooqMono.model.tables.pojos.PassionMajorPojo;
+import unid.monoServerApp.database.table.ecaProfile.DbEcaCourse;
+import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.opportunity.DbOpportunity;
+import unid.monoServerApp.mapper.EcaCourseMapper;
+import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.EcaCoursePayload;
 import unid.monoServerMeta.model.I18n;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +36,10 @@ import static unid.jooqMono.model.tables.EcaCourseTable.ECA_COURSE;
 @Service
 public class EcaCourseService {
     private final DSLContext dslContext;
-
+    private final I18nMapper i18nMapper;
+    private final DbI18N dbI18n;
+    private final EcaCourseMapper ecaCourseMapper;
+    private final DbEcaCourse dbEcaCourse;
 
     public PageResponse<EcaCourseResponse> page(EcaCoursePageRequest payload){
         var opportunitiesQueryCondition = dslContext
@@ -111,5 +123,60 @@ public class EcaCourseService {
                 totalPages,
                 list
         );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    EcaCoursePojo create(EcaCourseRequest payload) {
+
+        I18nPojo name = i18nMapper.toPojo(payload.getNameI18n());
+        dbI18n.getDao().insert(name);
+
+        I18nPojo desc = i18nMapper.toPojo(payload.getDescriptionI18n());
+        dbI18n.getDao().insert(desc);
+
+        EcaCoursePojo pojo = ecaCourseMapper.toPojo(payload)
+                .setTitleI18nId(name.getId())
+                .setDescriptionI18nId(desc.getId())
+                .setAcademicId(
+                        payload
+                                .getMajors()
+                                .stream()
+                                .map(EcaCourseRequest.AcademicMajor::getId)
+                                .collect(toList())
+                                .toArray(UUID[]::new)
+                ).setOpportunityId(
+                        payload
+                                .getOpportunities()
+                                .stream()
+                                .map(EcaCourseRequest.Opportunity::getId)
+                                .collect(toList())
+                                .toArray(UUID[]::new)
+                );
+
+        dbEcaCourse.getDao().insert(pojo);
+        return pojo;
+    }
+
+    public EcaCoursePayload get(UUID id) {
+        var table = dbEcaCourse.getTable();
+        dbEcaCourse.getDsl()
+                .select(
+                        table.asterisk(),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
+                        ).as(EcaCoursePayload.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.select(
+                                            DSL.multiset(
+                                                    DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
+                                            ).as(EcaCoursePayload.AcademicMajor.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                        )
+                                        .from(ACADEMIC_MAJOR)
+                                        .where(ACADEMIC_MAJOR.ID.eq(any(table.ACADEMIC_ID)))
+                        ).as(EcaCoursePayload.Fields.majors).convertFrom(r->r.isEmpty()?null:r.into(EcaCoursePayload.AcademicMajor.class))
+                )
+                .from(table)
+                .where(table.ID.eq(id));
+        return null;
     }
 }

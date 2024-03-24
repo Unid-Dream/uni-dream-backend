@@ -46,7 +46,9 @@ public enum TagCategoryEnum implements EnumType {
 
     EDUCATION_LEVEL("EDUCATION_LEVEL"),
 
-    UNIVERSITY("UNIVERSITY");
+    UNIVERSITY("UNIVERSITY"),
+
+    SECONDARY_SCHOOL("SECONDARY_SCHOOL");
 
     private final String literal;
 

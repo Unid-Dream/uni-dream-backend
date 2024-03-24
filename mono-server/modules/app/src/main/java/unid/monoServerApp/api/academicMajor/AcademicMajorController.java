@@ -88,7 +88,7 @@ public class AcademicMajorController {
     )
     public UnifiedResponse<AcademicMajorPayload> update(
             @PathVariable("userId") UUID userId,
-            @ParameterObject AcademicMajorPayload payload
+            @RequestBody AcademicMajorPayload payload
     ){
         return UnifiedResponse.of(
                 academicMajorService.get(academicMajorService.update(payload).getId())

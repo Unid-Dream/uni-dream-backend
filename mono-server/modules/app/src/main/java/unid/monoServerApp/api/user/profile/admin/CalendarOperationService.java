@@ -60,7 +60,7 @@ public class CalendarOperationService {
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
     //从页面的角度来看：status (null: 查询全部, pending: )
-    public UniPageResponse<StudentSessionTransactionPayload> getSessionPage(CalendarSessionPageRequest request, BookingStatusEnum status) {
+    public UniPageResponse<StudentSessionTransactionPayload> page(CalendarSessionPageRequest request, BookingStatusEnum status) {
         var statusCondition = DSL.noCondition();
 
         if (status == BookingStatusEnum.PENDING) {
@@ -74,10 +74,11 @@ public class CalendarOperationService {
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.RESERVED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)), BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.isNull()), BookingStatus.PENDING_APPROVAL)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatus.PENDING_PAYMENT)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatus.CONFIRMED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED), BookingStatus.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.CANCELLED), BookingStatus.CANCELLED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(
                                 DSL.select(
@@ -162,6 +163,7 @@ public class CalendarOperationService {
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.RESERVED)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)), BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.CANCELLED), BookingStatusEnum.CANCELLED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(
                                 DSL.select(
@@ -356,6 +358,7 @@ public class CalendarOperationService {
         return dbEvent.getDsl()
                 .select(
                         table.asterisk(),
+                        table.CREATED_ON.as(CourseEventPayload.Fields.eventCreateTime),
                         DSL.multiset(
                                 DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
                         ).as(CourseEventPayload.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),

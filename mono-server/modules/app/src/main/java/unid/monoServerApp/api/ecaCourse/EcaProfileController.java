@@ -36,7 +36,6 @@ public class EcaProfileController {
             authed = true,
             allowedRoles = UserRoleEnum.STUDENT
     )
-    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"
@@ -44,6 +43,22 @@ public class EcaProfileController {
     public @Valid UnifiedResponse<List<EcaProfileSectionResponse>> list() {
          return UnifiedResponse.of(ecaProfileService.query());
     }
+
+
+//    @PostMapping("/admin/ecaProfile")
+//    @ACL(
+//            authed = true,
+//            allowedRoles = UserRoleEnum.ADMIN
+//    )
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(
+//            summary = "Query"
+//    )
+//    public @Valid UnifiedResponse<EcaProfilePayload> create(
+//            @RequestBody EcaProfileCreateRequest req
+//    ) {
+//        return UnifiedResponse.of(ecaProfileService.create(req));
+//    }
 
 
     @PostMapping(value = {"/student/ecaProfile/{studentProfileId}"})

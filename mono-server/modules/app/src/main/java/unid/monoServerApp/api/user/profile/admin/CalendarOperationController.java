@@ -47,7 +47,7 @@ public class CalendarOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
-        return UnifiedResponse.of(calendarOperationService.getSessionPage(request,null));
+        return UnifiedResponse.of(calendarOperationService.page(request,null));
     }
 
 
@@ -82,7 +82,7 @@ public class CalendarOperationController {
             @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
-        return UnifiedResponse.of(calendarOperationService.getSessionPage(request, BookingStatusEnum.PENDING));
+        return UnifiedResponse.of(calendarOperationService.page(request, BookingStatusEnum.PENDING));
     }
 
 

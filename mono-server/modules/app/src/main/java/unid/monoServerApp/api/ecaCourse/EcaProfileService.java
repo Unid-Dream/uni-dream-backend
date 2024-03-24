@@ -11,13 +11,14 @@ import unid.monoServerApp.database.table.ecaProfile.DbEcaProfileOption;
 import unid.monoServerApp.database.table.ecaProfile.DbEcaProfileSection;
 import unid.monoServerApp.database.table.ecaProfile.DbStudentEcaProfileMap;
 import unid.monoServerApp.database.table.i18n.DbI18N;
+import unid.monoServerApp.mapper.EcaCourseMapper;
 import unid.monoServerApp.mapper.EcaProfileMapper;
+import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.mapper.StudentEcaProfileMapMapper;
 import unid.monoServerMeta.api.EcaProfileRequest;
 import unid.monoServerMeta.api.EcaProfileSectionResponse;
 import unid.monoServerMeta.api.StudentEcaProfileSectionResponse;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +33,9 @@ public class EcaProfileService {
     private final EcaProfileMapper ecaProfileMapper;
     private final DbStudentEcaProfileMap dbStudentEcaProfileMap;
     private final StudentEcaProfileMapMapper studentEcaProfileMapMapper;
+    private final I18nMapper i18nMapper;
+    private final DbI18N dbI18N;
+    private final EcaCourseMapper ecaCourseMapper;
 
     public List<EcaProfileSectionResponse> query() {
         List<DbEcaProfileSection.Result> list = dslContext.select(
@@ -124,6 +128,4 @@ public class EcaProfileService {
         }
         return studentEcaProfileMapMapper.toResponse(list);
     }
-
-
 }

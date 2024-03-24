@@ -18,6 +18,7 @@ import java.util.UUID;
 @Schema
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AcademicSubjectPayload {
+
     private UUID id;
 
     private AcademicMajorPayload major;
