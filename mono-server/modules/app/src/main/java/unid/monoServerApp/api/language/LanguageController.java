@@ -63,7 +63,6 @@ public class LanguageController {
             summary = "Query"
     )
     public UnifiedResponse<UniPageResponse<LanguagePayload>> page(
-            @PathVariable("userId") UUID userId,
             @ParameterObject LanguagePageRequest request
     ){
         return UnifiedResponse.of(
@@ -110,7 +109,6 @@ public class LanguageController {
             summary = "Get One"
     )
     public @Valid UnifiedResponse<LanguagePayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ) {
         return UnifiedResponse.of(

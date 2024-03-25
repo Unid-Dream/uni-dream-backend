@@ -111,7 +111,6 @@ public class AcademicSubjectController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<AcademicSubjectPayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid AcademicSubjectPayload req
     ) {
         var payload = academicSubjectService.get(
