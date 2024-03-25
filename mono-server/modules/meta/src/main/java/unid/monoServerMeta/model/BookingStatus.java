@@ -26,7 +26,6 @@ public enum BookingStatus implements NamedEnum {
     REVIEWED("REVIEWED"),
     PENDING_APPROVAL("PENDING_APPROVAL"),
     PENDING_PAYMENT("PENDING_PAYMENT"),
-    CONFIRMED("CONFIRMED"),
 
     ;
     private final String value;
