@@ -92,7 +92,7 @@ public class EcaProfileController {
             summary = "Get Submit Score"
     )
     public @Valid UnifiedResponse<List<StudentEcaProfileSectionResponse>> get(
-            @PathVariable @ACL.ProfileId UUID studentProfileId
+            @PathVariable UUID studentProfileId
     ) {
         return UnifiedResponse.of(
                 ecaProfileService.get(studentProfileId).isEmpty()?null:ecaProfileService.get(studentProfileId)

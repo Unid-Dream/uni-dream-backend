@@ -3,12 +3,14 @@ package unid.monoServerApp.api.interviewSkills;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.lang3.Range;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
@@ -26,10 +28,12 @@ import unid.monoServerApp.mapper.StudentUploadedSupervisorReviewMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.SerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.InterviewSkillUpdateRequest;
 import unid.monoServerMeta.model.I18n;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.*;
@@ -66,7 +70,7 @@ public class InterviewSkillService {
     }
 
 
-    public UniPageResponse<InterviewSkillPayload> query(InterviewSkillPageRequest request){
+    public UniPageResponse<InterviewSkillPayload> page(InterviewSkillPageRequest request){
         var table = dbStudentUploadedInterview.getTable();
         List<InterviewSkillPayload> payload = dbStudentUploadedInterview.getDsl()
                 .select(
@@ -76,6 +80,9 @@ public class InterviewSkillService {
                                 .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
                                 .otherwise(ReviewTypeEnum.PENDING)
                                 .as(InterviewSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(table.INTERVIEW_TOPIC_ID))
+                        ).as(InterviewSkillPayload.Fields.topic).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
                         DSL.multiset(
                                 DSL.select(
                                                 STUDENT_PROFILE.asterisk(),
@@ -93,7 +100,7 @@ public class InterviewSkillService {
                 )
                 .select(count().over().as(InterviewSkillPayload.Fields.total))
                 .from(table, STUDENT_PAYMENT_TRANSACTION)
-//                .where(table.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID).and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID)))
+                .where(table.PAYMENT_TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
                 .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
@@ -313,20 +320,72 @@ public class InterviewSkillService {
     @Transactional(rollbackFor = Exception.class)
     public InterviewSkillPayload update(InterviewSkillPayload payload) {
         var table = dbStudentUploadedInterview.getTable();
+        Range<Integer> range = Range.between(1, 5);
+        if(!range.contains(payload.getCharisma().getScore())||!range.contains(payload.getClarity().getScore())||!range.contains(payload.getContent().getScore())){
+            throw Exceptions.business(UniErrorCode.INTERVIEW_SKILLS_SCORE_IS_ERROR);
+        }
 
-        StudentUploadedSupervisorReviewPojo content = studentUploadedSupervisorReviewMapper.toPojo(payload.getContent());
-        StudentUploadedSupervisorReviewPojo charisma = studentUploadedSupervisorReviewMapper.toPojo(payload.getCharisma());
-        StudentUploadedSupervisorReviewPojo clarity = studentUploadedSupervisorReviewMapper.toPojo(payload.getClarity());
+        StudentUploadedInterviewPojo interview = dbStudentUploadedInterview.getDsl()
+                .select().from(table).where(dbStudentUploadedInterview.getTable().ID.eq(payload.getId()))
+                .fetchOptionalInto(StudentUploadedInterviewPojo.class)
+                .orElseThrow(()-> Exceptions.business(UniErrorCode.INTERVIEW_SKILLS_IS_NOT_EXIST));
 
-        dbStudentUploadedSupervisorReview.getDao().insert(content);
-        dbStudentUploadedSupervisorReview.getDao().insert(charisma);
-        dbStudentUploadedSupervisorReview.getDao().insert(clarity);
+        dbStudentUploadedSupervisorReview.getDsl()
+                        .select().from(STUDENT_UPLOADED_SUPERVISOR_REVIEW)
+                .where(
+                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(interview.getContentReviewId())
+                ).fetchOptionalInto(StudentUploadedSupervisorReviewPojo.class)
+                        .ifPresentOrElse(
+                                review -> {
+                                    studentUploadedSupervisorReviewMapper.merge(review,payload.getContent());
+                                    dbStudentUploadedSupervisorReview.getDao().update(review);
+                                },
+                                () -> {
+                                    StudentUploadedSupervisorReviewPojo pojo = studentUploadedSupervisorReviewMapper.toPojo(payload.getContent());
+                                    dbStudentUploadedSupervisorReview.getDao().insert(pojo);
+                                    interview.setContentReviewId(pojo.getId());
+                                }
+                        );
+
+        dbStudentUploadedSupervisorReview.getDsl()
+                .select().from(STUDENT_UPLOADED_SUPERVISOR_REVIEW)
+                .where(
+                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(interview.getClarityReviewId())
+                ).fetchOptionalInto(StudentUploadedSupervisorReviewPojo.class)
+                .ifPresentOrElse(
+                        review -> {
+                            studentUploadedSupervisorReviewMapper.merge(review,payload.getClarity());
+                            dbStudentUploadedSupervisorReview.getDao().update(review);
+                        },
+                        () -> {
+                            StudentUploadedSupervisorReviewPojo review = studentUploadedSupervisorReviewMapper.toPojo(payload.getClarity());
+                            dbStudentUploadedSupervisorReview.getDao().insert(review);
+                            interview.setClarityReviewId(review.getId());
+                        }
+                );
+
+        dbStudentUploadedSupervisorReview.getDsl()
+                .select().from(STUDENT_UPLOADED_SUPERVISOR_REVIEW)
+                .where(
+                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.ID.eq(interview.getCharismaReviewId())
+                ).fetchOptionalInto(StudentUploadedSupervisorReviewPojo.class)
+                .ifPresentOrElse(
+                        review -> {
+                            studentUploadedSupervisorReviewMapper.merge(review,payload.getCharisma());
+                            dbStudentUploadedSupervisorReview.getDao().update(review);
+                        },
+                        () -> {
+                            StudentUploadedSupervisorReviewPojo review = studentUploadedSupervisorReviewMapper.toPojo(payload.getCharisma());
+                            dbStudentUploadedSupervisorReview.getDao().insert(review);
+                            interview.setCharismaReviewId(review.getId());
+                        }
+                );
 
         dbStudentUploadedInterview.getDsl()
                 .update(table)
-                .set(table.CHARISMA_REVIEW_ID,charisma.getId())
-                .set(table.CLARITY_REVIEW_ID,charisma.getId())
-                .set(table.CONTENT_REVIEW_ID,content.getId())
+                .set(table.CHARISMA_REVIEW_ID,interview.getCharismaReviewId())
+                .set(table.CLARITY_REVIEW_ID,interview.getClarityReviewId())
+                .set(table.CONTENT_REVIEW_ID,interview.getContentReviewId())
                 .set(table.REVIEW_TYPE, ReviewTypeEnum.REVIEWED)
                 .where(table.ID.eq(payload.getId()))
                 .execute();

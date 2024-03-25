@@ -52,7 +52,11 @@ public enum BookingStatusEnum implements EnumType {
 
     RESCHEDULE("RESCHEDULE"),
 
-    REVIEWED("REVIEWED");
+    REVIEWED("REVIEWED"),
+
+    PENDING_APPROVAL("PENDING_APPROVAL"),
+
+    PENDING_PAYMENT("PENDING_PAYMENT");
 
     private final String literal;
 

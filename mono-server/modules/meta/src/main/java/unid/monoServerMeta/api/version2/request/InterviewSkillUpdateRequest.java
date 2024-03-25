@@ -1,4 +1,4 @@
-package unid.monoServerMeta.api;
+package unid.monoServerMeta.api.version2.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Data
 @FieldNameConstants
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class InterviewSkillPayload {
+public class InterviewSkillUpdateRequest {
 
     @NotNull
     private UUID id;

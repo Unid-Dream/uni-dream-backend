@@ -71,7 +71,14 @@ public enum UniErrorCode{
 
     // ---------------------------------- School -----------------------------------------------
     SCHOOL_LEVEL_IS_NOT_EXIST(15001, "School Level 不存在!!!"),
+    // ---------------------------------- Interview Skills  -----------------------------------------------
+    INTERVIEW_SKILLS_IS_NOT_EXIST(16001, " Interview Skills 不存在!!!"),
 
+    INTERVIEW_SKILLS_SCORE_IS_ERROR(16002, " Interview Skills Score 不存在!!!"),
+
+    // ---------------------------------- Student Milestone -----------------------------------------------
+    STUDENT_MILESTONE_QUESTION_IS_NOT_EXIST(17001, " Student Milestone Question 不存在!!!"),
+    STUDENT_MILESTONE_ANSWER_IS_NOT_EXIST(17002, " Student Milestone Answer 不存在!!!"),
 
     ;
 

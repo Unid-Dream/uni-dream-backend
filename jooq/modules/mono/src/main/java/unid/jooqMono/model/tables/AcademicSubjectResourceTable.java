@@ -172,29 +172,6 @@ public class AcademicSubjectResourceTable extends TableImpl<AcademicSubjectResou
 
     @Override
     @Nonnull
-    public List<ForeignKey<AcademicSubjectResourceRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ACADEMIC_SUBJECT_RESOURCE__FK_ACAD_SUB_RESC_ACAD_SUB, Keys.ACADEMIC_SUBJECT_RESOURCE__FK_ACAD_SUB_RESC_TITL);
-    }
-
-    private transient AcademicSubjectTable _academicSubject;
-    private transient I18nTable _i18n;
-
-    public AcademicSubjectTable academicSubject() {
-        if (_academicSubject == null)
-            _academicSubject = new AcademicSubjectTable(this, Keys.ACADEMIC_SUBJECT_RESOURCE__FK_ACAD_SUB_RESC_ACAD_SUB);
-
-        return _academicSubject;
-    }
-
-    public I18nTable i18n() {
-        if (_i18n == null)
-            _i18n = new I18nTable(this, Keys.ACADEMIC_SUBJECT_RESOURCE__FK_ACAD_SUB_RESC_TITL);
-
-        return _i18n;
-    }
-
-    @Override
-    @Nonnull
     public AcademicSubjectResourceTable as(String alias) {
         return new AcademicSubjectResourceTable(DSL.name(alias), this);
     }

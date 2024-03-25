@@ -1,6 +1,7 @@
 package unid.monoServerApp.api.user.profile.admin;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import unid.monoServerApp.database.table.course.DbEventScheduleTime;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
+import unid.monoServerApp.database.table.user.DbUser;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.CourseEventMapper;
 import unid.monoServerApp.mapper.I18nMapper;
@@ -56,12 +58,14 @@ public class CalendarOperationService {
     private final CourseEventMapper courseEventMapper;
     private final DbEventScheduleTime dbEventScheduleTime;
     private final SessionService sessionService;
+    private final DbUser dbUser;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
     //从页面的角度来看：status (null: 查询全部, pending: )
     public UniPageResponse<StudentSessionTransactionPayload> page(CalendarSessionPageRequest request, BookingStatusEnum status) {
         var statusCondition = DSL.noCondition();
+        var profileCondition = DSL.noCondition();
 
         if (status == BookingStatusEnum.PENDING) {
             statusCondition = DSL.and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING)
@@ -74,11 +78,11 @@ public class CalendarOperationService {
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.isNull()), BookingStatus.PENDING_APPROVAL)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatus.PENDING_PAYMENT)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatus.CONFIRMED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED), BookingStatus.REJECTED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.CANCELLED), BookingStatus.CANCELLED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.isNull()), BookingStatusEnum.PENDING_APPROVAL)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.PENDING_PAYMENT)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED), BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.CANCELLED), BookingStatusEnum.CANCELLED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(
                                 DSL.select(
@@ -104,7 +108,7 @@ public class CalendarOperationService {
                         ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
                 )
                 .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
-                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR,USER)
                 .where(
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
                                 .and(statusCondition)
@@ -159,10 +163,10 @@ public class CalendarOperationService {
                         //记录日志
                         //查询educator
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.RESERVED)
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED)), BookingStatusEnum.REJECTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING_APPROVAL)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.PENDING_PAYMENT)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED), BookingStatusEnum.REJECTED)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.CANCELLED), BookingStatusEnum.CANCELLED)
                                 .as(StudentSessionTransactionPayload.Fields.status),
                         DSL.multiset(

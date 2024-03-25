@@ -96,12 +96,12 @@ public class InterviewSkillController {
     @Operation(
             summary = "Query Student Writing Skill Page"
     )
-    public @Valid UnifiedResponse<UniPageResponse<InterviewSkillPayload>> query(
+    public @Valid UnifiedResponse<UniPageResponse<InterviewSkillPayload>> page(
             @PathVariable("userId") UUID userId,
             @ParameterObject InterviewSkillPageRequest request
     ) {
         return UnifiedResponse.of(
-                interviewSkillService.query(request)
+                interviewSkillService.page(request)
         );
     }
 
