@@ -11,10 +11,11 @@ import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerMeta.api.AcademicMajorPayload;
 import unid.monoServerMeta.api.AcademicMajorRequest;
 import unid.monoServerMeta.api.AcademicMajorResponse;
+import unid.monoServerMeta.api.version2.request.AcademicMajorCreateRequest;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-24T12:33:14+0800",
+    date = "2024-03-25T19:58:37+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -84,6 +85,15 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
         }
 
         data.setId( source.getId() );
+        data.setIconPath( source.getIconPath() );
+    }
+
+    @Override
+    public void merge(AcademicMajorPojo data, AcademicMajorCreateRequest source) {
+        if ( source == null ) {
+            return;
+        }
+
         data.setIconPath( source.getIconPath() );
     }
 

@@ -59,7 +59,7 @@ public class CountryController {
     private final TagService tagService;
 
 
-    @GetMapping(value = {"admin/{userId}/country/page"})
+    @GetMapping(value = {"admin/country/page"})
     @ACL(
             authed = true
     )
@@ -138,7 +138,7 @@ public class CountryController {
 //        );
 //    }
 
-    @PostMapping("admin/{userId}/country")
+    @PostMapping("admin/country")
     @Transactional
     @ACL(
             authed = true,

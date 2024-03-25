@@ -73,7 +73,7 @@ public class EcaCourseController {
     )
     public @Valid UnifiedResponse<Void> create(
             @Valid
-            @ParameterObject
+            @RequestBody
             EcaCourseRequest payload
     ) {
         ecaCourseService.create(payload);
@@ -91,7 +91,7 @@ public class EcaCourseController {
     )
     public @Valid UnifiedResponse<Void> update(
             @Valid
-            @ParameterObject
+            @RequestBody
             EcaCourseRequest payload
     ) {
         ecaCourseService.create(payload);

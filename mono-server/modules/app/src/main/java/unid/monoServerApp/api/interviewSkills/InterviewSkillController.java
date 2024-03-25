@@ -87,7 +87,7 @@ public class InterviewSkillController {
 
 
 
-    @GetMapping("admin/{userId}/interviewSkill/page")
+    @GetMapping("admin/interviewSkill/page")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -97,7 +97,6 @@ public class InterviewSkillController {
             summary = "Query Student Writing Skill Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<InterviewSkillPayload>> page(
-            @PathVariable("userId") UUID userId,
             @ParameterObject InterviewSkillPageRequest request
     ) {
         return UnifiedResponse.of(
@@ -105,7 +104,7 @@ public class InterviewSkillController {
         );
     }
 
-    @GetMapping("admin/{userId}/interviewSkill/{id}")
+    @GetMapping("admin/interviewSkill/{id}")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -115,7 +114,6 @@ public class InterviewSkillController {
             summary = "Query Student Writing Skill Page"
     )
     public @Valid UnifiedResponse<InterviewSkillPayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ) {
         return UnifiedResponse.of(
@@ -124,7 +122,7 @@ public class InterviewSkillController {
     }
 
 
-    @PutMapping("admin/{userId}/interviewSkill")
+    @PutMapping("admin/interviewSkill")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -134,7 +132,6 @@ public class InterviewSkillController {
             summary = "Update Student Writing Skill Review"
     )
     public @Valid UnifiedResponse<InterviewSkillPayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody InterviewSkillPayload payload
     ) {
         return UnifiedResponse.of(

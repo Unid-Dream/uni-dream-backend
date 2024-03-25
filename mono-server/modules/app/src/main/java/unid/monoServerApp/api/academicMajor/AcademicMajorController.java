@@ -20,6 +20,7 @@ import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerApp.mapper.AcademicMajorMapper;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.AcademicMajorCreateRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +41,7 @@ public class AcademicMajorController {
     private final TagService tagService;
 
 
-    @GetMapping("admin/{userId}/academicMajor/page")
+    @GetMapping("admin/academicMajor/page")
     @Transactional
     @ACL(
             authed = true
@@ -50,7 +51,6 @@ public class AcademicMajorController {
             summary = "Page"
     )
     public UnifiedResponse<UniPageResponse<AcademicMajorPayload>> page(
-            @PathVariable("userId") UUID userId,
             @ParameterObject AcademicMajorPageRequest request
     ){
         return UnifiedResponse.of(
@@ -58,7 +58,7 @@ public class AcademicMajorController {
         );
     }
 
-    @PostMapping("admin/{userId}/academicMajor")
+    @PostMapping("admin/academicMajor")
     @Transactional
     @ACL(
             authed = true
@@ -68,8 +68,7 @@ public class AcademicMajorController {
             summary = "Create"
     )
     public UnifiedResponse<AcademicMajorPayload> create(
-            @PathVariable("userId") UUID userId,
-            @RequestBody AcademicMajorPayload payload
+            @RequestBody AcademicMajorCreateRequest payload
     ){
         return UnifiedResponse.of(
                 academicMajorService.get(academicMajorService.create(payload).getId())
@@ -77,7 +76,7 @@ public class AcademicMajorController {
     }
 
 
-    @PutMapping("admin/{userId}/academicMajor")
+    @PutMapping("admin/academicMajor")
     @Transactional
     @ACL(
             authed = true
@@ -87,7 +86,6 @@ public class AcademicMajorController {
             summary = "Update"
     )
     public UnifiedResponse<AcademicMajorPayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody AcademicMajorPayload payload
     ){
         return UnifiedResponse.of(
@@ -96,7 +94,7 @@ public class AcademicMajorController {
     }
 
 
-    @GetMapping("admin/{userId}/academicMajor/{id}")
+    @GetMapping("admin/academicMajor/{id}")
     @Transactional
     @ACL(
             authed = true
@@ -106,11 +104,29 @@ public class AcademicMajorController {
             summary = "Get One"
     )
     public UnifiedResponse<AcademicMajorPayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ){
         return UnifiedResponse.of(
                 academicMajorService.get(id)
+        );
+    }
+
+
+    @DeleteMapping("admin/academicMajor/{id}")
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Delete"
+    )
+    public UnifiedResponse<Void> delete(
+            @PathVariable("id") UUID id
+    ){
+        academicMajorService.delete(id);
+        return UnifiedResponse.of(
+                null
         );
     }
 

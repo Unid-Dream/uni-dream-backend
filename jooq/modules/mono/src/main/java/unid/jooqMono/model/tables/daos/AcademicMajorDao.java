@@ -229,4 +229,38 @@ public class AcademicMajorDao extends DAOImpl<AcademicMajorRecord, AcademicMajor
     public List<AcademicMajorPojo> fetchByIconPath(String... values) {
         return fetch(AcademicMajorTable.ACADEMIC_MAJOR.ICON_PATH, values);
     }
+
+    /**
+     * Fetch records that have <code>serial_number BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchRangeOfSerialNumber(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AcademicMajorTable.ACADEMIC_MAJOR.SERIAL_NUMBER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>serial_number IN (values)</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchBySerialNumber(String... values) {
+        return fetch(AcademicMajorTable.ACADEMIC_MAJOR.SERIAL_NUMBER, values);
+    }
+
+    /**
+     * Fetch records that have <code>_deleted BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchRangeOf_Deleted(Boolean lowerInclusive, Boolean upperInclusive) {
+        return fetchRange(AcademicMajorTable.ACADEMIC_MAJOR._DELETED, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>_deleted IN (values)</code>
+     */
+    @Nonnull
+    public List<AcademicMajorPojo> fetchBy_Deleted(Boolean... values) {
+        return fetch(AcademicMajorTable.ACADEMIC_MAJOR._DELETED, values);
+    }
 }

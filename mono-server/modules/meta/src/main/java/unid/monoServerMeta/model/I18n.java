@@ -1,6 +1,7 @@
 package unid.monoServerMeta.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @FieldNameConstants
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
+@Schema
 public class I18n implements Serializable {
     @Nullable
     private String english;

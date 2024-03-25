@@ -15,8 +15,8 @@ import javax.validation.constraints.Size;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record9;
-import org.jooq.Row9;
+import org.jooq.Record11;
+import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.tables.AcademicMajorTable;
@@ -35,7 +35,7 @@ import unid.jooqMono.model.tables.pojos.AcademicMajorPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord> implements Record9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> {
+public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord> implements Record11<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -184,6 +184,39 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         return (String) get(8);
     }
 
+    /**
+     * Setter for <code>public.academic_major.serial_number</code>.
+     */
+    public AcademicMajorRecord setSerialNumber(@Nullable String value) {
+        set(9, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.academic_major.serial_number</code>.
+     */
+    @Size(max = 100)
+    @Nullable
+    public String getSerialNumber() {
+        return (String) get(9);
+    }
+
+    /**
+     * Setter for <code>public.academic_major._deleted</code>.
+     */
+    public AcademicMajorRecord set_Deleted(@Nullable Boolean value) {
+        set(10, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.academic_major._deleted</code>.
+     */
+    @Nullable
+    public Boolean get_Deleted() {
+        return (Boolean) get(10);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -195,19 +228,19 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     }
 
     // -------------------------------------------------------------------------
-    // Record9 type implementation
+    // Record11 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row11<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> valuesRow() {
-        return (Row9) super.valuesRow();
+    public Row11<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> valuesRow() {
+        return (Row11) super.valuesRow();
     }
 
     @Override
@@ -266,6 +299,18 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
 
     @Override
     @Nonnull
+    public Field<String> field10() {
+        return AcademicMajorTable.ACADEMIC_MAJOR.SERIAL_NUMBER;
+    }
+
+    @Override
+    @Nonnull
+    public Field<Boolean> field11() {
+        return AcademicMajorTable.ACADEMIC_MAJOR._DELETED;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -316,6 +361,18 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     @Nullable
     public String component9() {
         return getIconPath();
+    }
+
+    @Override
+    @Nullable
+    public String component10() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public Boolean component11() {
+        return get_Deleted();
     }
 
     @Override
@@ -370,6 +427,18 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     @Nullable
     public String value9() {
         return getIconPath();
+    }
+
+    @Override
+    @Nullable
+    public String value10() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public Boolean value11() {
+        return get_Deleted();
     }
 
     @Override
@@ -437,7 +506,21 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
 
     @Override
     @Nonnull
-    public AcademicMajorRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable OffsetDateTime value5, @Nullable String value6, @Nullable OffsetDateTime value7, @Nullable String value8, @Nullable String value9) {
+    public AcademicMajorRecord value10(@Nullable String value) {
+        setSerialNumber(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public AcademicMajorRecord value11(@Nullable Boolean value) {
+        set_Deleted(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public AcademicMajorRecord values(@Nonnull UUID value1, @Nullable UUID value2, @Nullable UUID value3, @Nullable UUID value4, @Nullable OffsetDateTime value5, @Nullable String value6, @Nullable OffsetDateTime value7, @Nullable String value8, @Nullable String value9, @Nullable String value10, @Nullable Boolean value11) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -447,6 +530,8 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         value7(value7);
         value8(value8);
         value9(value9);
+        value10(value10);
+        value11(value11);
         return this;
     }
 
@@ -464,8 +549,8 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
     /**
      * Create a detached, initialised AcademicMajorRecord
      */
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
-    public AcademicMajorRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath) {
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath", "serialNumber", "_Deleted" })
+    public AcademicMajorRecord(@Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath, @Nullable String serialNumber, @Nullable Boolean _Deleted) {
         super(AcademicMajorTable.ACADEMIC_MAJOR);
 
         setId(id);
@@ -477,6 +562,8 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
         setIconPath(iconPath);
+        setSerialNumber(serialNumber);
+        set_Deleted(_Deleted);
     }
 
     /**
@@ -495,6 +582,8 @@ public class AcademicMajorRecord extends UpdatableRecordImpl<AcademicMajorRecord
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
             setIconPath(value.getIconPath());
+            setSerialNumber(value.getSerialNumber());
+            set_Deleted(value.get_Deleted());
         }
     }
 }

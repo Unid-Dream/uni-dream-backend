@@ -8,6 +8,7 @@ import org.jooq.DAO;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import pwh.springWebStarter.response.UniErrorCode;
 import pwh.springWebStarter.response.UnifiedResponse;
@@ -29,8 +30,11 @@ import unid.monoServerApp.database.table.tag.DbTag;
 import unid.monoServerApp.mapper.AcademicMajorMapper;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.service.SessionService;
+import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.AcademicMajorCreateRequest;
 import unid.monoServerMeta.model.I18n;
+import unid.monoServerMeta.model.SerialNumberType;
 
 import javax.annotation.PostConstruct;
 import java.time.OffsetDateTime;
@@ -59,15 +63,7 @@ public class AcademicMajorService {
     private final DbAcademicMajorSubjectMap dbAcademicMajorSubjectMap;
     private final DbAcademicSubjectResource dbAcademicSubjectResource;
     private final DbTag dbTag;
-
-//    DbAcademicMajor.Result get(UUID id) {
-//        var table = dbAcademicMajor.getTable();
-//        return dbAcademicMajor.getQuery(table)
-//                .where(table.ID.eq(id).and(dbAcademicMajor.validateCondition(table)))
-//                .fetchOptional().orElseThrow(() -> Exceptions.notFound("Major Not Found"))
-//                .into(DbAcademicMajor.Result.class);
-//    }
-
+    private final RedisTemplate<String, String>  redisTemplateRefCache;
 
     AcademicMajorPayload get(UUID id) {
         var table = dbAcademicMajor.getTable();
@@ -88,16 +84,18 @@ public class AcademicMajorService {
     }
 
 
-    AcademicMajorPojo create(AcademicMajorPayload payload) {
+    public AcademicMajorPojo create(AcademicMajorCreateRequest payload) {
         sessionService.initDatabaseSession();
         var title = i18nMapper.toPojo(payload.getTitleI18n());
         dbI18N.getDao().insert(title);
         var desc = i18nMapper.toPojo(payload.getDescriptionI18n());
         dbI18N.getDao().insert(desc);
-        var pojo = new AcademicMajorPojo()
-                .setTitleI18nId(title.getId())
-                .setDescriptionI18nId(desc.getId());
+        var pojo = new AcademicMajorPojo();
         academicMajorMapper.merge(pojo, payload);
+        pojo
+                .setTitleI18nId(title.getId())
+                .setDescriptionI18nId(desc.getId())
+                .setSerialNumber(TypeSerialNumberUtils.generate(SerialNumberType.AcademicMajor,redisTemplateRefCache));
         dbAcademicMajor.getDao().insert(pojo);
 
         dbTag.getDao().insert(
@@ -109,197 +107,6 @@ public class AcademicMajorService {
         return pojo;
     }
 
-
-//    AcademicMajorPojo create(AcademicMajorRequest payload) {
-//        sessionService.initDatabaseSession();
-//        var title = i18nMapper.toPojo(payload.getTitleI18n());
-//        dbI18N.getDao().insert(title);
-//        var desc = Optional.ofNullable(
-//                i18nMapper.toPojo(payload.getDescriptionI18n())
-//        );
-//        desc.ifPresent(d -> dbI18N.getDao().insert(d));
-//        var pojo = new AcademicMajorPojo()
-//                .setTitleI18nId(title.getId())
-//                .setDescriptionI18nId(desc.map(I18nPojo::getId).orElse(null));
-//        academicMajorMapper.merge(pojo, payload);
-//        dbAcademicMajor.getDao().insert(pojo);
-//        var subjects = Optional.ofNullable(
-//                payload.getSubjects()
-//        );
-//        subjects.ifPresent(subs -> {
-//            dbAcademicMajorSubjectMap.getDao().insert(
-//                    subs.stream().map(subjectId -> new AcademicMajorSubjectMapPojo()
-//                                    .setAcademicMajorId(pojo.getId())
-//                                    .setAcademicSubjectId(subjectId))
-//                            .collect(Collectors.toList())
-//            );
-//        });
-//
-//        return pojo;
-//    }
-
-//    AcademicMajorPojo update(UUID id, AcademicMajorRequest payload) {
-//        sessionService.initDatabaseSession();
-//        var major = get(id);
-//        Db.parentCrud(major::getDescriptionI18n, payload::getDescriptionI18n)
-//                .onUpdate((db, obj) -> {
-//                    i18nMapper.merge(db, obj);
-//                    dbI18N.getDao().update(db);
-//                })
-//                .onDelete((db) -> {
-//                    major.setDescriptionI18nId(null);
-//                    dbAcademicMajor.getDao().update(major);
-//                    dbI18N.getDao().deleteById(db.getId());
-//                })
-//                .onInsert((obj) -> {
-//                    var pojo = i18nMapper.toPojo(obj);
-//                    dbI18N.getDao().insert(pojo);
-//                    major.setDescriptionI18nId(pojo.getId());
-//                    dbAcademicMajor.getDao().update(major);
-//                })
-//                .execute();
-//        Db.parentListCrud(
-//                major::getSubjects,
-//                payload::getSubjects,
-//                AcademicSubjectPojo::getId,
-//                source -> source,
-//                null,
-//                crud -> crud
-//                        .onDelete((db) -> {
-//                            var table = dbAcademicMajorSubjectMap.getTable();
-//                            dbAcademicMajorSubjectMap.getDsl().deleteFrom(table)
-//                                    .where(table.ACADEMIC_MAJOR_ID.eq(major.getId()))
-//                                    .and(table.ACADEMIC_SUBJECT_ID.eq(db.getId()))
-//                                    .execute();
-//                        })
-//                        .onInsert((source) -> {
-//                            dbAcademicMajorSubjectMap.getDao().insert(
-//                                    new AcademicMajorSubjectMapPojo()
-//                                            .setAcademicMajorId(major.getId())
-//                                            .setAcademicSubjectId(source)
-//                            );
-//                        })
-//                        .execute()
-//        );
-//        var title = Optional.ofNullable(
-//                dbI18N.getDao().fetchOneById(major.getTitleI18nId())
-//        ).orElseThrow(() -> Exceptions.notFound("Title Not Found"));
-//        i18nMapper.merge(title, payload.getTitleI18n());
-//        dbI18N.getDao().update(title);
-//        academicMajorMapper.merge(major, payload);
-//        dbAcademicMajor.getDao().update(major);
-//        return major;
-//    }
-
-    public void createByList(List<AcademicMajorBatchRequest> list) {
-        sessionService.initDatabaseSession();
-        //1. for循环majors
-        list.forEach(obj -> {
-            //2. 根据major item创建major,并获取major_id,
-            UUID majorId = saveAndGetUUID(obj);
-            //3. for循环subjects
-            obj.getSubjects().forEach(subject -> {
-                //4. 根据subject item创建item,并获取subject_id
-                UUID subjectId = saveAndGetUUID(subject);
-                subject.getBooks().forEach(reading -> save(reading, subjectId));
-                subject.getVideos().forEach(video -> save(video, subjectId));
-                subject.getPodcasts().forEach(podcast -> save(podcast, subjectId));
-                //5. 创建 major_subject_map,关联关系
-                AcademicMajorSubjectMapPojo create = new AcademicMajorSubjectMapPojo()
-                        .setAcademicMajorId(majorId)
-                        .setAcademicSubjectId(subjectId)
-                        .setCreatedOn(OffsetDateTime.now())
-                        .setUpdatedOn(OffsetDateTime.now());
-                dbAcademicMajorSubjectMap.getDao().insert(create);
-                //6.更新问答
-                I18n masterI18n = subject.getAnswers().get(0);
-                I18n phdI18n = subject.getAnswers().get(1);
-
-            });
-        });
-        //6. 以books为例子, for循环创建subject_resource_item
-    }
-
-
-    private UUID saveAndGetUUID(AcademicMajorBatchRequest major) {
-        I18nPojo nameI18n = i18nMapper.toPojo(major.getNameI18n());
-        dbI18N.getDao().insert(nameI18n);
-        UUID titleI18nId = nameI18n.getId();
-        I18nPojo descI18n = i18nMapper.toPojo(major.getDescI18n());
-        dbI18N.getDao().insert(descI18n);
-        UUID descI18nId = descI18n.getId();
-        AcademicMajorPojo createRQ = new AcademicMajorPojo();
-        createRQ.setDescriptionI18nId(descI18nId);
-        createRQ.setTitleI18nId(titleI18nId);
-        createRQ.setCreatedOn(OffsetDateTime.now());
-        createRQ.setUpdatedOn(OffsetDateTime.now());
-        dbAcademicMajor.getDao().insert(createRQ);
-        return createRQ.getId();
-    }
-
-
-    private UUID saveAndGetUUID(AcademicMajorBatchRequest.AcademicSubjectItem subject) {
-        I18nPojo nameI18n = i18nMapper.toPojo(subject.getNameI18n());
-        dbI18N.getDao().insert(nameI18n);
-        UUID titleI18nId = nameI18n.getId();
-        I18nPojo descI18n = i18nMapper.toPojo(subject.getDescI18n());
-        dbI18N.getDao().insert(descI18n);
-        UUID descI18nId = descI18n.getId();
-        AcademicSubjectPojo createRQ = new AcademicSubjectPojo()
-                .setTitleI18nId(titleI18nId)
-                .setDescriptionI18nId(descI18nId)
-                .setCreatedOn(OffsetDateTime.now())
-                .setUpdatedOn(OffsetDateTime.now());
-        dbAcademicSubject.getDao().insert(createRQ);
-        return createRQ.getId();
-    }
-
-
-    private void save(AcademicMajorBatchRequest.ReadingItem reading, UUID subjectId) {
-        I18nPojo titleI18n = i18nMapper.toPojo(reading.getNameI18n());
-        dbI18N.getDao().insert(titleI18n);
-        UUID titleI18nId = titleI18n.getId();
-        AcademicSubjectResourcePojo create = new AcademicSubjectResourcePojo()
-                .setAcademicSubjectId(subjectId)
-                .setTitleI18nId(titleI18nId)
-                .setAuthor(reading.getAuthorI18n().getEnglish())
-                .setThumbnail(reading.getImage())
-                .setType(AcademicSubjectResourceTypeEnum.READINGS)
-                .setCreatedOn(OffsetDateTime.now())
-                .setUpdatedOn(OffsetDateTime.now());
-        dbAcademicSubjectResource.getDao().insert(create);
-    }
-
-    private void save(AcademicMajorBatchRequest.VideoItem video, UUID subjectId) {
-        I18nPojo titleI18n = i18nMapper.toPojo(video.getNameI18n());
-        dbI18N.getDao().insert(titleI18n);
-        UUID titleI18nId = titleI18n.getId();
-        AcademicSubjectResourcePojo create = new AcademicSubjectResourcePojo()
-                .setAcademicSubjectId(subjectId)
-                .setTitleI18nId(titleI18nId)
-                .setAuthor(video.getAuthorI18n().getEnglish())
-                .setType(AcademicSubjectResourceTypeEnum.VIDEO)
-                .setUrl(video.getUrl())
-                .setCreatedOn(OffsetDateTime.now())
-                .setUpdatedOn(OffsetDateTime.now());
-        dbAcademicSubjectResource.getDao().insert(create);
-    }
-
-
-    private void save(AcademicMajorBatchRequest.PodcastItem podcast, UUID subjectId) {
-        I18nPojo titleI18n = i18nMapper.toPojo(podcast.getNameI18n());
-        dbI18N.getDao().insert(titleI18n);
-        UUID titleI18nId = titleI18n.getId();
-        AcademicSubjectResourcePojo create = new AcademicSubjectResourcePojo()
-                .setAcademicSubjectId(subjectId)
-                .setTitleI18nId(titleI18nId)
-                .setAuthor(podcast.getAuthorI18n().getEnglish())
-                .setUrl(podcast.getUrl())
-                .setType(AcademicSubjectResourceTypeEnum.PODCAST)
-                .setCreatedOn(OffsetDateTime.now())
-                .setUpdatedOn(OffsetDateTime.now());
-        dbAcademicSubjectResource.getDao().insert(create);
-    }
 
     public List<AcademicMajorResponse> list() {
         List<DbAcademicMajor.Result> results = dbAcademicMajor.getDsl()
@@ -606,6 +413,10 @@ public class AcademicMajorService {
 
         return pojo;
 
+    }
+
+    public void delete(UUID id) {
+        dbAcademicMajor.getDao().deleteById(id);
     }
 }
 

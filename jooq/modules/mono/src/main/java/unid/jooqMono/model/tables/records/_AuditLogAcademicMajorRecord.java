@@ -15,8 +15,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.jooq.Field;
-import org.jooq.Record14;
-import org.jooq.Row14;
+import org.jooq.Record16;
+import org.jooq.Row16;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.tables._AuditLogAcademicMajorTable;
@@ -35,7 +35,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogAcademicMajorPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcademicMajorRecord> implements Record14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> {
+public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcademicMajorRecord> implements Record16<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -270,20 +270,53 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         return (String) get(13);
     }
 
+    /**
+     * Setter for <code>public._audit_log_academic_major.serial_number</code>.
+     */
+    public _AuditLogAcademicMajorRecord setSerialNumber(@Nullable String value) {
+        set(14, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_academic_major.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return (String) get(14);
+    }
+
+    /**
+     * Setter for <code>public._audit_log_academic_major._deleted</code>.
+     */
+    public _AuditLogAcademicMajorRecord set_Deleted(@Nullable Boolean value) {
+        set(15, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_academic_major._deleted</code>.
+     */
+    @Nullable
+    public Boolean get_Deleted() {
+        return (Boolean) get(15);
+    }
+
     // -------------------------------------------------------------------------
-    // Record14 type implementation
+    // Record16 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row16<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row14<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> valuesRow() {
-        return (Row14) super.valuesRow();
+    public Row16<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> valuesRow() {
+        return (Row16) super.valuesRow();
     }
 
     @Override
@@ -372,6 +405,18 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
 
     @Override
     @Nonnull
+    public Field<String> field15() {
+        return _AuditLogAcademicMajorTable._AUDIT_LOG_ACADEMIC_MAJOR.SERIAL_NUMBER;
+    }
+
+    @Override
+    @Nonnull
+    public Field<Boolean> field16() {
+        return _AuditLogAcademicMajorTable._AUDIT_LOG_ACADEMIC_MAJOR._DELETED;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -452,6 +497,18 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     @Nullable
     public String component14() {
         return getIconPath();
+    }
+
+    @Override
+    @Nullable
+    public String component15() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public Boolean component16() {
+        return get_Deleted();
     }
 
     @Override
@@ -536,6 +593,18 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     @Nullable
     public String value14() {
         return getIconPath();
+    }
+
+    @Override
+    @Nullable
+    public String value15() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public Boolean value16() {
+        return get_Deleted();
     }
 
     @Override
@@ -638,7 +707,21 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
 
     @Override
     @Nonnull
-    public _AuditLogAcademicMajorRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13, @Nullable String value14) {
+    public _AuditLogAcademicMajorRecord value15(@Nullable String value) {
+        setSerialNumber(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogAcademicMajorRecord value16(@Nullable Boolean value) {
+        set_Deleted(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogAcademicMajorRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable UUID value9, @Nullable OffsetDateTime value10, @Nullable String value11, @Nullable OffsetDateTime value12, @Nullable String value13, @Nullable String value14, @Nullable String value15, @Nullable Boolean value16) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -653,6 +736,8 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         value12(value12);
         value13(value13);
         value14(value14);
+        value15(value15);
+        value16(value16);
         return this;
     }
 
@@ -670,8 +755,8 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
     /**
      * Create a detached, initialised _AuditLogAcademicMajorRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
-    public _AuditLogAcademicMajorRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath", "serialNumber", "_Deleted" })
+    public _AuditLogAcademicMajorRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nullable UUID titleI18nId, @Nullable UUID descriptionI18nId, @Nullable UUID tagId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String iconPath, @Nullable String serialNumber, @Nullable Boolean _Deleted) {
         super(_AuditLogAcademicMajorTable._AUDIT_LOG_ACADEMIC_MAJOR);
 
         setAuditSeq(auditSeq);
@@ -688,6 +773,8 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
         setUpdatedOn(updatedOn);
         setUpdatedBy(updatedBy);
         setIconPath(iconPath);
+        setSerialNumber(serialNumber);
+        set_Deleted(_Deleted);
     }
 
     /**
@@ -711,6 +798,8 @@ public class _AuditLogAcademicMajorRecord extends TableRecordImpl<_AuditLogAcade
             setUpdatedOn(value.getUpdatedOn());
             setUpdatedBy(value.getUpdatedBy());
             setIconPath(value.getIconPath());
+            setSerialNumber(value.getSerialNumber());
+            set_Deleted(value.get_Deleted());
         }
     }
 }

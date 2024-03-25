@@ -79,7 +79,7 @@ public class StudentQuestionnaireController {
             summary = "Create"
     )
     public @Valid UnifiedResponse<Void> create(
-            @PathVariable @ACL.ProfileId UUID studentProfileId,
+            @PathVariable UUID studentProfileId,
             @RequestBody StudentMilestoneRequest request
     ){
         studentQuestionnaireService.saveOrUpdate(studentProfileId,request);

@@ -21,6 +21,7 @@ import unid.monoServerApp.database.table.tag.DbTag;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class DbAcademicMajor extends Db<AcademicMajorTable, AcademicMajorDao> {
@@ -80,6 +81,20 @@ public class DbAcademicMajor extends Db<AcademicMajorTable, AcademicMajorDao> {
     public Condition validateCondition(AcademicMajorTable table) {
         return DSL.noCondition();
     }
+
+
+    public void deleteById(UUID id){
+        getDsl().update(table)
+                .set(table._DELETED, true)
+                .where(table.ID.eq(id))
+                .execute();
+    }
+
+    public Condition isNotDeleted(){
+        return table._DELETED.eq(false);
+    }
+
+
 
     @EqualsAndHashCode(callSuper = true)
     @Data

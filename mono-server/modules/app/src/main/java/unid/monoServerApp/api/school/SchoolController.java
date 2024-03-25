@@ -117,7 +117,7 @@ public class SchoolController {
     }
 
 
-    @GetMapping("admin/{userId}/school/page")
+    @GetMapping("admin/school/page")
     @ACL(
             authed = true
     )
@@ -136,7 +136,7 @@ public class SchoolController {
 
 
 
-    @PostMapping("admin/{userId}/school")
+    @PostMapping("admin/school")
     @ACL(
             authed = true
     )
@@ -154,7 +154,7 @@ public class SchoolController {
         );
     }
 
-    @GetMapping("admin/{userId}/school/{id}")
+    @GetMapping("admin/school/{id}")
     @ACL(
             authed = true
     )
@@ -171,50 +171,7 @@ public class SchoolController {
     }
 
 
-//    @GetMapping("student/school/{id}")
-//    @ACL(
-//            authed = true
-//    )
-//    @ResponseStatus(HttpStatus.OK)
-//    @Operation(
-//            summary = "Get One"
-//    )
-//    @Hidden
-//    public @Valid UnifiedResponse<SchoolResponse> get(
-//            @PathVariable("id") UUID id
-//    ) {
-//        var result = schoolService.get(id);
-//        return UnifiedResponse.of(
-//                null
-//        );
-//    }
-
-//    @PostMapping("admin/{userId}/university")
-//    @Transactional
-//    @ACL(
-//            authed = true,
-//            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
-//    )
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @Operation(
-//            summary = "Create One"
-//    )
-//    @Hidden
-//    public @Valid UnifiedResponse<SchoolResponse> create(
-//            @RequestBody @Valid
-//            UniversityPayload payload
-//    ) {
-//        var result = schoolService.get(
-//                schoolService.create(payload)
-//                        .getId()
-//        );
-//        var resp = schoolMapper.toResponse(result);
-//        return UnifiedResponse.of(
-//                resp
-//        );
-//    }
-
-    @PutMapping("admin/{userId}/school")
+    @PutMapping("admin/school")
     @Transactional
     @ACL(
             authed = true,
@@ -250,7 +207,7 @@ public class SchoolController {
         );
     }
 
-    @GetMapping(value = {"educator/secondarySchool /tags","student/secondarySchool /tags"})
+    @GetMapping(value = {"educator/secondarySchool/tags","student/secondarySchool/tags"})
     @ACL(
             authed = true
     )

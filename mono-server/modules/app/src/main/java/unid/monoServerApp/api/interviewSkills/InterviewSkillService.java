@@ -26,7 +26,7 @@ import unid.monoServerApp.mapper.InterviewTopicMapper;
 import unid.monoServerApp.mapper.StudentUploadedMapper;
 import unid.monoServerApp.mapper.StudentUploadedSupervisorReviewMapper;
 import unid.monoServerApp.service.SessionService;
-import unid.monoServerApp.util.SerialNumberUtils;
+import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.request.InterviewSkillUpdateRequest;
 import unid.monoServerMeta.model.I18n;
@@ -295,7 +295,7 @@ public class InterviewSkillService {
                 .orElseThrow(() -> Exceptions.notFound("Interview Skill Interview Not Found"));
         //1. 创建交易记录(student_payment_transaction)
         var transaction = interviewTopicMapper.merge(record,studentProfileId);
-        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("WS",redisTemplateRefCache));
+        transaction.setTransactionSerialNumber(TypeSerialNumberUtils.generateOrderNumber("WS",redisTemplateRefCache));
 
         UUID transactionId =  dslContext
                 .insertInto(STUDENT_PAYMENT_TRANSACTION)

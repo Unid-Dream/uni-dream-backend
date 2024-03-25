@@ -46,7 +46,7 @@ public class AcademicSubjectController {
     private final ObjectMapper objectMapper;
 
 
-    @GetMapping("admin/{userId}/academicSubject/page")
+    @GetMapping("admin/academicSubject/page")
     @ACL(
             authed = true
     )
@@ -55,7 +55,6 @@ public class AcademicSubjectController {
             summary = "Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<AcademicSubjectPayload>> page(
-            @PathVariable("userId") UUID userId,
             @Valid
             @ParameterObject
             AcademicSubjectPageRequest request
@@ -66,7 +65,7 @@ public class AcademicSubjectController {
     }
 
 
-    @GetMapping("admin/{userId}/academicSubject/{id}")
+    @GetMapping("admin/academicSubject/{id}")
     @ACL(
             authed = true
     )
@@ -75,14 +74,13 @@ public class AcademicSubjectController {
             summary = "Get One"
     )
     public @Valid UnifiedResponse<AcademicSubjectPayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id) {
         return UnifiedResponse.of(
                 academicSubjectService.get(id)
         );
     }
 
-    @PostMapping("admin/{userId}/academicSubject")
+    @PostMapping("admin/academicSubject")
     @Transactional
     @ACL(
             authed = true,
@@ -93,7 +91,6 @@ public class AcademicSubjectController {
             summary = "Create One"
     )
     public @Valid UnifiedResponse<AcademicSubjectPayload> create(
-            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             AcademicSubjectPayload payload
     ) {
@@ -103,7 +100,7 @@ public class AcademicSubjectController {
         );
     }
 
-    @PutMapping("/admin/{userId}/academicSubject")
+    @PutMapping("/admin/academicSubject")
     @Transactional
     @ACL(
             authed = true,

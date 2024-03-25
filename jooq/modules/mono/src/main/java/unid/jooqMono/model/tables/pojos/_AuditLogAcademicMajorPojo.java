@@ -46,6 +46,8 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
     private OffsetDateTime updatedOn;
     private String         updatedBy;
     private String         iconPath;
+    private String         serialNumber;
+    private Boolean        _Deleted;
 
     public _AuditLogAcademicMajorPojo() {}
 
@@ -64,9 +66,11 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
         this.iconPath = value.iconPath;
+        this.serialNumber = value.serialNumber;
+        this._Deleted = value._Deleted;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath", "serialNumber", "_Deleted" })
     public _AuditLogAcademicMajorPojo(
         @Nonnull Long           auditSeq,
         @Nonnull OffsetDateTime auditCreatedon,
@@ -81,7 +85,9 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         @Nullable String         createdBy,
         @Nullable OffsetDateTime updatedOn,
         @Nullable String         updatedBy,
-        @Nullable String         iconPath
+        @Nullable String         iconPath,
+        @Nullable String         serialNumber,
+        @Nullable Boolean        _Deleted
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -97,6 +103,8 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
         this.iconPath = iconPath;
+        this.serialNumber = serialNumber;
+        this._Deleted = _Deleted;
     }
 
     /**
@@ -330,6 +338,39 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public._audit_log_academic_major.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_academic_major.serial_number</code>.
+     */
+    public _AuditLogAcademicMajorPojo setSerialNumber(@Nullable String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public._audit_log_academic_major._deleted</code>.
+     */
+    @Nullable
+    public Boolean get_Deleted() {
+        return this._Deleted;
+    }
+
+    /**
+     * Setter for <code>public._audit_log_academic_major._deleted</code>.
+     */
+    public _AuditLogAcademicMajorPojo set_Deleted(@Nullable Boolean _Deleted) {
+        this._Deleted = _Deleted;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogAcademicMajorPojo (");
@@ -348,6 +389,8 @@ public class _AuditLogAcademicMajorPojo implements Serializable {
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
         sb.append(", ").append(iconPath);
+        sb.append(", ").append(serialNumber);
+        sb.append(", ").append(_Deleted);
 
         sb.append(")");
         return sb.toString();

@@ -64,7 +64,7 @@ public class WritingSkillController {
     }
 
 
-    @GetMapping("admin/{userId}/writingSkill/page")
+    @GetMapping("admin/writingSkill/page")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -74,7 +74,6 @@ public class WritingSkillController {
             summary = "Query Student Writing Skill Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<WritingSkillPayload>> query(
-            @PathVariable UUID userId,
             @ParameterObject WritingSkillPageRequest request
     ) {
         return UnifiedResponse.of(
@@ -82,7 +81,7 @@ public class WritingSkillController {
         );
     }
 
-    @GetMapping("admin/{userId}/writingSkill/{id}")
+    @GetMapping("admin/writingSkill/{id}")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -92,7 +91,6 @@ public class WritingSkillController {
             summary = "Query Student Writing Skill Page"
     )
     public @Valid UnifiedResponse<WritingSkillPayload> get(
-            @PathVariable("userId") UUID userId,
             @PathVariable("id") UUID id
     ) {
         return UnifiedResponse.of(
@@ -101,7 +99,7 @@ public class WritingSkillController {
     }
 
 
-    @PutMapping("admin/{userId}/writingSkill")
+    @PutMapping("admin/writingSkill")
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.ADMIN}
@@ -111,7 +109,6 @@ public class WritingSkillController {
             summary = "Update Student Writing Skill Review"
     )
     public @Valid UnifiedResponse<WritingSkillPayload> update(
-            @PathVariable("userId") UUID userId,
             @RequestBody WritingSkillPayload payload
     ) {
         return UnifiedResponse.of(

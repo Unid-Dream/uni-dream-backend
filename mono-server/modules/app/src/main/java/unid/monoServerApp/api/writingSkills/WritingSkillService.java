@@ -25,7 +25,7 @@ import unid.monoServerApp.database.table.skill.DbStudentUploadedWriting;
 import unid.monoServerApp.database.table.skill.DbWritingTopic;
 import unid.monoServerApp.mapper.*;
 import unid.monoServerApp.service.SessionService;
-import unid.monoServerApp.util.SerialNumberUtils;
+import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
@@ -303,7 +303,7 @@ public class WritingSkillService {
         //1. 创建交易记录(student_payment_transaction)
         var transaction = writingTopicMapper.merge(record, studentProfileId);
         //创建订单流水号
-        transaction.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("IS", redisTemplateRefCache));
+        transaction.setTransactionSerialNumber(TypeSerialNumberUtils.generateOrderNumber("IS", redisTemplateRefCache));
         UUID transactionId = dslContext
                 .insertInto(STUDENT_PAYMENT_TRANSACTION)
                 .set(dslContext.newRecord(STUDENT_PAYMENT_TRANSACTION, transaction))

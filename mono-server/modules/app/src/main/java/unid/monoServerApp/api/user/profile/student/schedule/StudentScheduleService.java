@@ -25,7 +25,7 @@ import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
 import unid.monoServerApp.model.SessionLogger;
 import unid.monoServerApp.service.SessionLoggerService;
-import unid.monoServerApp.util.SerialNumberUtils;
+import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.model.BaseResponse;
 import unid.monoServerMeta.model.BookingStatus;
@@ -295,7 +295,7 @@ public class StudentScheduleService {
                 .setPaymentStatus(PaymentStatusEnum.PENDING)
                 .setProcessStatus(BookingStatusEnum.PENDING)
                 .setTransactionSubmitTime(LocalDateTime.now());
-        studentPaymentTransactionPojo.setTransactionSerialNumber(SerialNumberUtils.generateOrderNumber("ER", redisTemplateRefCache));
+        studentPaymentTransactionPojo.setTransactionSerialNumber(TypeSerialNumberUtils.generateOrderNumber("ER", redisTemplateRefCache));
 
         //查询当前educator calendar
         DbEducatorCalendar.Result calendar = dbEducatorCalendar.getDsl()

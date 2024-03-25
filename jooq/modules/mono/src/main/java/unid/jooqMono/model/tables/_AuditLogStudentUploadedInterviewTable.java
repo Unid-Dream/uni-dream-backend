@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row19;
+import org.jooq.Row20;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -25,6 +25,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.records._AuditLogStudentUploadedInterviewRecord;
 
 
@@ -171,6 +172,12 @@ public class _AuditLogStudentUploadedInterviewTable extends TableImpl<_AuditLogS
      */
     public final TableField<_AuditLogStudentUploadedInterviewRecord, String> RECOMMENDATION = createField(DSL.name("recommendation"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_student_uploaded_interview.review_type</code>.
+     */
+    public final TableField<_AuditLogStudentUploadedInterviewRecord, ReviewTypeEnum> REVIEW_TYPE = createField(DSL.name("review_type"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.ReviewTypeEnum.class), this, "");
+
     private _AuditLogStudentUploadedInterviewTable(Name alias, Table<_AuditLogStudentUploadedInterviewRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -250,12 +257,12 @@ public class _AuditLogStudentUploadedInterviewTable extends TableImpl<_AuditLogS
     }
 
     // -------------------------------------------------------------------------
-    // Row19 type methods
+    // Row20 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row19<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> fieldsRow() {
-        return (Row19) super.fieldsRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 }

@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row9;
+import org.jooq.Row11;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -104,6 +104,16 @@ public class AcademicMajorTable extends TableImpl<AcademicMajorRecord> {
      * The column <code>public.academic_major.icon_path</code>.
      */
     public final TableField<AcademicMajorRecord, String> ICON_PATH = createField(DSL.name("icon_path"), SQLDataType.VARCHAR(225), this, "");
+
+    /**
+     * The column <code>public.academic_major.serial_number</code>.
+     */
+    public final TableField<AcademicMajorRecord, String> SERIAL_NUMBER = createField(DSL.name("serial_number"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>public.academic_major._deleted</code>.
+     */
+    public final TableField<AcademicMajorRecord, Boolean> _DELETED = createField(DSL.name("_deleted"), SQLDataType.BOOLEAN.defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
 
     private AcademicMajorTable(Name alias, Table<AcademicMajorRecord> aliased) {
         this(alias, aliased, null);
@@ -218,12 +228,12 @@ public class AcademicMajorTable extends TableImpl<AcademicMajorRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row9<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row11<UUID, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String, String, Boolean> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 }

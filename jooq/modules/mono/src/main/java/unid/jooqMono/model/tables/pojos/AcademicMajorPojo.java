@@ -40,6 +40,8 @@ public class AcademicMajorPojo implements Serializable {
     private OffsetDateTime updatedOn;
     private String         updatedBy;
     private String         iconPath;
+    private String         serialNumber;
+    private Boolean        _Deleted;
 
     public AcademicMajorPojo() {}
 
@@ -53,9 +55,11 @@ public class AcademicMajorPojo implements Serializable {
         this.updatedOn = value.updatedOn;
         this.updatedBy = value.updatedBy;
         this.iconPath = value.iconPath;
+        this.serialNumber = value.serialNumber;
+        this._Deleted = value._Deleted;
     }
 
-    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath" })
+    @ConstructorProperties({ "id", "titleI18nId", "descriptionI18nId", "tagId", "createdOn", "createdBy", "updatedOn", "updatedBy", "iconPath", "serialNumber", "_Deleted" })
     public AcademicMajorPojo(
         @Nonnull UUID           id,
         @Nullable UUID           titleI18nId,
@@ -65,7 +69,9 @@ public class AcademicMajorPojo implements Serializable {
         @Nullable String         createdBy,
         @Nullable OffsetDateTime updatedOn,
         @Nullable String         updatedBy,
-        @Nullable String         iconPath
+        @Nullable String         iconPath,
+        @Nullable String         serialNumber,
+        @Nullable Boolean        _Deleted
     ) {
         this.id = id;
         this.titleI18nId = titleI18nId;
@@ -76,6 +82,8 @@ public class AcademicMajorPojo implements Serializable {
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
         this.iconPath = iconPath;
+        this.serialNumber = serialNumber;
+        this._Deleted = _Deleted;
     }
 
     /**
@@ -223,6 +231,39 @@ public class AcademicMajorPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.academic_major.serial_number</code>.
+     */
+    @Size(max = 100)
+    @Nullable
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    /**
+     * Setter for <code>public.academic_major.serial_number</code>.
+     */
+    public AcademicMajorPojo setSerialNumber(@Nullable String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.academic_major._deleted</code>.
+     */
+    @Nullable
+    public Boolean get_Deleted() {
+        return this._Deleted;
+    }
+
+    /**
+     * Setter for <code>public.academic_major._deleted</code>.
+     */
+    public AcademicMajorPojo set_Deleted(@Nullable Boolean _Deleted) {
+        this._Deleted = _Deleted;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AcademicMajorPojo (");
@@ -236,6 +277,8 @@ public class AcademicMajorPojo implements Serializable {
         sb.append(", ").append(updatedOn);
         sb.append(", ").append(updatedBy);
         sb.append(", ").append(iconPath);
+        sb.append(", ").append(serialNumber);
+        sb.append(", ").append(_Deleted);
 
         sb.append(")");
         return sb.toString();

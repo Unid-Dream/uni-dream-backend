@@ -33,7 +33,7 @@ public class CalendarOperationController {
     private final CalendarOperationService calendarOperationService;
 
 
-    @GetMapping("admin/{userId}/consultation-session/page")
+    @GetMapping("admin/consultation-session/page")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -44,14 +44,13 @@ public class CalendarOperationController {
             summary = "Query Consultation Session Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getAllSessionPage(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
         return UnifiedResponse.of(calendarOperationService.page(request,null));
     }
 
 
-    @GetMapping("admin/{userId}/consultation-session/{id}")
+    @GetMapping("admin/consultation-session/{id}")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -62,13 +61,12 @@ public class CalendarOperationController {
             summary = "Get Consultation Session Detail"
     )
     public @Valid UnifiedResponse<StudentSessionTransactionPayload> getSessionDetail(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         return UnifiedResponse.of(calendarOperationService.getSessionDetail(transactionId));
     }
 
-    @GetMapping("admin/{userId}/consultation-session/pending/page")
+    @GetMapping("admin/consultation-session/pending/page")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -79,14 +77,13 @@ public class CalendarOperationController {
             summary = "Query Pending Consultation Session Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<StudentSessionTransactionPayload>> getPendingSessionPage(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject @Valid CalendarSessionPageRequest request
     ) {
         return UnifiedResponse.of(calendarOperationService.page(request, BookingStatusEnum.PENDING));
     }
 
 
-    @PutMapping("admin/{userId}/consultation-session/{id}/cancel")
+    @PutMapping("admin/consultation-session/{id}/cancel")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -97,14 +94,13 @@ public class CalendarOperationController {
             summary = "Cancel Consultation Session"
     )
     public @Valid UnifiedResponse<Void> cancel(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         calendarOperationService.cancel(transactionId);
         return UnifiedResponse.of(null);
     }
 
-    @GetMapping("admin/{userId}/consultation-session/{id}/eventLog")
+    @GetMapping("admin/consultation-session/{id}/eventLog")
     @Transactional
     @ACL(
             authed = true,
@@ -116,13 +112,12 @@ public class CalendarOperationController {
             summary = "Query Calendar Page"
     )
     public @Valid UnifiedResponse<SessionEventLogResponse> getSessionEventLogs(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId) {
         return UnifiedResponse.of(calendarOperationService.getSessionEventLogs(transactionId));
     }
 
 
-    @GetMapping("admin/{userId}/consultation-session/{id}/comments")
+    @GetMapping("admin/consultation-session/{id}/comments")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -134,7 +129,6 @@ public class CalendarOperationController {
     )
     @SneakyThrows
     public @Valid UnifiedResponse<List<EducatorSessionNoteCommentResponse>> listComments(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID transactionId
     ) {
         var list = calendarOperationService.getSessionComments(transactionId);
@@ -142,7 +136,7 @@ public class CalendarOperationController {
     }
 
 
-    @GetMapping("admin/{userId}/promotion-event/page")
+    @GetMapping("admin/promotion-event/page")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -153,7 +147,6 @@ public class CalendarOperationController {
             summary = "Query Promotion Event Page"
     )
     public @Valid UnifiedResponse<UniPageResponse<CourseEventPayload>> getPromotionEventPage(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @ParameterObject CourseEventPageRequest request
     ) {
         return UnifiedResponse.of(
@@ -161,7 +154,7 @@ public class CalendarOperationController {
         );
     }
 
-    @GetMapping("admin/{userId}/promotion-event/{id}")
+    @GetMapping("admin/promotion-event/{id}")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -172,7 +165,6 @@ public class CalendarOperationController {
             summary = "Get Promotion Event Detail"
     )
     public @Valid UnifiedResponse<CourseEventPayload> getPromotionEventDetail(
-            @PathVariable("userId")  @ACL.UserId UUID userId,
             @PathVariable("id") UUID eventId
     ) {
         return UnifiedResponse.of(
@@ -181,7 +173,7 @@ public class CalendarOperationController {
     }
 
 
-    @PostMapping("admin/{userId}/promotion-event")
+    @PostMapping("admin/promotion-event")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -192,7 +184,6 @@ public class CalendarOperationController {
             summary = "Create Promotion Event"
     )
     public @Valid UnifiedResponse<CourseEventPayload> createPromotionEvent(
-            @PathVariable("userId") @ACL.UserId UUID userId,
             @RequestBody CourseEventPayload payload
     ) {
         return UnifiedResponse.of(
@@ -202,7 +193,7 @@ public class CalendarOperationController {
         );
     }
 
-    @PutMapping("admin/{userId}/promotion-event")
+    @PutMapping("admin/promotion-event")
     @ACL(
             authed = true,
             allowedRoles = UserRoleEnum.ADMIN,
@@ -213,7 +204,6 @@ public class CalendarOperationController {
             summary = "Update Promotion Event"
     )
     public @Valid UnifiedResponse<CourseEventPayload> update(
-            @PathVariable("userId") @ACL.UserId UUID userId,
             @RequestBody CourseEventPayload payload
     ) {
         return UnifiedResponse.of(

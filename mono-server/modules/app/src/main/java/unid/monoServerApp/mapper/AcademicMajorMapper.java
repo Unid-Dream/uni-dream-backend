@@ -6,6 +6,7 @@ import unid.monoServerApp.database.table.academicMajor.DbAcademicMajor;
 import unid.monoServerMeta.api.AcademicMajorPayload;
 import unid.monoServerMeta.api.AcademicMajorRequest;
 import unid.monoServerMeta.api.AcademicMajorResponse;
+import unid.monoServerMeta.api.version2.request.AcademicMajorCreateRequest;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public interface AcademicMajorMapper {
     void merge(@MappingTarget AcademicMajorPojo data, AcademicMajorRequest source);
 
     void merge(@MappingTarget AcademicMajorPojo data, AcademicMajorPayload source);
+    void merge(@MappingTarget AcademicMajorPojo data, AcademicMajorCreateRequest source);
 
 
     AcademicMajorPayload toResponse(AcademicMajorPojo data);
