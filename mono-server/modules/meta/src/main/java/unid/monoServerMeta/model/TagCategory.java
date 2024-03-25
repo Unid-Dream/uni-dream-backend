@@ -19,6 +19,8 @@ public enum TagCategory implements NamedEnum {
     EDUCATION_LEVEL("EDUCATION_LEVEL"),
     UNIVERSITY("UNIVERSITY"),
 
+    SECONDARY_SCHOOL("SECONDARY_SCHOOL")
+
     ;
 
     private final String value;
