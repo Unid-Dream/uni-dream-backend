@@ -105,7 +105,7 @@ public class CountryService {
                 )
                 .select(count().over().as(CountryPayload.Fields.total))
                 .from(table)
-                .orderBy(table.ID.desc())
+                .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
                 .fetchInto(CountryPayload.class);

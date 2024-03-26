@@ -1,5 +1,6 @@
 package unid.monoServerMeta.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import unid.monoServerMeta.model.I18n;
@@ -19,4 +20,7 @@ public class EcaCourseResponse {
     private List<I18n> academicI18ns;
     private List<I18n> opportunityI18ns;
     private Integer[] grade;
+
+    @JsonIgnore
+    private Integer total;
 }

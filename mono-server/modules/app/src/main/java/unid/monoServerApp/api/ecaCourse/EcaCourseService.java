@@ -18,6 +18,7 @@ import unid.monoServerApp.mapper.EcaCourseMapper;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.EcaCoursePayload;
+import unid.monoServerMeta.api.version2.request.EcaCoursePagePayload;
 import unid.monoServerMeta.model.I18n;
 
 import javax.annotation.PostConstruct;
@@ -124,6 +125,66 @@ public class EcaCourseService {
                 list
         );
     }
+
+    public UniPageResponse<EcaCourseResponse> page(EcaCoursePagePayload payload){
+
+        List<EcaCourseResponse> list = dslContext.select(
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.TITLE_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.DESCRIPTION_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.ELIGIBILITY_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.eligibilityI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N,OPPORTUNITY)
+                                        .where(I18N.ID.eq(OPPORTUNITY.TITLE_I18N_ID).and(OPPORTUNITY.ID.eq(any(ECA_COURSE.OPPORTUNITY_ID))))
+                        ).as(EcaCourseResponse.Fields.opportunityI18ns).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
+                        ECA_COURSE.REF_URL,
+                        ECA_COURSE.COVER_IMAGE,
+                        ECA_COURSE.GRADE,
+                        ECA_COURSE.ID,
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N,PASSION_MAJOR)
+                                        .where(I18N.ID.eq(PASSION_MAJOR.NAME_I18N_ID).and(PASSION_MAJOR.ID.eq(any(ECA_COURSE.ACADEMIC_ID))))
+                        ).as(EcaCourseResponse.Fields.academicI18ns).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class))
+
+                )
+                .select(count().over().as(EcaCourseResponse.Fields.total))
+                .from(ECA_COURSE)
+                .offset((payload.getPageNumber() - 1) * payload.getPageSize())
+                .limit(payload.getPageSize())
+                .fetchInto(EcaCourseResponse.class);
+        int totalSize = list.stream()
+                .findFirst()
+                .map(EcaCourseResponse::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                payload.getPageNumber(),
+                payload.getPageSize(),
+                null,
+                list
+        );
+    }
+
+
+
+
+
+
+
 
     @Transactional(rollbackFor = Exception.class)
     EcaCoursePojo create(EcaCourseRequest payload) {

@@ -28,6 +28,7 @@ import unid.monoServerApp.api.educationLevel.EducationLevelPagination;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.EcaCoursePagePayload;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -43,12 +44,11 @@ import java.util.UUID;
 public class EcaCourseController {
     private final EcaCourseService ecaCourseService;
 
-    @GetMapping("/student/student/ecaCourse")
+    @GetMapping(value={"/student/student/ecaCourse"})
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = { UserRoleEnum.STUDENT }
     )
-    
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Query"
@@ -59,6 +59,23 @@ public class EcaCourseController {
             EcaCoursePageRequest payload
     ) {
          return UnifiedResponse.of(ecaCourseService.page(payload));
+    }
+
+    @GetMapping(value={"/admin/ecaCourse/page"})
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<EcaCourseResponse>> page(
+            @Valid
+            @ParameterObject
+            EcaCoursePagePayload payload
+    ) {
+        return UnifiedResponse.of(ecaCourseService.page(payload));
     }
 
 
