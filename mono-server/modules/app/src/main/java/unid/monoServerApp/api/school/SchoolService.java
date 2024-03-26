@@ -327,4 +327,8 @@ public class SchoolService {
                 payload
         );
     }
+
+    public void delete(UUID id) {
+        dbSchool.getDao().deleteById(id);
+    }
 }

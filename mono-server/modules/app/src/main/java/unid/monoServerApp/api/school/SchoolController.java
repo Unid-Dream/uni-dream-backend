@@ -193,6 +193,26 @@ public class SchoolController {
         );
     }
 
+
+    @DeleteMapping("admin/school/{id}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Delete One"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable("id") UUID id
+    ) {
+        schoolService.delete(id);
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
     @GetMapping(value = {"educator/school/tags","student/school/tags","admin/school/tags"})
     @ACL(
             authed = true
