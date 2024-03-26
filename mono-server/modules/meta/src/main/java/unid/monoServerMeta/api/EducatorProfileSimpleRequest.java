@@ -35,6 +35,8 @@ public class EducatorProfileSimpleRequest {
     private String phone;
     private Gender gender;
 
+    private String microsoftEmail;
+
     @Data
     @FieldNameConstants
     public static class EducationLevel{
