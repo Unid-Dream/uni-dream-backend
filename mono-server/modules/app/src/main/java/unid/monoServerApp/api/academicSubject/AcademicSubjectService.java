@@ -124,6 +124,7 @@ public class AcademicSubjectService {
                 .setTitleI18nId(title.getId())
                 .setDescriptionI18nId(desc.map(I18nPojo::getId).orElse(null));
         academicSubjectMapper.merge(pojo, payload);
+        dbAcademicSubject.getDao().insert(pojo);
 
         dbAcademicMajorSubjectMap.getDao().insert(
                 new AcademicMajorSubjectMapPojo()
@@ -131,7 +132,6 @@ public class AcademicSubjectService {
                         .setAcademicSubjectId(pojo.getId())
         );
 
-        dbAcademicSubject.getDao().insert(pojo);
 
         insertOrUpdateResources(pojo.getId(),payload.getResources());
 
