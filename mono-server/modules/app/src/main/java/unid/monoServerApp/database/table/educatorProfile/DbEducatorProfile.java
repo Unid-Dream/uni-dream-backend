@@ -87,8 +87,7 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                                 .from(I18N,USER)
                                 .where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(Tables.EDUCATOR_PROFILE.USER_ID)))
                 ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
-        ).from(Tables.EDUCATOR_PROFILE,USER)
-                .where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
+        ).from(Tables.EDUCATOR_PROFILE,USER).where(Tables.EDUCATOR_PROFILE.USER_ID.eq(USER.ID));
     }
 
 
@@ -183,7 +182,7 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
     public @NotNull SelectConditionStep<?> getSimpleCnt(){
         return dsl.selectCount()
                 .from(USER,EDUCATOR_PROFILE)
-                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
+                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID));
     }
 
     public @NotNull SelectConditionStep<?> getQueryEducatorProfile(){
@@ -252,7 +251,7 @@ public class DbEducatorProfile extends Db<EducatorProfileTable, EducatorProfileD
                         ).as(EducatorResponse.Fields.educations).convertFrom(r -> r.isEmpty() ? null : r.into(EducatorResponse.Education.class))
                  )
                 .from(USER,EDUCATOR_PROFILE)
-                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)));
+                .where(USER.ID.eq(EDUCATOR_PROFILE.USER_ID));
     }
 
 

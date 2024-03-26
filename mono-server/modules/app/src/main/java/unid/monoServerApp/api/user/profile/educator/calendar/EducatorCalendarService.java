@@ -13,6 +13,7 @@ import unid.jooqMono.model.enums.*;
 import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.database.table.country.DbCountry;
+import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.database.table.educatorCalendar.DbEducatorCalendar;
 import unid.monoServerApp.database.table.educatorCalendar.DbSessionReschedule;
@@ -57,6 +58,7 @@ public class EducatorCalendarService {
     private final DbSessionReschedule dbSessionReschedule;
     private final DbSessionOpLog dbSessionOpLog;
     private final SessionLoggerService sessionLoggerService;
+    private final DbEvent dbEvent;
 
     public DbEducatorCalendar.Result get(UUID id) {
         var table = dbEducatorCalendar.getTable();
@@ -395,29 +397,6 @@ public class EducatorCalendarService {
             UUID profileId,
             EducatorHistoryPageRequest request
     ) {
-        var interviewQ = dbStudentPaymentTransaction.getDsl()
-                .select(
-                        STUDENT_UPLOADED_INTERVIEW.ID,
-                        STUDENT_UPLOADED_INTERVIEW.CREATED_ON.as(StudentHistoryPayload.Fields.submissionTime),
-                        STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE.cast(String.class).as(StudentHistoryPayload.Fields.status),
-                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(StudentHistoryPayload.Fields.transactionItem)
-                )
-                .select(count().over().as(StudentHistoryPayload.Fields.total))
-                .from(STUDENT_UPLOADED_INTERVIEW,STUDENT_PAYMENT_TRANSACTION)
-                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_INTERVIEW.PAYMENT_TRANSACTION_ID)
-                        .and(STUDENT_UPLOADED_INTERVIEW.EDUCATOR_PROFILE_ID.eq(profileId)));
-
-        var writingQ = dbStudentPaymentTransaction.getDsl()
-                .select(
-                        STUDENT_UPLOADED_WRITING.ID,
-                        STUDENT_UPLOADED_WRITING.CREATED_ON.as(EducatorHistoryPayload.Fields.submissionTime),
-                        STUDENT_UPLOADED_WRITING.REVIEW_TYPE.cast(String.class).as(EducatorHistoryPayload.Fields.status),
-                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(EducatorHistoryPayload.Fields.transactionItem)
-                )
-                .select(count().over().as(EducatorHistoryPayload.Fields.total))
-                .from(STUDENT_UPLOADED_WRITING,STUDENT_PAYMENT_TRANSACTION)
-                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_WRITING.PAYMENT_TRANSACTION_ID).and(STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID.eq(profileId)));
-
         var sessionQ = dbStudentPaymentTransaction.getDsl()
                 .select(
                         STUDENT_PAYMENT_TRANSACTION.ID,
@@ -431,9 +410,7 @@ public class EducatorCalendarService {
                         .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId)));
 
 
-        List<EducatorHistoryPayload> list = writingQ
-                .union(sessionQ)
-                .union(interviewQ)
+        List<EducatorHistoryPayload> list = sessionQ
                 .limit(request.getPageSize())
                 .offset((request.getPageNumber() - 1) * request.getPageSize())
                 .fetchInto(EducatorHistoryPayload.class);
