@@ -23,7 +23,10 @@ public enum ApplicationApprovalEnum implements NamedEnum {
 
     APPROVED("APPROVED"),
 
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+    BANNED("BANNED"),
+
+    ;
 
     private final String value;
 

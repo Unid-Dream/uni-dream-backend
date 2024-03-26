@@ -65,7 +65,6 @@ public class CalendarOperationService {
     //从页面的角度来看：status (null: 查询全部, pending: )
     public UniPageResponse<StudentSessionTransactionPayload> page(CalendarSessionPageRequest request, BookingStatusEnum status) {
         var statusCondition = DSL.noCondition();
-        var profileCondition = DSL.noCondition();
 
         if (status == BookingStatusEnum.PENDING) {
             statusCondition = DSL.and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING)
@@ -110,8 +109,7 @@ public class CalendarOperationService {
                 .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
                 .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR,USER)
                 .where(
-                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
-                                .and(statusCondition)
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID).and(statusCondition)
                 )
                 .orderBy(STUDENT_PAYMENT_TRANSACTION.CREATED_ON.desc())
                 .limit(request.getPageSize())
