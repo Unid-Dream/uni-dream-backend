@@ -69,8 +69,7 @@ public class CalendarOperationController {
     @GetMapping("admin/consultation-session/pending/page")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
