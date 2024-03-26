@@ -1,40 +1,32 @@
 package unid.monoServerApp.api.educationLevel;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.SortOrder;
-import org.jooq.impl.DSL;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pwh.coreRsqlJooq.jooq.PaginatedQuery;
-import pwh.coreRsqlJooq.jooq.PaginatedQuerySorting;
-import pwh.coreRsqlJooq.model.PaginationRequest;
-import pwh.coreRsqlJooq.model.PaginationResponse;
-import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.TagCategoryEnum;
-import unid.jooqMono.model.enums.UserRoleEnum;
-import unid.monoServerApp.Constant;
+import unid.jooqMono.model.tables.pojos.TagPojo;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
-import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.EducationLevelMapper;
-import unid.monoServerMeta.api.EducationLevelRequest;
-import unid.monoServerMeta.api.EducationLevelResponse;
+import unid.monoServerApp.mapper.TagMapper;
+import unid.monoServerMeta.api.TagRequest;
 import unid.monoServerMeta.api.TagResponse;
+import unid.monoServerMeta.api.UniPageResponse;
+import unid.monoServerMeta.api.version2.request.TagCategoryCreateRequest;
+import unid.monoServerMeta.api.version2.request.TagCategoryUpdateRequest;
+import unid.monoServerMeta.api.version2.request.TagPagePayload;
+import unid.monoServerMeta.model.TagCategory;
 
 import javax.validation.Valid;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +42,7 @@ public class EducationLevelController {
     private final DbEducationLevel dbEducationLevel;
     private final ObjectMapper objectMapper;
     private final TagService tagService;
+    private final TagMapper tagMapper;
 
     @GetMapping(value = {"/educator/educationLevel/tags","/student/educationLevel/tags"})
     @ACL(
@@ -62,58 +55,83 @@ public class EducationLevelController {
     public @Valid UnifiedResponse<List<TagResponse>> tags() {
         var list = tagService.list(TagCategoryEnum.EDUCATION_LEVEL);
         return UnifiedResponse.of(list);
-//        var table = EducationLevelPagination.TABLE;
-//        var dslContext = dbEducationLevel.getDsl();
-//        var extraConditionOnFirstPage = DSL.noCondition();
-//        if (StringUtils.isBlank(payload.getPage())) {
-//            extraConditionOnFirstPage = dbEducationLevel.validateCondition(table);
-//        }
-//        var result = PaginatedQuery.init(
-//                        dslContext,
-//                        objectMapper,
-//                        payload,
-//                        RequestHolder.get().getAuthToken(),
-//                        Constant.PAGINATION_MIN_SIZE,
-//                        Constant.PAGINATION_MAX_SIZE
-//                )
-//                .select(dsl -> dbEducationLevel.getQuery(table))
-//                .conditions(EducationLevelPagination.conditionVisitor)
-//                .extraConditions(extraConditionOnFirstPage)
-//                .sortBy(
-//                        EducationLevelPagination.orderingVisitor,
-//                        null,
-//                        null,
-//                        null,
-//                        uniqueSort -> {
-//                            uniqueSort.add(
-//                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-//                                            table.CREATED_ON,
-//                                            SortOrder.DESC,
-//                                            OrderingVisitor.Seeking.builder()
-//                                                    .whenSeeking(OffsetDateTime::parse)
-//                                                    .build()
-//                                    )
-//                            );
-//                            uniqueSort.add(
-//                                    new PaginatedQuerySorting.ExtraOrUniqueSort(
-//                                            table.ID,
-//                                            SortOrder.DESC,
-//                                            OrderingVisitor.Seeking.builder()
-//                                                    .whenSeeking(UUID::fromString)
-//                                                    .build()
-//                                    )
-//                            );
-//                        }
-//                )
-//                .fetch();
-//        return UnifiedResponse.of(
-//                PaginationResponse.asResult(result, educationLevelMapper.toResponse(result.getResult().into(DbEducationLevel.Result.class)))
-//        );
     }
 
 
+    @GetMapping(value = {"/admin/educationLevel/page"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<TagResponse>> page(
+            @ParameterObject TagPagePayload payload
+    ) {
+        return UnifiedResponse.of(
+                tagService.page(payload,TagCategoryEnum.EDUCATION_LEVEL)
+        );
+    }
 
 
+    @PostMapping(value = {"/admin/educationLevel"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Create"
+    )
+    public @Valid UnifiedResponse<TagResponse> create(
+            @RequestBody TagCategoryCreateRequest payload
+    ) {
+        TagRequest request = new TagRequest();
+        request.setDescriptionI18n(payload.getDescriptionI18n());
+        request.setTagCategory(TagCategory.EDUCATION_LEVEL);
+        var id = tagService.create(request).getId();
+        return UnifiedResponse.of(
+                tagMapper.toResponse(tagService.get(id))
+        );
+    }
+
+    @PutMapping(value = {"/admin/educationLevel"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update"
+    )
+    public @Valid UnifiedResponse<TagResponse> update(
+            @RequestBody TagCategoryUpdateRequest payload
+    ) {
+        TagRequest request = new TagRequest();
+        request.setDescriptionI18n(payload.getDescriptionI18n());
+        request.setTagCategory(TagCategory.EDUCATION_LEVEL);
+        var id = tagService.update(payload.getId(),request).getId();
+        return UnifiedResponse.of(
+                tagMapper.toResponse(tagService.get(id))
+        );
+    }
+
+
+    @DeleteMapping(value = {"/admin/educationLevel/{id}"})
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Delete"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable UUID id
+    ) {
+        tagService.delete(id);
+        return UnifiedResponse.of(
+               null
+        );
+    }
 
 
 

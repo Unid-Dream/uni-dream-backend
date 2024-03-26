@@ -208,10 +208,13 @@ public class SchoolService {
             response.setNameI18n(i18nMapper.toModel(nameI18n));
 
             //查询city
-            DbCity.Result city = dslContext.select().from(CITY)
+            Optional<DbCity.Result> cityOpt = dslContext.select().from(CITY)
                     .where(CITY.ID.eq(result.getCityId()))
-                    .fetchOptionalInto(DbCity.Result.class)
-                    .orElseThrow(()->Exceptions.notFound("City Not Found"));
+                    .fetchOptionalInto(DbCity.Result.class);
+            if(cityOpt.isEmpty()){
+                continue;
+            }
+            DbCity.Result city = cityOpt.get();
             CityResponse cityResponse = cityMapper.toResponse(city);
             //查询city i18n
             I18nPojo cityI18n = dbI18N.getQuery()

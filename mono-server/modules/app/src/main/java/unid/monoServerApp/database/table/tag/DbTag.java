@@ -73,5 +73,7 @@ public class DbTag extends Db<TagTable, TagDao> {
         public UUID getId() {
             return super.getId();
         }
+
+        private Integer total;
     }
 }
