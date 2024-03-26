@@ -27,6 +27,7 @@ import pwh.coreRsqlJooq.model.PaginationRequest;
 import pwh.coreRsqlJooq.model.PaginationResponse;
 import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
+import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.jooqMono.model.tables.EducatorProfileTable;
 import unid.monoServerApp.Constant;
@@ -85,7 +86,32 @@ public class EducatorProfileController {
                         schools,
                         subjects,
                         expertises,
-                        languages)
+                        languages,null)
+        );
+    }
+
+
+    @GetMapping(value = {"admin/user/profile/educator/application/page" } )
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<EducatorProfileSimpleResponse>> getApplicationPage(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber) {
+        if(pageSize == null || pageNumber == null){
+            throw Exceptions.badRequest(" Page Parameter Must Not Empty");
+        }
+        return UnifiedResponse.of(
+                educatorProfileService.page(
+                        pageNumber,
+                        pageSize,
+                        null,null,null,null,
+                        ApplicationApprovalEnum.PENDING)
         );
     }
 
@@ -112,7 +138,7 @@ public class EducatorProfileController {
                         null,
                         null,
                         null,
-                        null)
+                        null,null)
         );
     }
 

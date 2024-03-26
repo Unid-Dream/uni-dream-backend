@@ -195,13 +195,13 @@ public class EducatorProfileService {
         );
     }
 
-
     public UniPageResponse<EducatorProfileSimpleResponse> page(Integer pageNumber,
-                                                  Integer pageSize,
-                                                  List<String> schoolQuery,
-                                                  List<String> subjectQuery,
-                                                  List<String> expertiseQuery,
-                                                  List<String> languageQuery) {
+                                                               Integer pageSize,
+                                                               List<String> schoolQuery,
+                                                               List<String> subjectQuery,
+                                                               List<String> expertiseQuery,
+                                                               List<String> languageQuery,
+                                                               ApplicationApprovalEnum approval) {
         List<UUID> schoolCondition = dslContext.select(EDUCATOR_SCHOOL.EDUCATOR_PROFILE_ID)
                 .from(EDUCATOR_SCHOOL)
                 .leftJoin(TAG).on(EDUCATOR_SCHOOL.UNIVERSITY_ID.eq(TAG.ID))
@@ -226,7 +226,9 @@ public class EducatorProfileService {
                 .from(EDUCATOR_PROFILE)
                 .leftJoin(TAG).on(TAG.ID.eq(any(EDUCATOR_PROFILE.LANGUAGE_ID)))
                 .leftJoin(I18N).on(TAG.DESCRIPTION_I18N_ID.eq(I18N.ID))
-                .where(I18N.ENGLISH.in(languageQuery).or(I18N.CHINESE_SIMPLIFIED.in(languageQuery)).or(I18N.CHINESE_TRADITIONAL.in(languageQuery))).fetchInto(UUID.class);
+                .where(I18N.ENGLISH.in(languageQuery).or(I18N.CHINESE_SIMPLIFIED.in(languageQuery)).or(I18N.CHINESE_TRADITIONAL.in(languageQuery)))
+                .and(approval==null?DSL.noCondition():EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(approval))
+                .fetchInto(UUID.class);
 
         Integer totalRecords = dbEducatorProfile
                 .getSimpleCnt()
@@ -234,6 +236,7 @@ public class EducatorProfileService {
                 .and(subjectQuery == null || subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
                 .and(expertiseQuery == null || expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
                 .and(languageQuery == null || languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
+                .and(approval==null?DSL.noCondition():EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(approval))
                 .fetchOptionalInto(Integer.class).orElse(0);
 
         // 计算总页数
@@ -244,6 +247,7 @@ public class EducatorProfileService {
                 .and(subjectQuery == null || subjectQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(majorCondition))
                 .and(expertiseQuery == null || expertiseQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(expertiseCondition))
                 .and(languageQuery == null || languageQuery.isEmpty() ? DSL.noCondition() : EDUCATOR_PROFILE.ID.in(langCondition))
+                .and(approval==null?DSL.noCondition():EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(approval))
                 .orderBy(EDUCATOR_PROFILE.ID.asc())
                 .offset((pageNumber - 1) * pageSize)
                 .limit(pageSize)

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.jooq.impl.DSL.count;
 import static unid.jooqMono.model.Tables.I18N;
 import static unid.jooqMono.model.Tables.TAG;
 
@@ -108,6 +109,7 @@ public class LanguageService {
                                 DSL.selectFrom(I18N).where(I18N.ID.eq(table.DESCRIPTION_I18N_ID))
                         ).as(LanguagePayload.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
                 )
+                .select(count().over().as(LanguagePayload.Fields.total))
                 .from(table)
                 .orderBy(table.CREATED_ON.desc())
                 .limit(request.getPageSize())
@@ -125,5 +127,9 @@ public class LanguageService {
                 null,
                 payload
         );
+    }
+
+    public void delete(UUID id) {
+        dbLanguage.getDao().deleteById(id);
     }
 }

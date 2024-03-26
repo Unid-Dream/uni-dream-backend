@@ -116,6 +116,23 @@ public class LanguageController {
         );
     }
 
+    @DeleteMapping("/admin/language/{id}")
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get One"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable("id") UUID id
+    ) {
+        languageService.delete(id);
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
     @PostMapping("/admin/language")
     @Transactional
     @ACL(
