@@ -126,8 +126,7 @@ public class StudentProfileController {
     @Transactional
     @ACL(
             authed = true,
-            allowedRoles = {UserRoleEnum.STUDENT, UserRoleEnum.ADMIN, UserRoleEnum.ROOT},
-            matchingSessionUserId = true
+            allowedRoles = {UserRoleEnum.STUDENT, UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
     )
     
     @ResponseStatus(HttpStatus.OK)
@@ -135,7 +134,7 @@ public class StudentProfileController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<StudentProfileResponse> update(
-            @PathVariable("userId") @ACL.UserId UUID userId,
+            @PathVariable("userId") UUID userId,
             @RequestBody @Valid
             StudentProfileRequest payload
     ) {
