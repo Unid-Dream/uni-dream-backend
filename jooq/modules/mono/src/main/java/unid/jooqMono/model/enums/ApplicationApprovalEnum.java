@@ -30,7 +30,9 @@ public enum ApplicationApprovalEnum implements EnumType {
 
     APPROVED("APPROVED"),
 
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+
+    BANNED("BANNED");
 
     private final String literal;
 

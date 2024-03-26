@@ -254,5 +254,26 @@ public class EducatorProfileController {
     }
 
 
+    @PutMapping(value={"admin/user/{educatorProfileId}/profile/educator/ban"})
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Ban One"
+    )
+    public @Valid UnifiedResponse<EducatorProfileSimpleResponse> ban(
+            @PathVariable("educatorProfileId") UUID educatorProfileId
+    ) {
+        var result = educatorProfileService.getSimpleCache(
+                educatorProfileService.acceptOrReject(educatorProfileId, false)
+                        .getId()
+        );
+        return UnifiedResponse.of(result);
+    }
+
+
 
 }

@@ -122,7 +122,7 @@ public class StudentProfileController {
         return UnifiedResponse.of(response);
     }
 
-    @PutMapping("student/user/{userId}/profile/student")
+    @PutMapping(value={"student/user/{userId}/profile/student","admin/user/{userId}/profile/student"})
     @Transactional
     @ACL(
             authed = true,
@@ -145,7 +145,6 @@ public class StudentProfileController {
         );
         var response = studentProfileMapper.toResponse(result);
         studentProfileService.fill(result,response);
-//        tagAppendService.refresh(result);
         return UnifiedResponse.of(response);
     }
 

@@ -99,6 +99,21 @@ public class EducatorProfileService {
         return pojo;
     }
 
+    public EducatorProfilePojo ban(UUID educatorProfileId){
+        var table = dbEducatorProfile.getTable();
+        return dbEducatorProfile.getDsl()
+                .select()
+                .from(table)
+                .where(table.ID.eq(educatorProfileId).and(table.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)))
+                .fetchOptionalInto(EducatorProfilePojo.class)
+                .map((pojo)->{
+                    pojo.setApplicationApproval(ApplicationApprovalEnum.BANNED);
+                    dbEducatorProfile.getDao().update(pojo);
+                    return pojo;
+                })
+                .orElseThrow(()-> Exceptions.business(EDUCATOR_UPDATE_PROFILE_FAIL));
+    }
+
     public EducatorProfilePojo acceptOrReject(UUID educatorProfileId, boolean accept){
         var table = dbEducatorProfile.getTable();
         return dbEducatorProfile.getDsl()
@@ -112,8 +127,6 @@ public class EducatorProfileService {
                     return pojo;
                 })
                 .orElseThrow(()-> Exceptions.business(EDUCATOR_UPDATE_PROFILE_FAIL));
-
-
     }
 
 
