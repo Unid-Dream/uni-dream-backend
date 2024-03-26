@@ -268,7 +268,7 @@ public class EducatorProfileController {
             @PathVariable("educatorProfileId") UUID educatorProfileId
     ) {
         var result = educatorProfileService.getSimpleCache(
-                educatorProfileService.acceptOrReject(educatorProfileId, false)
+                educatorProfileService.ban(educatorProfileId)
                         .getId()
         );
         return UnifiedResponse.of(result);
