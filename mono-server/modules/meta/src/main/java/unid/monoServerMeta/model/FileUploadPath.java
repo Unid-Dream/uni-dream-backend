@@ -11,6 +11,14 @@ public enum FileUploadPath implements NamedEnum {
     INTERVIEW_SKILL("interview-skills"),
     PROFILE_PICTURE("profiles"),
     SCHOOL_REPORT("school-reports"),
+
+    ECA("eca"),
+    ACADEMIC_SUBJECT_READING("academic-subject-reading"),
+    ACADEMIC_MAJOR("academic-major"),
+    COURSE("course"),
+    WEBINAR("webinar"),
+
+
     ;
 
     private final String value;
