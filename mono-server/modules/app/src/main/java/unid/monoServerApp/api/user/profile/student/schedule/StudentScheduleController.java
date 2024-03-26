@@ -198,7 +198,7 @@ public class StudentScheduleController {
 
 
 
-    @GetMapping(value = {"student/session/history/{profileId}","admin/session/history/{profileId}"})
+    @GetMapping(value = {"student/session/history/{profileId}"})
     @ACL(
             authed = true,
             allowedRoles = {UserRoleEnum.STUDENT,UserRoleEnum.ADMIN}
@@ -214,5 +214,23 @@ public class StudentScheduleController {
         return UnifiedResponse.of(
                 studentScheduleService.page(profileId,request)
         );
+    }
+
+
+    @GetMapping(value = {"admin/history/page"})
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    @Hidden
+    public @Valid UnifiedResponse<UniPageResponse<StudentHistoryPayload.Page>> page(
+            @ParameterObject StudentHistoryPageRequest request) {
+
+
+        return UnifiedResponse.of(null);
     }
 }

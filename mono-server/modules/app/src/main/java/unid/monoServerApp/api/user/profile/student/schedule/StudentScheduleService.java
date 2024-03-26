@@ -66,23 +66,24 @@ public class StudentScheduleService {
     ) {
         var table = dbStudentPaymentTransaction.getTable();
 
-        dbStudentPaymentTransaction.getDsl()
-                .select(
-                        table.asterisk(),
-                        DSL.multiset(
-                                DSL.select(
-                                        DSL.multiset(
-                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-                                        ).as(StudentHistoryPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
-                                        DSL.multiset(
-                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-                                        ).as(StudentHistoryPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
-                                ).from(USER)
-                        ).as(StudentHistoryPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentHistoryPayload.StudentProfile.class))
-                )
-                .from(table)
-                .where(table.ID.eq(profileId))
-                .fetchOptionalInto(StudentHistoryPayload.class);
+//        dbStudentPaymentTransaction.getDsl()
+//                .select(
+//                        table.asterisk(),
+//                        DSL.multiset(
+//                                DSL.select(
+//                                        DSL.multiset(
+//                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+//                                        ).as(StudentHistoryPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+//                                        DSL.multiset(
+//                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+//                                        ).as(StudentHistoryPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+//                                ).from(USER)
+//                        ).as(StudentHistoryPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentHistoryPayload.StudentProfile.class))
+//                )
+//                .select()
+//                .from(table)
+//                .where(table.ID.eq(profileId))
+//                .fetchOptionalInto(StudentHistoryPayload.class);
 
 
         return null;

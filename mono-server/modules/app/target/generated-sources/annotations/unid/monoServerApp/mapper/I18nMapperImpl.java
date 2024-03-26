@@ -1,5 +1,6 @@
 package unid.monoServerApp.mapper;
 
+import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import unid.jooqMono.model.tables.pojos.I18nPojo;
@@ -7,7 +8,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-24T12:33:14+0800",
+    date = "2024-03-26T00:46:07+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -52,5 +53,19 @@ public class I18nMapperImpl implements I18nMapper {
         data.setEnglish( source.getEnglish() );
         data.setChineseTraditional( source.getChineseTraditional() );
         data.setChineseSimplified( source.getChineseSimplified() );
+    }
+
+    @Override
+    public void merge(I18nPojo data, I18n source, UUID id) {
+        if ( source == null && id == null ) {
+            return;
+        }
+
+        if ( source != null ) {
+            data.setEnglish( source.getEnglish() );
+            data.setChineseTraditional( source.getChineseTraditional() );
+            data.setChineseSimplified( source.getChineseSimplified() );
+        }
+        data.setId( id );
     }
 }

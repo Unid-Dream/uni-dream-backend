@@ -353,4 +353,8 @@ public class AcademicSubjectService {
         return subject;
 
     }
+
+    public void delete(UUID id) {
+        dbAcademicSubject.getDao().deleteById(id);
+    }
 }

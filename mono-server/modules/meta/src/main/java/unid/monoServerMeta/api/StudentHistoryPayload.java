@@ -14,20 +14,32 @@ import java.util.UUID;
 
 @Data
 @FieldNameConstants
-@Schema
 public class StudentHistoryPayload {
-     private UUID id;
-     private StudentProfile studentProfile;
-     private OffsetDateTime submissionTime;
-     private TransactionItem transactionItem;
-     private BookingStatus status;
 
-     @Data
-     @FieldNameConstants
-     @Schema
-     public static class StudentProfile{
-         private UUID id;
-         private I18n firstNameI18n;
-         private I18n lastNameI18n;
-     }
+    @Data
+    @Schema
+    @FieldNameConstants
+    public static class Page{
+        private UUID id;
+        private StudentProfile studentProfile;
+        private OffsetDateTime submissionTime;
+        private TransactionItem transactionItem;
+        private BookingStatus status;
+
+        @Data
+        @FieldNameConstants
+        @Schema
+        public static class StudentProfile{
+            private UUID id;
+            private I18n firstNameI18n;
+            private I18n lastNameI18n;
+        }
+    }
+
+
+
+
+
+
+
 }

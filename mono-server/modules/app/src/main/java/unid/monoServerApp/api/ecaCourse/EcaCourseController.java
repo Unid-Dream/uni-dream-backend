@@ -114,4 +114,22 @@ public class EcaCourseController {
         ecaCourseService.get(id);
         return UnifiedResponse.of(null);
     }
+
+
+
+    @DeleteMapping("/admin/ecaCourse/{id}")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Delete"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable("id") @NotNull UUID id
+    ) {
+        ecaCourseService.delete(id);
+        return UnifiedResponse.of(null);
+    }
 }

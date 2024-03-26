@@ -9,6 +9,8 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import pwh.springWebStarter.response.UniErrorCode;
+import unid.jooqMono.model.enums.ApplicationApprovalEnum;
 import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.cache.CacheTags;
@@ -95,6 +97,23 @@ public class EducatorProfileService {
         insertOrUpdateSchoolLevel(profileId,payload.getEducationLevel());
         dbEducatorProfile.getDao().update(pojo);
         return pojo;
+    }
+
+    public EducatorProfilePojo acceptOrReject(UUID educatorProfileId, boolean accept){
+        var table = dbEducatorProfile.getTable();
+        return dbEducatorProfile.getDsl()
+                .select()
+                .from(table)
+                .where(table.ID.eq(educatorProfileId).and(table.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.PENDING)))
+                .fetchOptionalInto(EducatorProfilePojo.class)
+                .map((pojo)->{
+                    pojo.setApplicationApproval(accept? ApplicationApprovalEnum.APPROVED:ApplicationApprovalEnum.REJECTED);
+                    dbEducatorProfile.getDao().update(pojo);
+                    return pojo;
+                })
+                .orElseThrow(()-> Exceptions.business(EDUCATOR_UPDATE_PROFILE_FAIL));
+
+
     }
 
 

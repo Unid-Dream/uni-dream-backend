@@ -71,6 +71,8 @@ public enum UniErrorCode{
 
     // ---------------------------------- School -----------------------------------------------
     SCHOOL_LEVEL_IS_NOT_EXIST(15001, "School Level 不存在!!!"),
+    SCHOOL_IS_NOT_EXIST(15002, "School 不存在!!!"),
+
     // ---------------------------------- Interview Skills  -----------------------------------------------
     INTERVIEW_SKILLS_IS_NOT_EXIST(16001, " Interview Skills 不存在!!!"),
 

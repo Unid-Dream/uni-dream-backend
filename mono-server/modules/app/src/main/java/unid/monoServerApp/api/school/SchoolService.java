@@ -43,8 +43,7 @@ import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.multiset;
-import static pwh.springWebStarter.response.UniErrorCode.COUNTRY_IS_NOT_EXIST;
-import static pwh.springWebStarter.response.UniErrorCode.SCHOOL_LEVEL_IS_NOT_EXIST;
+import static pwh.springWebStarter.response.UniErrorCode.*;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -105,7 +104,7 @@ public class SchoolService {
         dbI18N.getDao().insert(name);
         SchoolPojo pojo = schoolMapper.toPojo(payload);
         pojo.setNameI18nId(name.getId());
-        pojo.setCountryId(payload.getCountry().getId());
+        Optional.ofNullable(payload.getCountry()).flatMap(country -> Optional.ofNullable(country.getId())).ifPresent(pojo::setCountryId);
         dbSchool.getDao().insert(pojo);
         //查询TagCategory
         Optional.ofNullable(pojo.getSchoolLevel())
@@ -128,9 +127,9 @@ public class SchoolService {
     SchoolPojo update(SchoolPayload payload){
         SchoolPojo pojo = dbSchool.getDao().fetchOneById(payload.getId());
         if(pojo == null){
-            throw Exceptions.business(COUNTRY_IS_NOT_EXIST);
+            throw Exceptions.business(SCHOOL_IS_NOT_EXIST);
         }
-        pojo.setCountryId(payload.getCountry().getId());
+        Optional.ofNullable(payload.getCountry()).flatMap(country -> Optional.ofNullable(country.getId())).ifPresent(pojo::setCountryId);
         schoolMapper.merge(pojo,payload);
         var name = dbI18N.getDao().fetchOneById(
                 pojo.getNameI18nId()

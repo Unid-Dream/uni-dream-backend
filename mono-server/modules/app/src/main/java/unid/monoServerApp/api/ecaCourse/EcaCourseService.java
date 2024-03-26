@@ -179,4 +179,8 @@ public class EcaCourseService {
                 .where(table.ID.eq(id));
         return null;
     }
+
+    public void delete(UUID id) {
+        dbEcaCourse.getDao().deleteById(id);
+    }
 }

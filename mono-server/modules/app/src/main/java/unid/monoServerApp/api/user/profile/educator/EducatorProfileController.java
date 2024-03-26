@@ -59,10 +59,10 @@ public class EducatorProfileController {
     private final ObjectMapper objectMapper;
 
 
-    @GetMapping("student/user/profile/educator/page")
+    @GetMapping(value = {"student/user/profile/educator/page" } )
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.STUDENT
+            allowedRoles = { UserRoleEnum.STUDENT,UserRoleEnum.ADMIN }
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -90,10 +90,37 @@ public class EducatorProfileController {
     }
 
 
-    @GetMapping(value = { "student/user/{educatorProfileId}/profile/educator","educator/user/{educatorProfileId}/profile/educator"})
+    @GetMapping(value = {"admin/user/profile/educator/page" } )
     @ACL(
             authed = true,
-            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR}
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<EducatorProfileSimpleResponse>> page(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber) {
+        if(pageSize == null || pageNumber == null){
+            throw Exceptions.badRequest(" Page Parameter Must Not Empty");
+        }
+        return UnifiedResponse.of(
+                educatorProfileService.page(
+                        pageNumber,
+                        pageSize,
+                        null,
+                        null,
+                        null,
+                        null)
+        );
+    }
+
+
+    @GetMapping(value = { "student/user/{educatorProfileId}/profile/educator","educator/user/{educatorProfileId}/profile/educator","admin/user/{educatorProfileId}/profile/educator"})
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.STUDENT, UserRoleEnum.EDUCATOR,UserRoleEnum.ADMIN}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -136,20 +163,18 @@ public class EducatorProfileController {
         return UnifiedResponse.of(response);
     }
 
-    @PutMapping("educator/user/{educatorProfileId}/profile/educator")
+    @PutMapping(value={"educator/user/{educatorProfileId}/profile/educator","admin/user/{educatorProfileId}/profile/educator"})
     @Transactional
     @ACL(
             authed = true,
-            allowedRoles = {UserRoleEnum.EDUCATOR, UserRoleEnum.ADMIN, UserRoleEnum.ROOT},
-            matchingSessionProfileId = true,
-            skipMatchingForAdministrative = true
+            allowedRoles = {UserRoleEnum.EDUCATOR, UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update One"
     )
     public @Valid UnifiedResponse<EducatorProfileSimpleResponse> update(
-            @PathVariable("educatorProfileId") @ACL.ProfileId UUID educatorProfileId,
+            @PathVariable("educatorProfileId") UUID educatorProfileId,
             @RequestBody @Valid
             EducatorProfileSimpleRequest payload
     ) {
@@ -159,4 +184,49 @@ public class EducatorProfileController {
         );
         return UnifiedResponse.of(result);
     }
+
+
+    @PutMapping(value={"admin/user/{educatorProfileId}/profile/educator/accept"})
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Accept One"
+    )
+    public @Valid UnifiedResponse<EducatorProfileSimpleResponse> accept(
+            @PathVariable("educatorProfileId") UUID educatorProfileId
+    ) {
+        var result = educatorProfileService.getSimpleCache(
+                educatorProfileService.acceptOrReject(educatorProfileId, true)
+                        .getId()
+        );
+        return UnifiedResponse.of(result);
+    }
+
+
+    @PutMapping(value={"admin/user/{educatorProfileId}/profile/educator/reject"})
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Reject One"
+    )
+    public @Valid UnifiedResponse<EducatorProfileSimpleResponse> reject(
+            @PathVariable("educatorProfileId") UUID educatorProfileId
+    ) {
+        var result = educatorProfileService.getSimpleCache(
+                educatorProfileService.acceptOrReject(educatorProfileId, false)
+                        .getId()
+        );
+        return UnifiedResponse.of(result);
+    }
+
+
+
 }

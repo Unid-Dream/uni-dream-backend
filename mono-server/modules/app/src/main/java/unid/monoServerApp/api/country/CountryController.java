@@ -1,16 +1,10 @@
 package unid.monoServerApp.api.country;//package unid.monoServerApp.api.country;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.SortOrder;
 import org.jooq.impl.DSL;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,27 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pwh.coreRsqlJooq.jooq.PaginatedQuery;
-import pwh.coreRsqlJooq.jooq.PaginatedQuerySorting;
-import pwh.coreRsqlJooq.model.PaginationRequest;
-import pwh.coreRsqlJooq.model.PaginationResponse;
-import pwh.coreRsqlJooq.rsql.OrderingVisitor;
 import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.enums.UserRoleEnum;
-import unid.monoServerApp.Constant;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.tag.TagService;
 import unid.monoServerApp.database.table.country.DbCountry;
 import unid.monoServerApp.database.table.i18n.DbI18N;
-import unid.monoServerApp.database.table.skill.DbInterviewTopic;
-import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.CountryMapper;
 import unid.monoServerMeta.api.*;
-import unid.monoServerMeta.model.I18n;
 
 import javax.validation.Valid;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -150,7 +134,7 @@ public class CountryController {
     )
     public @Valid UnifiedResponse<CountryPayload> create(
             @RequestBody @Valid
-            CountryPayload payload
+            CountryPayload.Create payload
     ) {
         return UnifiedResponse.of(
                 countryService.get(
@@ -159,7 +143,7 @@ public class CountryController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/admin/country")
     @Transactional
     @ACL(
             authed = true,
@@ -170,15 +154,33 @@ public class CountryController {
             summary = "Update One"
     )
     public @Valid UnifiedResponse<CountryPayload> update(
-            @PathVariable("id") UUID id,
             @RequestBody @Valid
-            CountryRequest payload
+            CountryPayload payload
     ) {
         return UnifiedResponse.of(
                 countryService.get(
-                        countryService.update(id, payload)
+                        countryService.update(payload)
                                 .getId()
                 )
+        );
+    }
+
+    @DeleteMapping("/admin/country/{id}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Delete One"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable("id") UUID id
+    ) {
+        countryService.delete(id);
+        return UnifiedResponse.of(
+                null
         );
     }
 }

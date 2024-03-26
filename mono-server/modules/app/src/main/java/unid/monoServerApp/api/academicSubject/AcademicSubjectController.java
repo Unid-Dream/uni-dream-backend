@@ -120,4 +120,22 @@ public class AcademicSubjectController {
                 payload
         );
     }
+
+
+    @DeleteMapping("/admin/academicSubject/{id}")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN, UserRoleEnum.ROOT}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Update One"
+    )
+    public @Valid UnifiedResponse<Void> delete(
+            @PathVariable("id") UUID id
+    ) {
+        academicSubjectService.delete(id);
+        return UnifiedResponse.of(null);
+    }
 }

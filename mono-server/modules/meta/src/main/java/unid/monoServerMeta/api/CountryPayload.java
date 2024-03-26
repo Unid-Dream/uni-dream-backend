@@ -19,4 +19,10 @@ public class CountryPayload {
 
     @JsonIgnore
     private Integer total;
+
+    @Data
+    @Schema
+    public static class Create{
+        private I18n i18n;
+    }
 }

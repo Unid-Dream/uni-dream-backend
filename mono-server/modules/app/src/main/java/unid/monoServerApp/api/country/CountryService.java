@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.TagCategoryEnum;
 import unid.jooqMono.model.tables.pojos.CountryPojo;
 import unid.jooqMono.model.tables.pojos.TagPojo;
@@ -23,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.count;
-import static unid.jooqMono.model.Tables.ACADEMIC_MAJOR_SUBJECT_MAP;
 import static unid.jooqMono.model.Tables.I18N;
 
 @Service
@@ -55,7 +56,6 @@ public class CountryService {
                                 DSL.selectFrom(I18N).where(I18N.ID.eq(table.NAME_I18N_ID))
                         ).as(CountryPayload.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
                 )
-                .select(count().over().as(CountryPayload.Fields.total))
                 .from(table)
                 .where(table.ID.eq(id))
                 .fetchOneInto(CountryPayload.class);
@@ -63,7 +63,8 @@ public class CountryService {
 
 
 
-    CountryPojo create(CountryPayload payload) {
+    @Transactional(rollbackFor = Exception.class)
+    CountryPojo create(CountryPayload.Create payload) {
         sessionService.initDatabaseSession();
         var name = i18nMapper.toPojo(payload.getI18n());
         dbI18N.getDao().insert(name);
@@ -78,17 +79,19 @@ public class CountryService {
         return pojo;
     }
 
-    CountryPojo update(UUID id, CountryRequest payload) {
-//        sessionService.initDatabaseSession();
-//        var country = get(id);
-//        var nameI18n = Optional.ofNullable(dbI18N.getDao().fetchOneById(country.getNameI18nId()))
-//                .orElseThrow(() -> Exceptions.notFound("Name Not Found"));
-//        i18nMapper.merge(nameI18n, payload.getNameI18n());
-//        dbI18N.getDao().update(nameI18n);
-//        countryMapper.merge(country, payload);
-//        dbCountry.getDao().update(country);
-//        return country;
-        return null;
+    CountryPojo update(CountryPayload payload) {
+        sessionService.initDatabaseSession();
+        //查询
+        CountryPojo pojo = dbCountry.getDao().fetchOneById(payload.getId());
+        Optional.ofNullable(pojo).orElseThrow(()->Exceptions.business(UniErrorCode.COUNTRY_IS_NOT_EXIST));
+        Optional.ofNullable(dbI18N.getDao().fetchOneById(pojo.getNameI18nId()))
+                .ifPresent(
+                        i18n-> {
+                            i18nMapper.merge(i18n,payload.getI18n(),i18n.getId());
+                            dbI18N.getDao().update(i18n);
+                        }
+                );
+        return pojo;
     }
 
     public UniPageResponse<CountryPayload> page(CountryPageRequest request) {
@@ -119,5 +122,9 @@ public class CountryService {
                 null,
                 payload
         );
+    }
+
+    void delete(UUID id){
+        dbCountry.getDao().deleteById(id);
     }
 }
