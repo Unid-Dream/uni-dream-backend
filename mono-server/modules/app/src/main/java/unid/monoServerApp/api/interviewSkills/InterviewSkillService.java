@@ -321,7 +321,7 @@ public class InterviewSkillService {
     @Transactional(rollbackFor = Exception.class)
     public UUID update(InterviewSkillReviewRequest payload) {
         var table = dbStudentUploadedInterview.getTable();
-        Range<Integer> range = Range.between(1, 5);
+        Range<Integer> range = Range.between(0, 6);
         if(!range.contains(payload.getCharisma().getScore())||!range.contains(payload.getClarity().getScore())||!range.contains(payload.getContent().getScore())){
             throw Exceptions.business(UniErrorCode.INTERVIEW_SKILLS_SCORE_IS_ERROR);
         }
