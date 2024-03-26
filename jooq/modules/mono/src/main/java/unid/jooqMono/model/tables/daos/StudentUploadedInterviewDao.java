@@ -325,4 +325,21 @@ public class StudentUploadedInterviewDao extends DAOImpl<StudentUploadedIntervie
     public List<StudentUploadedInterviewPojo> fetchByReviewType(ReviewTypeEnum... values) {
         return fetch(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE, values);
     }
+
+    /**
+     * Fetch records that have <code>educator_profile_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentUploadedInterviewPojo> fetchRangeOfEducatorProfileId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.EDUCATOR_PROFILE_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>educator_profile_id IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentUploadedInterviewPojo> fetchByEducatorProfileId(UUID... values) {
+        return fetch(StudentUploadedInterviewTable.STUDENT_UPLOADED_INTERVIEW.EDUCATOR_PROFILE_ID, values);
+    }
 }

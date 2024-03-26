@@ -326,4 +326,38 @@ public class StudentUploadedWritingDao extends DAOImpl<StudentUploadedWritingRec
     public List<StudentUploadedWritingPojo> fetchByReviewType(ReviewTypeEnum... values) {
         return fetch(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.REVIEW_TYPE, values);
     }
+
+    /**
+     * Fetch records that have <code>serial_number BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentUploadedWritingPojo> fetchRangeOfSerialNumber(String lowerInclusive, String upperInclusive) {
+        return fetchRange(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.SERIAL_NUMBER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>serial_number IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentUploadedWritingPojo> fetchBySerialNumber(String... values) {
+        return fetch(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.SERIAL_NUMBER, values);
+    }
+
+    /**
+     * Fetch records that have <code>educator_profile_id BETWEEN lowerInclusive
+     * AND upperInclusive</code>
+     */
+    @Nonnull
+    public List<StudentUploadedWritingPojo> fetchRangeOfEducatorProfileId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>educator_profile_id IN (values)</code>
+     */
+    @Nonnull
+    public List<StudentUploadedWritingPojo> fetchByEducatorProfileId(UUID... values) {
+        return fetch(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID, values);
+    }
 }

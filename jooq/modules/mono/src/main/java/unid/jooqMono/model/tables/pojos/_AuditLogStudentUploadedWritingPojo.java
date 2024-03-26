@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -51,6 +52,7 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
     private String         updatedBy;
     private String[]       recommendedActivity;
     private String         recommendation;
+    private String         serialNumber;
 
     public _AuditLogStudentUploadedWritingPojo() {}
 
@@ -74,9 +76,10 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
         this.updatedBy = value.updatedBy;
         this.recommendedActivity = value.recommendedActivity;
         this.recommendation = value.recommendation;
+        this.serialNumber = value.serialNumber;
     }
 
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation" })
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "serialNumber" })
     public _AuditLogStudentUploadedWritingPojo(
         @Nonnull Long           auditSeq,
         @Nonnull OffsetDateTime auditCreatedon,
@@ -96,7 +99,8 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
         @Nullable OffsetDateTime updatedOn,
         @Nullable String         updatedBy,
         @Nullable String[]       recommendedActivity,
-        @Nullable String         recommendation
+        @Nullable String         recommendation,
+        @Nullable String         serialNumber
     ) {
         this.auditSeq = auditSeq;
         this.auditCreatedon = auditCreatedon;
@@ -117,6 +121,7 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
         this.updatedBy = updatedBy;
         this.recommendedActivity = recommendedActivity;
         this.recommendation = recommendation;
+        this.serialNumber = serialNumber;
     }
 
     /**
@@ -466,6 +471,25 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
+     */
+    public _AuditLogStudentUploadedWritingPojo setSerialNumber(@Nullable String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("_AuditLogStudentUploadedWritingPojo (");
@@ -489,6 +513,7 @@ public class _AuditLogStudentUploadedWritingPojo implements Serializable {
         sb.append(", ").append(updatedBy);
         sb.append(", ").append(Arrays.toString(recommendedActivity));
         sb.append(", ").append(recommendation);
+        sb.append(", ").append(serialNumber);
 
         sb.append(")");
         return sb.toString();

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row19;
+import org.jooq.Row20;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -171,6 +171,12 @@ public class _AuditLogStudentUploadedWritingTable extends TableImpl<_AuditLogStu
      */
     public final TableField<_AuditLogStudentUploadedWritingRecord, String> RECOMMENDATION = createField(DSL.name("recommendation"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
+     */
+    public final TableField<_AuditLogStudentUploadedWritingRecord, String> SERIAL_NUMBER = createField(DSL.name("serial_number"), SQLDataType.VARCHAR(255), this, "");
+
     private _AuditLogStudentUploadedWritingTable(Name alias, Table<_AuditLogStudentUploadedWritingRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -250,12 +256,12 @@ public class _AuditLogStudentUploadedWritingTable extends TableImpl<_AuditLogStu
     }
 
     // -------------------------------------------------------------------------
-    // Row19 type methods
+    // Row20 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row19<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> fieldsRow() {
-        return (Row19) super.fieldsRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 }

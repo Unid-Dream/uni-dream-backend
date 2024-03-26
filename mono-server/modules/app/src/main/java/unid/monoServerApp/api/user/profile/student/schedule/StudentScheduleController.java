@@ -217,7 +217,7 @@ public class StudentScheduleController {
     }
 
 
-    @GetMapping(value = {"admin/history/page"})
+    @GetMapping(value = {"admin/student/{profileId}/history/page"})
     @ACL(
             authed = true,
             allowedRoles = { UserRoleEnum.ADMIN }
@@ -226,11 +226,10 @@ public class StudentScheduleController {
     @Operation(
             summary = "Page"
     )
-    @Hidden
-    public @Valid UnifiedResponse<UniPageResponse<StudentHistoryPayload.Page>> page(
+    public @Valid UnifiedResponse<UniPageResponse<StudentHistoryPayload>> page(
+            @PathVariable("profileId") UUID profileId,
             @ParameterObject StudentHistoryPageRequest request) {
 
-
-        return UnifiedResponse.of(null);
+        return UnifiedResponse.of(studentScheduleService.page(profileId,request));
     }
 }

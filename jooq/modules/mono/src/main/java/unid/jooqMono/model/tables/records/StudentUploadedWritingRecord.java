@@ -12,11 +12,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record15;
-import org.jooq.Row15;
+import org.jooq.Record17;
+import org.jooq.Row17;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import unid.jooqMono.model.enums.ReviewTypeEnum;
@@ -36,7 +37,7 @@ import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUploadedWritingRecord> implements Record15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> {
+public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUploadedWritingRecord> implements Record17<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> {
 
     private static final long serialVersionUID = 1L;
 
@@ -295,6 +296,41 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         return (ReviewTypeEnum) get(14);
     }
 
+    /**
+     * Setter for <code>public.student_uploaded_writing.serial_number</code>.
+     */
+    public StudentUploadedWritingRecord setSerialNumber(@Nullable String value) {
+        set(15, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.student_uploaded_writing.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return (String) get(15);
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_uploaded_writing.educator_profile_id</code>.
+     */
+    public StudentUploadedWritingRecord setEducatorProfileId(@Nullable UUID value) {
+        set(16, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public.student_uploaded_writing.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return (UUID) get(16);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -306,19 +342,19 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     }
 
     // -------------------------------------------------------------------------
-    // Record15 type implementation
+    // Record17 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
-        return (Row15) super.fieldsRow();
+    public Row17<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> valuesRow() {
-        return (Row15) super.valuesRow();
+    public Row17<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> valuesRow() {
+        return (Row17) super.valuesRow();
     }
 
     @Override
@@ -413,6 +449,18 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
 
     @Override
     @Nonnull
+    public Field<String> field16() {
+        return StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.SERIAL_NUMBER;
+    }
+
+    @Override
+    @Nonnull
+    public Field<UUID> field17() {
+        return StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID;
+    }
+
+    @Override
+    @Nonnull
     public UUID component1() {
         return getId();
     }
@@ -499,6 +547,18 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     @Nullable
     public ReviewTypeEnum component15() {
         return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public String component16() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public UUID component17() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -589,6 +649,18 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     @Nullable
     public ReviewTypeEnum value15() {
         return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public String value16() {
+        return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public UUID value17() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -698,7 +770,21 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
 
     @Override
     @Nonnull
-    public StudentUploadedWritingRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull UUID value3, @Nonnull UUID value4, @Nullable String value5, @Nullable UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable OffsetDateTime value9, @Nullable String value10, @Nullable OffsetDateTime value11, @Nullable String value12, @Nullable String[] value13, @Nullable String value14, @Nullable ReviewTypeEnum value15) {
+    public StudentUploadedWritingRecord value16(@Nullable String value) {
+        setSerialNumber(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public StudentUploadedWritingRecord value17(@Nullable UUID value) {
+        setEducatorProfileId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public StudentUploadedWritingRecord values(@Nonnull UUID value1, @Nonnull UUID value2, @Nonnull UUID value3, @Nonnull UUID value4, @Nullable String value5, @Nullable UUID value6, @Nullable UUID value7, @Nullable UUID value8, @Nullable OffsetDateTime value9, @Nullable String value10, @Nullable OffsetDateTime value11, @Nullable String value12, @Nullable String[] value13, @Nullable String value14, @Nullable ReviewTypeEnum value15, @Nullable String value16, @Nullable UUID value17) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -714,6 +800,8 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         value13(value13);
         value14(value14);
         value15(value15);
+        value16(value16);
+        value17(value17);
         return this;
     }
 
@@ -731,8 +819,8 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
     /**
      * Create a detached, initialised StudentUploadedWritingRecord
      */
-    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType" })
-    public StudentUploadedWritingRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType) {
+    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType", "serialNumber", "educatorProfileId" })
+    public StudentUploadedWritingRecord(@Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType, @Nullable String serialNumber, @Nullable UUID educatorProfileId) {
         super(StudentUploadedWritingTable.STUDENT_UPLOADED_WRITING);
 
         setId(id);
@@ -750,6 +838,8 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
         setRecommendedActivity(recommendedActivity);
         setRecommendation(recommendation);
         setReviewType(reviewType);
+        setSerialNumber(serialNumber);
+        setEducatorProfileId(educatorProfileId);
     }
 
     /**
@@ -774,6 +864,8 @@ public class StudentUploadedWritingRecord extends UpdatableRecordImpl<StudentUpl
             setRecommendedActivity(value.getRecommendedActivity());
             setRecommendation(value.getRecommendation());
             setReviewType(value.getReviewType());
+            setSerialNumber(value.getSerialNumber());
+            setEducatorProfileId(value.getEducatorProfileId());
         }
     }
 }

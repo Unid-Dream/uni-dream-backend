@@ -220,4 +220,21 @@ public class EducatorCalendarController {
         ConsultationSessionResponse response = educatorCalendarService.getConsultationSession(profileId, calendarId);
         return UnifiedResponse.of(response);
     }
+
+
+    @GetMapping(value = {"admin/educator/{profileId}/history/page"})
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<EducatorHistoryPayload>> page(
+            @PathVariable("profileId") UUID profileId,
+            @ParameterObject EducatorHistoryPageRequest request) {
+
+        return UnifiedResponse.of(educatorCalendarService.page(profileId,request));
+    }
 }

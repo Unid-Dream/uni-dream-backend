@@ -391,4 +391,65 @@ public class EducatorCalendarService {
     }
 
 
+    public UniPageResponse<EducatorHistoryPayload> page(
+            UUID profileId,
+            EducatorHistoryPageRequest request
+    ) {
+        var interviewQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_UPLOADED_INTERVIEW.ID,
+                        STUDENT_UPLOADED_INTERVIEW.CREATED_ON.as(StudentHistoryPayload.Fields.submissionTime),
+                        STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE.cast(String.class).as(StudentHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(StudentHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(StudentHistoryPayload.Fields.total))
+                .from(STUDENT_UPLOADED_INTERVIEW,STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_INTERVIEW.PAYMENT_TRANSACTION_ID)
+                        .and(STUDENT_UPLOADED_INTERVIEW.EDUCATOR_PROFILE_ID.eq(profileId)));
+
+        var writingQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_UPLOADED_WRITING.ID,
+                        STUDENT_UPLOADED_WRITING.CREATED_ON.as(EducatorHistoryPayload.Fields.submissionTime),
+                        STUDENT_UPLOADED_WRITING.REVIEW_TYPE.cast(String.class).as(EducatorHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(EducatorHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(EducatorHistoryPayload.Fields.total))
+                .from(STUDENT_UPLOADED_WRITING,STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_WRITING.PAYMENT_TRANSACTION_ID).and(STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID.eq(profileId)));
+
+        var sessionQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_PAYMENT_TRANSACTION.ID,
+                        STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(EducatorHistoryPayload.Fields.submissionTime),
+                        STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.cast(String.class).as(EducatorHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(EducatorHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(EducatorHistoryPayload.Fields.total))
+                .from(STUDENT_PAYMENT_TRANSACTION,EDUCATOR_CALENDAR)
+                .where(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                        .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(profileId)));
+
+
+        List<EducatorHistoryPayload> list = writingQ
+                .union(sessionQ)
+                .union(interviewQ)
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(EducatorHistoryPayload.class);
+
+
+        int totalSize = list.stream()
+                .findFirst()
+                .map(EducatorHistoryPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                list
+        );
+    }
 }

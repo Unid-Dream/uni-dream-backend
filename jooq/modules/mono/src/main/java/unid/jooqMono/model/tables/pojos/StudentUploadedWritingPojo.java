@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import unid.jooqMono.model.enums.ReviewTypeEnum;
 
@@ -49,6 +50,8 @@ public class StudentUploadedWritingPojo implements Serializable {
     private String[]       recommendedActivity;
     private String         recommendation;
     private ReviewTypeEnum reviewType;
+    private String         serialNumber;
+    private UUID           educatorProfileId;
 
     public StudentUploadedWritingPojo() {}
 
@@ -68,9 +71,11 @@ public class StudentUploadedWritingPojo implements Serializable {
         this.recommendedActivity = value.recommendedActivity;
         this.recommendation = value.recommendation;
         this.reviewType = value.reviewType;
+        this.serialNumber = value.serialNumber;
+        this.educatorProfileId = value.educatorProfileId;
     }
 
-    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType" })
+    @ConstructorProperties({ "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType", "serialNumber", "educatorProfileId" })
     public StudentUploadedWritingPojo(
         @Nonnull UUID           id,
         @Nonnull UUID           studentProfileId,
@@ -86,7 +91,9 @@ public class StudentUploadedWritingPojo implements Serializable {
         @Nullable String         updatedBy,
         @Nullable String[]       recommendedActivity,
         @Nullable String         recommendation,
-        @Nullable ReviewTypeEnum reviewType
+        @Nullable ReviewTypeEnum reviewType,
+        @Nullable String         serialNumber,
+        @Nullable UUID           educatorProfileId
     ) {
         this.id = id;
         this.studentProfileId = studentProfileId;
@@ -103,6 +110,8 @@ public class StudentUploadedWritingPojo implements Serializable {
         this.recommendedActivity = recommendedActivity;
         this.recommendation = recommendation;
         this.reviewType = reviewType;
+        this.serialNumber = serialNumber;
+        this.educatorProfileId = educatorProfileId;
     }
 
     /**
@@ -360,6 +369,41 @@ public class StudentUploadedWritingPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>public.student_uploaded_writing.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    /**
+     * Setter for <code>public.student_uploaded_writing.serial_number</code>.
+     */
+    public StudentUploadedWritingPojo setSerialNumber(@Nullable String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public.student_uploaded_writing.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return this.educatorProfileId;
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_uploaded_writing.educator_profile_id</code>.
+     */
+    public StudentUploadedWritingPojo setEducatorProfileId(@Nullable UUID educatorProfileId) {
+        this.educatorProfileId = educatorProfileId;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("StudentUploadedWritingPojo (");
@@ -379,6 +423,8 @@ public class StudentUploadedWritingPojo implements Serializable {
         sb.append(", ").append(Arrays.toString(recommendedActivity));
         sb.append(", ").append(recommendation);
         sb.append(", ").append(reviewType);
+        sb.append(", ").append(serialNumber);
+        sb.append(", ").append(educatorProfileId);
 
         sb.append(")");
         return sb.toString();

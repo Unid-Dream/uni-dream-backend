@@ -21,6 +21,7 @@ import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.learningHub.DbLearningHub;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
 import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
+import unid.monoServerApp.database.table.tag.DbTag;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.StudentPaymentTransactionMapper;
 import unid.monoServerApp.model.SessionLogger;
@@ -40,8 +41,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.jooq.impl.DSL.multiset;
-import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.*;
 import static unid.jooqMono.model.Tables.*;
 
 @Service
@@ -61,32 +61,64 @@ public class StudentScheduleService {
     private final SessionLoggerService sessionLoggerService;
 
     public UniPageResponse<StudentHistoryPayload> page(
-            UUID profileId,
+            UUID studentProfileId,
             StudentHistoryPageRequest request
     ) {
-        var table = dbStudentPaymentTransaction.getTable();
+        var interviewQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_UPLOADED_INTERVIEW.ID,
+                        STUDENT_UPLOADED_INTERVIEW.CREATED_ON.as(StudentHistoryPayload.Fields.submissionTime),
+                        STUDENT_UPLOADED_INTERVIEW.REVIEW_TYPE.cast(String.class).as(StudentHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(StudentHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(StudentHistoryPayload.Fields.total))
+                .from(STUDENT_UPLOADED_INTERVIEW,STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_INTERVIEW.PAYMENT_TRANSACTION_ID)
+                        .and(STUDENT_UPLOADED_INTERVIEW.STUDENT_PROFILE_ID.eq(studentProfileId)));
 
-//        dbStudentPaymentTransaction.getDsl()
-//                .select(
-//                        table.asterisk(),
-//                        DSL.multiset(
-//                                DSL.select(
-//                                        DSL.multiset(
-//                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
-//                                        ).as(StudentHistoryPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
-//                                        DSL.multiset(
-//                                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
-//                                        ).as(StudentHistoryPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
-//                                ).from(USER)
-//                        ).as(StudentHistoryPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentHistoryPayload.StudentProfile.class))
-//                )
-//                .select()
-//                .from(table)
-//                .where(table.ID.eq(profileId))
-//                .fetchOptionalInto(StudentHistoryPayload.class);
+        var writingQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_UPLOADED_WRITING.ID,
+                        STUDENT_UPLOADED_WRITING.CREATED_ON.as(StudentHistoryPayload.Fields.submissionTime),
+                        STUDENT_UPLOADED_WRITING.REVIEW_TYPE.cast(String.class).as(StudentHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(StudentHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(StudentHistoryPayload.Fields.total))
+                .from(STUDENT_UPLOADED_WRITING,STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_UPLOADED_WRITING.PAYMENT_TRANSACTION_ID).and(STUDENT_UPLOADED_WRITING.STUDENT_PROFILE_ID.eq(studentProfileId)));
+
+        var sessionQ = dbStudentPaymentTransaction.getDsl()
+                .select(
+                        STUDENT_PAYMENT_TRANSACTION.ID,
+                        STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentHistoryPayload.Fields.submissionTime),
+                        STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.cast(String.class).as(StudentHistoryPayload.Fields.status),
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM.as(StudentHistoryPayload.Fields.transactionItem)
+                )
+                .select(count().over().as(StudentHistoryPayload.Fields.total))
+                .from(STUDENT_PAYMENT_TRANSACTION)
+                .where(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID.eq(studentProfileId));
 
 
-        return null;
+        List<StudentHistoryPayload> list = writingQ
+                .union(sessionQ)
+                .union(interviewQ)
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(StudentHistoryPayload.class);
+
+
+        int totalSize = list.stream()
+                .findFirst()
+                .map(StudentHistoryPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                list
+        );
     }
 
 

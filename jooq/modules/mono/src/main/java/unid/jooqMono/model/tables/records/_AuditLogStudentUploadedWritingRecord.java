@@ -12,10 +12,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.jooq.Field;
-import org.jooq.Record19;
-import org.jooq.Row19;
+import org.jooq.Record20;
+import org.jooq.Row20;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.tables._AuditLogStudentUploadedWritingTable;
@@ -34,7 +35,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogStudentUploadedWritingPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_AuditLogStudentUploadedWritingRecord> implements Record19<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> {
+public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_AuditLogStudentUploadedWritingRecord> implements Record20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -385,20 +386,39 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
         return (String) get(18);
     }
 
+    /**
+     * Setter for
+     * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
+     */
+    public _AuditLogStudentUploadedWritingRecord setSerialNumber(@Nullable String value) {
+        set(19, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
+     */
+    @Size(max = 255)
+    @Nullable
+    public String getSerialNumber() {
+        return (String) get(19);
+    }
+
     // -------------------------------------------------------------------------
-    // Record19 type implementation
+    // Record20 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row19<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> fieldsRow() {
-        return (Row19) super.fieldsRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row19<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String> valuesRow() {
-        return (Row19) super.valuesRow();
+    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> valuesRow() {
+        return (Row20) super.valuesRow();
     }
 
     @Override
@@ -517,6 +537,12 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nonnull
+    public Field<String> field20() {
+        return _AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING.SERIAL_NUMBER;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -627,6 +653,12 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
     @Nullable
     public String component19() {
         return getRecommendation();
+    }
+
+    @Override
+    @Nullable
+    public String component20() {
+        return getSerialNumber();
     }
 
     @Override
@@ -741,6 +773,12 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
     @Nullable
     public String value19() {
         return getRecommendation();
+    }
+
+    @Override
+    @Nullable
+    public String value20() {
+        return getSerialNumber();
     }
 
     @Override
@@ -878,7 +916,14 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nonnull
-    public _AuditLogStudentUploadedWritingRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19) {
+    public _AuditLogStudentUploadedWritingRecord value20(@Nullable String value) {
+        setSerialNumber(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogStudentUploadedWritingRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19, @Nullable String value20) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -898,6 +943,7 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
         value17(value17);
         value18(value18);
         value19(value19);
+        value20(value20);
         return this;
     }
 
@@ -915,8 +961,8 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
     /**
      * Create a detached, initialised _AuditLogStudentUploadedWritingRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation" })
-    public _AuditLogStudentUploadedWritingRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "serialNumber" })
+    public _AuditLogStudentUploadedWritingRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable String serialNumber) {
         super(_AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING);
 
         setAuditSeq(auditSeq);
@@ -938,6 +984,7 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
         setUpdatedBy(updatedBy);
         setRecommendedActivity(recommendedActivity);
         setRecommendation(recommendation);
+        setSerialNumber(serialNumber);
     }
 
     /**
@@ -966,6 +1013,7 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
             setUpdatedBy(value.getUpdatedBy());
             setRecommendedActivity(value.getRecommendedActivity());
             setRecommendation(value.getRecommendation());
+            setSerialNumber(value.getSerialNumber());
         }
     }
 }

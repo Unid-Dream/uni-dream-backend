@@ -206,11 +206,10 @@ public class SchoolTable extends TableImpl<SchoolRecord> {
     @Override
     @Nonnull
     public List<ForeignKey<SchoolRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.SCHOOL__FK_SCHL_NAME, Keys.SCHOOL__FK_SCHL_COUT, Keys.SCHOOL__FK_SCHL_CITY, Keys.SCHOOL__FK_SCHL_ADDR, Keys.SCHOOL__FK_SCHL_TAG);
+        return Arrays.asList(Keys.SCHOOL__FK_SCHL_NAME, Keys.SCHOOL__FK_SCHL_CITY, Keys.SCHOOL__FK_SCHL_ADDR, Keys.SCHOOL__FK_SCHL_TAG);
     }
 
     private transient I18nTable _fkSchlName;
-    private transient CountryTable _country;
     private transient CityTable _city;
     private transient I18nTable _fkSchlAddr;
     private transient TagTable _tag;
@@ -220,13 +219,6 @@ public class SchoolTable extends TableImpl<SchoolRecord> {
             _fkSchlName = new I18nTable(this, Keys.SCHOOL__FK_SCHL_NAME);
 
         return _fkSchlName;
-    }
-
-    public CountryTable country() {
-        if (_country == null)
-            _country = new CountryTable(this, Keys.SCHOOL__FK_SCHL_COUT);
-
-        return _country;
     }
 
     public CityTable city() {

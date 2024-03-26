@@ -49,6 +49,7 @@ public class StudentUploadedInterviewPojo implements Serializable {
     private String[]       recommendedActivity;
     private String         recommendation;
     private ReviewTypeEnum reviewType;
+    private UUID           educatorProfileId;
 
     public StudentUploadedInterviewPojo() {}
 
@@ -68,9 +69,10 @@ public class StudentUploadedInterviewPojo implements Serializable {
         this.recommendedActivity = value.recommendedActivity;
         this.recommendation = value.recommendation;
         this.reviewType = value.reviewType;
+        this.educatorProfileId = value.educatorProfileId;
     }
 
-    @ConstructorProperties({ "id", "studentProfileId", "interviewTopicId", "paymentTransactionId", "uploadedFile", "contentReviewId", "clarityReviewId", "charismaReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType" })
+    @ConstructorProperties({ "id", "studentProfileId", "interviewTopicId", "paymentTransactionId", "uploadedFile", "contentReviewId", "clarityReviewId", "charismaReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType", "educatorProfileId" })
     public StudentUploadedInterviewPojo(
         @Nonnull UUID           id,
         @Nonnull UUID           studentProfileId,
@@ -86,7 +88,8 @@ public class StudentUploadedInterviewPojo implements Serializable {
         @Nullable String         updatedBy,
         @Nullable String[]       recommendedActivity,
         @Nullable String         recommendation,
-        @Nullable ReviewTypeEnum reviewType
+        @Nullable ReviewTypeEnum reviewType,
+        @Nullable UUID           educatorProfileId
     ) {
         this.id = id;
         this.studentProfileId = studentProfileId;
@@ -103,6 +106,7 @@ public class StudentUploadedInterviewPojo implements Serializable {
         this.recommendedActivity = recommendedActivity;
         this.recommendation = recommendation;
         this.reviewType = reviewType;
+        this.educatorProfileId = educatorProfileId;
     }
 
     /**
@@ -362,6 +366,24 @@ public class StudentUploadedInterviewPojo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for
+     * <code>public.student_uploaded_interview.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return this.educatorProfileId;
+    }
+
+    /**
+     * Setter for
+     * <code>public.student_uploaded_interview.educator_profile_id</code>.
+     */
+    public StudentUploadedInterviewPojo setEducatorProfileId(@Nullable UUID educatorProfileId) {
+        this.educatorProfileId = educatorProfileId;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("StudentUploadedInterviewPojo (");
@@ -381,6 +403,7 @@ public class StudentUploadedInterviewPojo implements Serializable {
         sb.append(", ").append(Arrays.toString(recommendedActivity));
         sb.append(", ").append(recommendation);
         sb.append(", ").append(reviewType);
+        sb.append(", ").append(educatorProfileId);
 
         sb.append(")");
         return sb.toString();

@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row15;
+import org.jooq.Row17;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -141,6 +141,17 @@ public class StudentUploadedWritingTable extends TableImpl<StudentUploadedWritin
      * The column <code>public.student_uploaded_writing.review_type</code>.
      */
     public final TableField<StudentUploadedWritingRecord, ReviewTypeEnum> REVIEW_TYPE = createField(DSL.name("review_type"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.ReviewTypeEnum.class), this, "");
+
+    /**
+     * The column <code>public.student_uploaded_writing.serial_number</code>.
+     */
+    public final TableField<StudentUploadedWritingRecord, String> SERIAL_NUMBER = createField(DSL.name("serial_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>public.student_uploaded_writing.educator_profile_id</code>.
+     */
+    public final TableField<StudentUploadedWritingRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
 
     private StudentUploadedWritingTable(Name alias, Table<StudentUploadedWritingRecord> aliased) {
         this(alias, aliased, null);
@@ -273,12 +284,12 @@ public class StudentUploadedWritingTable extends TableImpl<StudentUploadedWritin
     }
 
     // -------------------------------------------------------------------------
-    // Row15 type methods
+    // Row17 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row15<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
-        return (Row15) super.fieldsRow();
+    public Row17<UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 }
