@@ -44,7 +44,7 @@ public class EducationLevelController {
     private final TagService tagService;
     private final TagMapper tagMapper;
 
-    @GetMapping(value = {"/educator/educationLevel/tags","/student/educationLevel/tags"})
+    @GetMapping(value = {"/educator/educationLevel/tags","/student/educationLevel/tags","/admin/educationLevel/tags"})
     @ACL(
             authed = true
     )
