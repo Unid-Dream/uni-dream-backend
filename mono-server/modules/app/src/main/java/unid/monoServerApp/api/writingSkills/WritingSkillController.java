@@ -17,6 +17,7 @@ import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.WritingSkillReviewRequest;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -109,11 +110,11 @@ public class WritingSkillController {
             summary = "Update Student Writing Skill Review"
     )
     public @Valid UnifiedResponse<WritingSkillPayload> update(
-            @RequestBody WritingSkillPayload payload
+            @RequestBody WritingSkillReviewRequest payload
     ) {
         return UnifiedResponse.of(
                 writingSkillService.get(
-                        writingSkillService.update(payload).getId()
+                        writingSkillService.update(payload)
                 )
         );
     }

@@ -27,6 +27,7 @@ import unid.monoServerApp.mapper.*;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.WritingSkillReviewRequest;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.ReviewStatus;
@@ -174,7 +175,7 @@ public class WritingSkillService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public WritingSkillPayload update(WritingSkillPayload payload) {
+    public UUID update(WritingSkillReviewRequest payload) {
         var table = dbStudentUploadedWriting.getTable();
 
         StudentUploadedSupervisorReviewPojo grammarAndExpression = studentUploadedSupervisorReviewMapper.toPojo(payload.getGrammarAndExpression());
@@ -194,7 +195,7 @@ public class WritingSkillService {
                 .where(table.ID.eq(payload.getId()))
                 .execute();
 
-        return payload;
+        return payload.getId();
     }
 
 
@@ -211,7 +212,7 @@ public class WritingSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(
@@ -227,7 +228,7 @@ public class WritingSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(
@@ -243,7 +244,7 @@ public class WritingSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(WritingSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(

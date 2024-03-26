@@ -28,6 +28,7 @@ import unid.monoServerApp.mapper.StudentUploadedSupervisorReviewMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillUpdateRequest;
 import unid.monoServerMeta.model.I18n;
 
@@ -141,7 +142,7 @@ public class InterviewSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(
@@ -157,7 +158,7 @@ public class InterviewSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(
@@ -173,7 +174,7 @@ public class InterviewSkillService {
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_STRENGTH.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WEAKNESS.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_IMPROVEMENT.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+                                        STUDENT_UPLOADED_SUPERVISOR_REVIEW.SUPERVISOR_COMMENTED_WRAP_UP.as(InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
                                 ).from(
                                         STUDENT_UPLOADED_SUPERVISOR_REVIEW
                                 ).where(
@@ -318,7 +319,7 @@ public class InterviewSkillService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public InterviewSkillPayload update(InterviewSkillPayload payload) {
+    public UUID update(InterviewSkillReviewRequest payload) {
         var table = dbStudentUploadedInterview.getTable();
         Range<Integer> range = Range.between(1, 5);
         if(!range.contains(payload.getCharisma().getScore())||!range.contains(payload.getClarity().getScore())||!range.contains(payload.getContent().getScore())){
@@ -390,7 +391,7 @@ public class InterviewSkillService {
                 .where(table.ID.eq(payload.getId()))
                 .execute();
 
-        return payload;
+        return payload.getId();
     }
 }
 

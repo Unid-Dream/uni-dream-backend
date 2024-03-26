@@ -87,6 +87,6 @@ public class WritingSkillPayload {
         private String strength;
         private String weakness;
         private String improvement;
-        private String warpUp;
+        private String wrapUp;
     }
 }
