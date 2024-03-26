@@ -19,7 +19,7 @@ public interface StudentUploadedSupervisorReviewMapper {
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedStrength, source=WritingSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWeakness, source=WritingSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedImprovement, source=WritingSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=WritingSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=WritingSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
 
     })
     StudentUploadedSupervisorReviewPojo toPojo(WritingSkillPayload.StudentUploadedSupervisorReview data);
@@ -31,7 +31,7 @@ public interface StudentUploadedSupervisorReviewMapper {
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedStrength, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWeakness, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedImprovement, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
 
     })
     StudentUploadedSupervisorReviewPojo toPojo(InterviewSkillPayload.StudentUploadedSupervisorReview data);
@@ -43,7 +43,7 @@ public interface StudentUploadedSupervisorReviewMapper {
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedStrength, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.strength),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWeakness, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.weakness),
             @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedImprovement, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.improvement),
-            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.warpUp)
+            @Mapping(target = StudentUploadedSupervisorReviewPojo.Columns.supervisorCommentedWrapUp, source=InterviewSkillPayload.StudentUploadedSupervisorReview.Fields.wrapUp)
     })
     void merge(@MappingTarget StudentUploadedSupervisorReviewPojo pojo , InterviewSkillPayload.StudentUploadedSupervisorReview data);
 }
