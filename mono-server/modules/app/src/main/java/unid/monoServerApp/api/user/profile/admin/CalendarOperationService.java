@@ -117,7 +117,7 @@ public class CalendarOperationService {
                         ).as(StudentSessionTransactionPayload.Fields.educatorProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(StudentSessionTransactionPayload.EducatorProfile.class))
                 )
                 .select(count().over().as(StudentSessionTransactionPayload.Fields.total))
-                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR,USER)
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR)
                 .where(
                         STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID).and(statusCondition)
                 )
