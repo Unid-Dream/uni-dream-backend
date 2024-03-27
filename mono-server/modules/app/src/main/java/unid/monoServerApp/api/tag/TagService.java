@@ -22,8 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.count;
-import static unid.jooqMono.model.Tables.I18N;
-import static unid.jooqMono.model.Tables.TAG;
+import static unid.jooqMono.model.Tables.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -63,6 +62,21 @@ public class TagService {
                 )
                 .from(TAG,I18N)
                 .where(TAG.TAG_CATEGORY.eq(tagCategoryEnum).and(TAG.DESCRIPTION_I18N_ID.eq(I18N.ID)).and(I18N.ENGLISH.isNotNull()))
+                .fetchInto(DbTag.Result.class);
+        return tagMapper.toResponse(list);
+    }
+
+
+    public List<TagResponse> listAcademicMajorTags() {
+        List<DbTag.Result> list = dbTag.getDsl().select(
+                        ACADEMIC_MAJOR.asterisk(),
+                        DSL.multiset(
+                                DSL.select()
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ACADEMIC_MAJOR.TITLE_I18N_ID))
+                        ).as(DbTag.Result.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(DbI18N.Result.class))
+                )
+                .from(ACADEMIC_MAJOR)
                 .fetchInto(DbTag.Result.class);
         return tagMapper.toResponse(list);
     }

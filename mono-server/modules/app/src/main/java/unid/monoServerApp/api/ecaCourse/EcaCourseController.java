@@ -28,6 +28,7 @@ import unid.monoServerApp.api.educationLevel.EducationLevelPagination;
 import unid.monoServerApp.database.table.educationLevel.DbEducationLevel;
 import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.EcaCoursePayload;
 import unid.monoServerMeta.api.version2.request.EcaCoursePagePayload;
 
 import javax.validation.Valid;
@@ -123,13 +124,12 @@ public class EcaCourseController {
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Update"
+            summary = "Query One"
     )
-    public @Valid UnifiedResponse<Void> get(
+    public @Valid UnifiedResponse<EcaCourseResponse> get(
             @PathVariable("id") @NotNull UUID id
     ) {
-        ecaCourseService.get(id);
-        return UnifiedResponse.of(null);
+        return UnifiedResponse.of(ecaCourseService.get(id));
     }
 
 

@@ -147,7 +147,7 @@ public class AcademicMajorController {
     }
 
 
-    @GetMapping(value={"educator/academicMajor/tags","admin/academicMajor/tags"})
+    @GetMapping(value={"educator/academicMajor/tags"})
     @Transactional
     @ACL(
             authed = true
@@ -158,6 +158,23 @@ public class AcademicMajorController {
     )
     public UnifiedResponse<List<TagResponse>> tags(){
         List<TagResponse> list = tagService.list(TagCategoryEnum.ACADEMIC_MAJOR);
+        return UnifiedResponse.of(
+                list
+        );
+    }
+
+
+    @GetMapping(value={"admin/academicMajor/tags"})
+    @Transactional
+    @ACL(
+            authed = true
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Academic Major Tags"
+    )
+    public UnifiedResponse<List<TagResponse>> listAcademicMajorTags(){
+        List<TagResponse> list = tagService.listAcademicMajorTags();
         return UnifiedResponse.of(
                 list
         );

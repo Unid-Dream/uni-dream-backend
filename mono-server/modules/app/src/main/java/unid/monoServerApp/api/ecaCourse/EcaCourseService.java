@@ -218,27 +218,43 @@ public class EcaCourseService {
         return pojo;
     }
 
-    public EcaCoursePayload get(UUID id) {
+    EcaCourseResponse get(UUID id) {
         var table = dbEcaCourse.getTable();
-        dbEcaCourse.getDsl()
-                .select(
-                        table.asterisk(),
-                        DSL.multiset(
-                                DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
-                        ).as(EcaCoursePayload.Fields.nameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
-                        DSL.multiset(
-                                DSL.select(
-                                            DSL.multiset(
-                                                    DSL.selectFrom(I18N).where(I18N.ID.eq(table.TITLE_I18N_ID))
-                                            ).as(EcaCoursePayload.AcademicMajor.Fields.i18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
-                                        )
-                                        .from(ACADEMIC_MAJOR)
-                                        .where(ACADEMIC_MAJOR.ID.eq(any(table.ACADEMIC_ID)))
-                        ).as(EcaCoursePayload.Fields.majors).convertFrom(r->r.isEmpty()?null:r.into(EcaCoursePayload.AcademicMajor.class))
+        return dslContext.select(
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.TITLE_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.titleI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.DESCRIPTION_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.descriptionI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N)
+                                        .where(I18N.ID.eq(ECA_COURSE.ELIGIBILITY_I18N_ID))
+                        ).as(EcaCourseResponse.Fields.eligibilityI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N,OPPORTUNITY)
+                                        .where(I18N.ID.eq(OPPORTUNITY.TITLE_I18N_ID).and(OPPORTUNITY.ID.eq(any(ECA_COURSE.OPPORTUNITY_ID))))
+                        ).as(EcaCourseResponse.Fields.opportunityI18ns).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class)),
+                        ECA_COURSE.REF_URL,
+                        ECA_COURSE.COVER_IMAGE,
+                        ECA_COURSE.GRADE,
+                        ECA_COURSE.ID,
+                        multiset(
+                                select(I18N.fields())
+                                        .from(I18N,PASSION_MAJOR)
+                                        .where(I18N.ID.eq(PASSION_MAJOR.NAME_I18N_ID).and(PASSION_MAJOR.ID.eq(any(ECA_COURSE.ACADEMIC_ID))))
+                        ).as(EcaCourseResponse.Fields.academicI18ns).convertFrom(r -> r.isEmpty() ? null : r.into(I18n.class))
+
                 )
-                .from(table)
-                .where(table.ID.eq(id));
-        return null;
+                .from(ECA_COURSE)
+                .where(ECA_COURSE.ID.eq(id))
+                .fetchOneInto(EcaCourseResponse.class);
     }
 
     public void delete(UUID id) {
