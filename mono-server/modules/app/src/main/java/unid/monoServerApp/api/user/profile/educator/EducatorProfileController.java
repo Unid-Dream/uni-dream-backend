@@ -275,5 +275,18 @@ public class EducatorProfileController {
     }
 
 
+    @GetMapping(value={"admin/educator/profile/list"})
+    @ACL(
+            authed = true,
+            allowedRoles = { UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query One"
+    )
+    public @Valid UnifiedResponse<List<EducatorProfileSimpleResponse>> list(
+    ) {
+        return UnifiedResponse.of(educatorProfileService.list());
+    }
 
 }

@@ -175,8 +175,7 @@ public class CalendarOperationController {
     @PostMapping("admin/promotion-event")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(

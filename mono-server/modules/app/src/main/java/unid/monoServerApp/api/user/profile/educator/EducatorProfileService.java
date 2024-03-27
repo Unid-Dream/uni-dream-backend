@@ -312,4 +312,23 @@ public class EducatorProfileService {
     }
 
 
+    //查询educator 状态为 approval list
+    public List<EducatorProfileSimpleResponse> list(){
+        List<DbEducatorProfile.Result> list = dbEducatorProfile.getDsl()
+                .select(
+                        EDUCATOR_PROFILE.asterisk(),
+                        DSL.multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                        ).as(DbEducatorProfile.Result.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbI18N.Result.class)),
+                        DSL.multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                        ).as(DbEducatorProfile.Result.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(DbI18N.Result.class))
+                )
+                .from(EDUCATOR_PROFILE,USER)
+                .where(EDUCATOR_PROFILE.USER_ID.eq(USER.ID).and(EDUCATOR_PROFILE.APPLICATION_APPROVAL.eq(ApplicationApprovalEnum.APPROVED)))
+                .fetchInto(DbEducatorProfile.Result.class);
+        return educatorProfileMapper.toSimpleResponse(list);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package unid.monoServerMeta.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import unid.monoServerMeta.model.ApplicationApprovalEnum;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Data
 @FieldNameConstants
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EducatorProfileSimpleResponse implements Serializable {
     private UUID id;
     private I18n firstNameI18n;

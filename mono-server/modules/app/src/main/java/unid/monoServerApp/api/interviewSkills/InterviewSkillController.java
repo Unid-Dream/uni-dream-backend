@@ -17,6 +17,8 @@ import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
+import unid.monoServerMeta.api.version2.request.InterviewSkillEducatorRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 
 import javax.validation.Valid;
@@ -139,6 +141,25 @@ public class InterviewSkillController {
                 interviewSkillService.get(
                         interviewSkillService.update(payload)
                 )
+        );
+    }
+
+
+
+    @PutMapping("admin/interviewSkill/assign")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = " Assign Educator"
+    )
+    public @Valid UnifiedResponse<InterviewSkillAssignPayload> assign(
+            @RequestBody InterviewSkillEducatorRequest payload
+    ) {
+        return UnifiedResponse.of(
+                interviewSkillService.update(payload)
         );
     }
 

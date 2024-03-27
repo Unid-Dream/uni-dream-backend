@@ -17,6 +17,7 @@ import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedSupervisorReviewPojo;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.api.user.profile.educator.EducatorProfileService;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbInterviewTopic;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedInterview;
@@ -28,6 +29,8 @@ import unid.monoServerApp.mapper.StudentUploadedSupervisorReviewMapper;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
+import unid.monoServerMeta.api.version2.request.InterviewSkillEducatorRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillUpdateRequest;
 import unid.monoServerMeta.model.I18n;
@@ -54,6 +57,8 @@ public class InterviewSkillService {
     private final DbStudentUploadedInterview dbStudentUploadedInterview;
     private final DbStudentUploadedSupervisorReview dbStudentUploadedSupervisorReview;
     private final StudentUploadedSupervisorReviewMapper studentUploadedSupervisorReviewMapper;
+
+    private final EducatorProfileService educatorProfileService;
 
     public InterviewTopicResponse query() {
         DbInterviewTopic.Result record = dslContext.select(
@@ -392,6 +397,56 @@ public class InterviewSkillService {
                 .execute();
 
         return payload.getId();
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public InterviewSkillAssignPayload update(InterviewSkillEducatorRequest request) {
+        var table = dbStudentUploadedInterview.getTable();
+        List<StudentUploadedInterviewPojo> interviews = dbStudentUploadedInterview.getDsl()
+                .select().from(table).where(dbStudentUploadedInterview.getTable().ID.in(request.getInterviewIds()))
+                .fetchInto(StudentUploadedInterviewPojo.class);
+        interviews.forEach(interview -> interview.setEducatorProfileId(request.getEducatorProfileId()));
+        dbStudentUploadedInterview.getDao().update(interviews);
+
+        //查询educator
+        InterviewSkillAssignPayload payload = new InterviewSkillAssignPayload();
+        EducatorProfileSimpleResponse educator = educatorProfileService.getSimpleCache(request.getEducatorProfileId());
+
+        List<InterviewSkillPayload> list = dbStudentUploadedInterview.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(InterviewSkillPayload.Fields.submissionTime),
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(InterviewSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select().from(I18N).where(I18N.ID.eq(table.INTERVIEW_TOPIC_ID))
+                        ).as(InterviewSkillPayload.Fields.topic).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(InterviewSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(InterviewSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(InterviewSkillPayload.StudentProfile.class))
+                )
+                .from(table, STUDENT_PAYMENT_TRANSACTION)
+                .where(table.PAYMENT_TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
+                .and(table.ID.in(request.getInterviewIds()))
+                .fetchInto(InterviewSkillPayload.class);
+        payload.setInterviews(list);
+        payload.setEducator(educator);
+        return payload;
     }
 }
 
