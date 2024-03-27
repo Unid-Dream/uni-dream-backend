@@ -13,10 +13,7 @@ import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
-import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
-import unid.jooqMono.model.tables.pojos.EventPojo;
-import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
-import unid.jooqMono.model.tables.pojos.UserPojo;
+import unid.jooqMono.model.tables.pojos.*;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerApp.database.table.course.DbEvent;
@@ -89,7 +86,7 @@ public class CalendarOperationService {
                         STUDENT_PAYMENT_TRANSACTION.CREATED_ON.as(StudentSessionTransactionPayload.Fields.submissionTime),
                         EDUCATOR_CALENDAR.asterisk(),
                         DSL.case_()
-                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.isNull()), BookingStatusEnum.PENDING_APPROVAL)
+                                .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING)), BookingStatusEnum.PENDING_APPROVAL)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.PENDING_PAYMENT)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PAID).and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.ACCEPTED)), BookingStatusEnum.ACCEPTED)
                                 .when(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.REJECTED), BookingStatusEnum.REJECTED)
@@ -133,6 +130,22 @@ public class CalendarOperationService {
                 .map(StudentSessionTransactionPayload::getTotal)
                 .orElse(0);
 
+        list.forEach(item->{
+            //查询状态是否为reschedule
+            dbStudentPaymentTransaction.getDsl()
+                    .select(SESSION_RESCHEDULE.asterisk())
+                    .from(SESSION_RESCHEDULE,EDUCATOR_CALENDAR,STUDENT_PAYMENT_TRANSACTION)
+                    .where(SESSION_RESCHEDULE.EDUCATOR_CALENDAR_ID.eq(EDUCATOR_CALENDAR.ID).and(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)))
+                    .and(STUDENT_PAYMENT_TRANSACTION.ID.eq(item.getTransactionId()).and(SESSION_RESCHEDULE.ACCPET.isNull()))
+                    .fetchOptionalInto(SessionReschedulePojo.class)
+                    .ifPresent(pojo->{
+                        item.setStatus(BookingStatus.RESCHEDULE);
+                        StudentSessionTransactionPayload.Reschedule reschedule = new StudentSessionTransactionPayload.Reschedule();
+                        reschedule.setEndTimeUtc(pojo.getEndTimeUtc());
+                        reschedule.setStartTimeUtc(pojo.getStartTimeUtc());
+                        item.setReschedule(reschedule);
+                    });
+        });
         return new UniPageResponse<>(
                 totalSize,
                 request.getPageNumber(),

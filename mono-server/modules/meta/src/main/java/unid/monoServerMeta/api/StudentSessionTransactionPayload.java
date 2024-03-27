@@ -38,10 +38,20 @@ public class StudentSessionTransactionPayload implements Serializable {
 
     private List<EventOpLog> eventOpLogs;
 
-
+    private Reschedule reschedule;
 
     @JsonIgnore
     private Integer total;
+
+
+    @Data
+    @FieldNameConstants
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public static class Reschedule{
+        private OffsetDateTime startTimeUtc;
+        private OffsetDateTime endTimeUtc;
+    }
+
 
     @Data
     @FieldNameConstants
