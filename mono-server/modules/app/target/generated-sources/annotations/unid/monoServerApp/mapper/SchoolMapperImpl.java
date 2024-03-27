@@ -16,7 +16,7 @@ import unid.monoServerMeta.model.SchoolLevel;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-24T12:33:14+0800",
+    date = "2024-03-27T22:36:01+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -63,10 +63,13 @@ public class SchoolMapperImpl implements SchoolMapper {
         schoolPojo.setSchoolLevel( schoolLevelToSchoolLevelEnum( data.getSchoolLevel() ) );
         schoolPojo.setLongitude( data.getLongitude() );
         schoolPojo.setLatitude( data.getLatitude() );
+        schoolPojo.setRate( data.getRate() );
+        schoolPojo.setPopulation( data.getPopulation() );
         if ( data.getTuition() != null ) {
             schoolPojo.setTuition( new BigDecimal( data.getTuition() ) );
         }
         schoolPojo.setFactor( data.getFactor() );
+        schoolPojo.setDescription( data.getDescription() );
 
         return schoolPojo;
     }
@@ -94,6 +97,8 @@ public class SchoolMapperImpl implements SchoolMapper {
         data.setSchoolLevel( schoolLevelToSchoolLevelEnum( source.getSchoolLevel() ) );
         data.setLongitude( source.getLongitude() );
         data.setLatitude( source.getLatitude() );
+        data.setRate( source.getRate() );
+        data.setPopulation( source.getPopulation() );
         if ( source.getTuition() != null ) {
             data.setTuition( new BigDecimal( source.getTuition() ) );
         }
@@ -101,6 +106,7 @@ public class SchoolMapperImpl implements SchoolMapper {
             data.setTuition( null );
         }
         data.setFactor( source.getFactor() );
+        data.setDescription( source.getDescription() );
     }
 
     @Override

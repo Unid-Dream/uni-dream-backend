@@ -15,7 +15,7 @@ import unid.monoServerMeta.api.version2.request.AcademicMajorCreateRequest;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-25T19:58:37+0800",
+    date = "2024-03-27T22:36:02+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -86,6 +86,7 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
 
         data.setId( source.getId() );
         data.setIconPath( source.getIconPath() );
+        data.setSerialNumber( source.getSerialNumber() );
     }
 
     @Override
@@ -107,6 +108,7 @@ public class AcademicMajorMapperImpl implements AcademicMajorMapper {
 
         academicMajorPayload.setId( data.getId() );
         academicMajorPayload.setIconPath( data.getIconPath() );
+        academicMajorPayload.setSerialNumber( data.getSerialNumber() );
 
         return academicMajorPayload;
     }

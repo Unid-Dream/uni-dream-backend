@@ -20,7 +20,7 @@ import unid.monoServerMeta.model.I18n;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-24T12:33:15+0800",
+    date = "2024-03-27T22:36:00+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component

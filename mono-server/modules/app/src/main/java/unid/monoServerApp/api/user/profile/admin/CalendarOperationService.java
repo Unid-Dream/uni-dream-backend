@@ -557,10 +557,10 @@ public class CalendarOperationService {
             //记录操作日志
             sessionLoggerService.async(SessionLogger.OpEvent.builder()
                     .userId(RequestHolder.get().getUser().getUserId())
-                    .status(accept? BookingStatus.RESCHEDULE_ACCEPT : BookingStatus.RESCHEDULE_REJECT)
+                    .status(accept? BookingStatus.RESCHEDULE_ACCEPTED : BookingStatus.RESCHEDULE_REJECTED)
                     .transactionId(pojo.getEducatorCalendarId())
                     .timeUtc(OffsetDateTime.now())
-                    .opType(accept? SessionOpType.RESCHEDULE_ACCEPTED : SessionOpType.RESCHEDULE_REJECTED).build());
+                    .opType(accept? SessionOpType.RESCHEDULE_ACCEPT : SessionOpType.RESCHEDULE_REJECT).build());
         });
     }
 }
