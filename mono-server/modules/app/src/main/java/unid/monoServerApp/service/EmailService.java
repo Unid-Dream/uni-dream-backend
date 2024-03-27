@@ -22,6 +22,7 @@ import unid.monoServerApp.database.table.studentProfile.DbStudentProfile;
 import unid.monoServerApp.queue.MessageProducer;
 import unid.monoServerApp.queue.model.EmailRequestPayload;
 import unid.monoServerMeta.Pattern;
+import unid.monoServerMeta.api.version2.request.PendingSessionRemindEducatorEmailPayload;
 
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
@@ -76,6 +77,54 @@ public class EmailService {
                 "Verify Your E-mail",
                 html,
                 Collections.singletonList(payload.getEmail()).toArray(new String[]{})
+        );
+    }
+
+
+    @SneakyThrows
+    @Async
+    public void requestRemindEcuatorInterview(
+            NewRegisterUser payload
+    ) {
+        var template = freeMarkerConfigurer
+                .getConfiguration()
+                .getTemplate(getTemplatePath("NewUserRegistrationOtp_en"));
+        var html = FreeMarkerTemplateUtils.processTemplateIntoString(
+                template,
+                Map.of(
+                        "otp", payload.getOtp()
+                )
+        );
+        sendEmail(
+                "Verify Your E-mail",
+                html,
+                Collections.singletonList(payload.getEmail()).toArray(new String[]{})
+        );
+    }
+
+    @SneakyThrows
+    @Async
+    public void requestRemindEducatorPendingSession(
+            PendingSessionRemindEducatorEmailPayload payload
+    ) {
+        var template = freeMarkerConfigurer
+                .getConfiguration()
+                .getTemplate(getTemplatePath("session-reminder"));
+        var html = FreeMarkerTemplateUtils.processTemplateIntoString(
+                template,
+                Map.of(
+                        "educatorFirstName", payload.getEducatorFirstName().getEnglish(),
+                        "educatorLastName", payload.getEducatorLastName().getEnglish(),
+                        "startTimeUtc", payload.getStartTimeUtc().toLocalTime(),
+                        "endTimeUtc",payload.getEndTimeUtc().toLocalTime(),
+                        "submitDate",  payload.getStartTimeUtc().toLocalDate()
+                )
+        );
+        sendEmail(
+                "Remind No Response Session",
+                html,
+                Collections.singletonList("1019193566@qq.com").toArray(new String[]{})
+//                Collections.singletonList(payload.getEmail()).toArray(new String[]{})
         );
     }
 

@@ -13,12 +13,15 @@ import pwh.springWebStarter.response.UniErrorCode;
 import unid.jooqMono.model.enums.BookingStatusEnum;
 import unid.jooqMono.model.enums.EventStatusEnum;
 import unid.jooqMono.model.enums.PaymentStatusEnum;
+import unid.jooqMono.model.tables.pojos.EducatorProfilePojo;
 import unid.jooqMono.model.tables.pojos.EventPojo;
 import unid.jooqMono.model.tables.pojos.EventScheduleTimePojo;
+import unid.jooqMono.model.tables.pojos.UserPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.course.DbEventScheduleTime;
+import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.studentPaymentTransaction.DbStudentPaymentTransaction;
@@ -27,9 +30,14 @@ import unid.monoServerApp.http.RequestHolder;
 import unid.monoServerApp.mapper.CourseEventMapper;
 import unid.monoServerApp.mapper.I18nMapper;
 import unid.monoServerApp.model.SessionLogger;
+import unid.monoServerApp.service.EmailService;
 import unid.monoServerApp.service.SessionLoggerService;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.PendingSessionRemindEducatorEmailPayload;
+import unid.monoServerMeta.api.version2.request.PendingSessionRemindEducatorPayload;
+import unid.monoServerMeta.api.version2.request.RescheduleSessionPageRequest;
+import unid.monoServerMeta.api.version2.request.RescheduleSessionPayload;
 import unid.monoServerMeta.model.BookingStatus;
 import unid.monoServerMeta.model.I18n;
 import unid.monoServerMeta.model.SessionOpType;
@@ -59,6 +67,8 @@ public class CalendarOperationService {
     private final DbEventScheduleTime dbEventScheduleTime;
     private final SessionService sessionService;
     private final DbUser dbUser;
+    private final DbEducatorProfile dbEducatorProfile;
+    private final EmailService emailService;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
@@ -413,5 +423,112 @@ public class CalendarOperationService {
         dbEvent.getDao().update(event);
 
         return event;
+    }
+
+    public void remindEducator(PendingSessionRemindEducatorPayload request) {
+        //查询对应eudcator的邮箱
+        PendingSessionRemindEducatorEmailPayload payload =  dbEducatorProfile.getDsl()
+                        .select(
+                                USER.EMAIL,
+                                EDUCATOR_CALENDAR.START_TIME_UTC.as(PendingSessionRemindEducatorEmailPayload.Fields.startTimeUtc),
+                                EDUCATOR_CALENDAR.END_TIME_UTC.as(PendingSessionRemindEducatorEmailPayload.Fields.endTimeUtc),
+                                DSL.multiset(
+                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                ).as(PendingSessionRemindEducatorEmailPayload.Fields.educatorFirstName).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                DSL.multiset(
+                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                ).as(PendingSessionRemindEducatorEmailPayload.Fields.educatorLastName).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                        )
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR,USER, EDUCATOR_PROFILE)
+                .where(
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                )
+                .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
+                .and(EDUCATOR_PROFILE.USER_ID.eq(USER.ID))
+                .and(STUDENT_PAYMENT_TRANSACTION.ID.eq(request.getTransactionId()))
+                .fetchOptionalInto(PendingSessionRemindEducatorEmailPayload.class)
+                .orElseThrow(()->Exceptions.business(UniErrorCode.EDUCATOR_NOT_EXIST));
+        emailService.requestRemindEducatorPendingSession(payload);
+    }
+
+
+
+    public void remindAllEducator() {
+        //查询对应eudcator的邮箱
+        List<PendingSessionRemindEducatorEmailPayload> list =  dbEducatorProfile.getDsl()
+                .select(
+                        USER.EMAIL,
+                        EDUCATOR_CALENDAR.START_TIME_UTC.as(PendingSessionRemindEducatorEmailPayload.Fields.startTimeUtc),
+                        EDUCATOR_CALENDAR.END_TIME_UTC.as(PendingSessionRemindEducatorEmailPayload.Fields.endTimeUtc),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                        ).as(PendingSessionRemindEducatorEmailPayload.Fields.educatorFirstName).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                        DSL.multiset(
+                                DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                        ).as(PendingSessionRemindEducatorEmailPayload.Fields.educatorLastName).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                )
+                .from(STUDENT_PAYMENT_TRANSACTION, EDUCATOR_CALENDAR,USER, EDUCATOR_PROFILE)
+                .where(
+                        STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID.eq(EDUCATOR_CALENDAR.ID)
+                )
+                .and(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID.eq(EDUCATOR_PROFILE.ID))
+                .and(EDUCATOR_PROFILE.USER_ID.eq(USER.ID))
+                //学生提交了生成,但是没有accept or reject
+                .and(STUDENT_PAYMENT_TRANSACTION.PAYMENT_STATUS.eq(PaymentStatusEnum.PENDING))
+                .and(STUDENT_PAYMENT_TRANSACTION.PROCESS_STATUS.eq(BookingStatusEnum.PENDING))
+                .fetchInto(PendingSessionRemindEducatorEmailPayload.class);
+        list.forEach(emailService::requestRemindEducatorPendingSession);
+    }
+
+    public void deleteEvent(UUID id) {
+        dbEvent.getDao().deleteById(id);
+    }
+
+    public UniPageResponse<RescheduleSessionPayload> getRescheduleSessionPage(RescheduleSessionPageRequest request) {
+        List<RescheduleSessionPayload> list = dbStudentPaymentTransaction.getDsl()
+                .select(
+
+                        DSL.multiset(
+                                DSL.select(
+                                        DSL.multiset(
+                                                DSL.select(I18N.asterisk()).from(I18N,USER,EDUCATOR_PROFILE).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(EDUCATOR_PROFILE.USER_ID)).and(EDUCATOR_PROFILE.ID.eq(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID)))
+                                        ).as(RescheduleSessionPayload.EducatorProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        DSL.multiset(
+                                                DSL.select(I18N.asterisk()).from(I18N,USER,EDUCATOR_PROFILE).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(EDUCATOR_PROFILE.USER_ID)).and(EDUCATOR_PROFILE.ID.eq(EDUCATOR_CALENDAR.EDUCATOR_PROFILE_ID)))
+                                        ).as(RescheduleSessionPayload.EducatorProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                )
+                        ).as(RescheduleSessionPayload.Fields.educator).convertFrom(r->r.isEmpty()?null:r.get(0).into(RescheduleSessionPayload.EducatorProfile.class)),
+                        DSL.multiset(
+                                DSL.select(
+                                        DSL.multiset(
+                                                DSL.select(I18N.asterisk()).from(I18N,USER,STUDENT_PROFILE).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID).and(USER.ID.eq(STUDENT_PROFILE.USER_ID)).and(STUDENT_PROFILE.ID.eq(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID)))
+                                        ).as(RescheduleSessionPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class)),
+                                        DSL.multiset(
+                                                DSL.select(I18N.asterisk()).from(I18N,USER,STUDENT_PROFILE).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID).and(USER.ID.eq(STUDENT_PROFILE.USER_ID)).and(STUDENT_PROFILE.ID.eq(STUDENT_PAYMENT_TRANSACTION.STUDENT_PROFILE_ID)))
+                                        ).as(RescheduleSessionPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r->r.isEmpty()?null:r.get(0).into(I18n.class))
+                                )
+                        ).as(RescheduleSessionPayload.Fields.student).convertFrom(r->r.isEmpty()?null:r.get(0).into(RescheduleSessionPayload.StudentProfile.class))
+
+                 )
+                .select(count().over().as(RescheduleSessionPayload.Fields.total))
+                .from(SESSION_RESCHEDULE,EDUCATOR_CALENDAR,STUDENT_PAYMENT_TRANSACTION)
+                .where(SESSION_RESCHEDULE.EDUCATOR_CALENDAR_ID.eq(EDUCATOR_CALENDAR.ID))
+                .and(STUDENT_PAYMENT_TRANSACTION.ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID))
+                .orderBy(SESSION_RESCHEDULE.CREATED_ON.desc())
+                .limit(request.getPageSize())
+                .offset((request.getPageNumber() - 1) * request.getPageSize())
+                .fetchInto(RescheduleSessionPayload.class);
+        int totalSize = list.stream()
+                .findFirst()
+                .map(RescheduleSessionPayload::getTotal)
+                .orElse(0);
+
+        return new UniPageResponse<>(
+                totalSize,
+                request.getPageNumber(),
+                request.getPageSize(),
+                null,
+                list
+        );
     }
 }

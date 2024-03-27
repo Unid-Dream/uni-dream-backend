@@ -17,6 +17,7 @@ import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedSupervisorReviewPojo;
 import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.EducatorProfileService;
+import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbInterviewTopic;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedInterview;
@@ -30,11 +31,13 @@ import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
 import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
+import unid.monoServerMeta.api.version2.request.InterviewSkillRemindRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 import unid.monoServerMeta.model.I18n;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.*;
@@ -56,6 +59,7 @@ public class InterviewSkillService {
     private final StudentUploadedSupervisorReviewMapper studentUploadedSupervisorReviewMapper;
 
     private final EducatorProfileService educatorProfileService;
+    private final DbEducatorProfile dbEducatorProfile;
 
     public InterviewTopicResponse query() {
         DbInterviewTopic.Result record = dslContext.select(
@@ -444,6 +448,17 @@ public class InterviewSkillService {
         payload.setInterviews(list);
         payload.setEducator(educator);
         return payload;
+    }
+
+    public void remind(InterviewSkillRemindRequest payload) {
+        //查询对应eudcator的邮箱
+        Optional.ofNullable(
+                dbEducatorProfile.getDao()
+                        .fetchOneById(payload.getEducatorProfileId())
+        ).ifPresent(pojo->{
+
+        });
+
     }
 }
 

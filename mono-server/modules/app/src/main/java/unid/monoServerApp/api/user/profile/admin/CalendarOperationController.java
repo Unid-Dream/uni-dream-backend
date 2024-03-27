@@ -18,6 +18,9 @@ import unid.monoServerApp.api.ACL;
 import unid.monoServerApp.api.user.profile.educator.calendar.EducatorCalendarService;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.request.PendingSessionRemindEducatorPayload;
+import unid.monoServerMeta.api.version2.request.RescheduleSessionPageRequest;
+import unid.monoServerMeta.api.version2.request.RescheduleSessionPayload;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -112,6 +115,32 @@ public class CalendarOperationController {
     }
 
 
+
+    @GetMapping("admin/consultation-session/reschedule/page")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Reschedule Session Page"
+    )
+    public @Valid UnifiedResponse<UniPageResponse<RescheduleSessionPayload>> getRescheduleSessionPage(
+            @ParameterObject RescheduleSessionPageRequest request
+    ) {
+        return UnifiedResponse.of(
+                calendarOperationService.getRescheduleSessionPage(request)
+        );
+    }
+
+
+
+
+
+
+
+
     @GetMapping("admin/consultation-session/{id}/comments")
     @ACL(
             authed = true,
@@ -184,6 +213,45 @@ public class CalendarOperationController {
         );
     }
 
+
+    @PutMapping("admin/educator/pending/session/remind")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = " No Response Session Remind Educator "
+    )
+    public @Valid UnifiedResponse<Void> remind(
+            @RequestBody PendingSessionRemindEducatorPayload payload
+    ) {
+        calendarOperationService.remindEducator(payload);
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
+    @PutMapping("admin/educator/pending/session/remindAll")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = " No Response Session Remind All Educator "
+    )
+    public @Valid UnifiedResponse<Void> remindAll() {
+        calendarOperationService.remindAllEducator();
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
+
+
+
+
     @PutMapping("admin/promotion-event")
     @ACL(
             authed = true,
@@ -203,4 +271,24 @@ public class CalendarOperationController {
         );
     }
 
+
+
+    @DeleteMapping("admin/promotion-event/{id}")
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Cancel Promotion Event"
+    )
+    public @Valid UnifiedResponse<CourseEventPayload> deleteEvent(
+            @PathVariable("id") UUID id
+    ) {
+
+        calendarOperationService.deleteEvent(id);
+        return UnifiedResponse.of(
+                null
+        );
+    }
 }

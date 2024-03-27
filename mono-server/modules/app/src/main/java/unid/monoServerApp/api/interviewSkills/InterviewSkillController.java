@@ -16,6 +16,7 @@ import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
 import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
+import unid.monoServerMeta.api.version2.request.InterviewSkillRemindRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 
 import javax.validation.Valid;
@@ -156,6 +157,24 @@ public class InterviewSkillController {
     ) {
         return UnifiedResponse.of(
                 interviewSkillService.update(payload)
+        );
+    }
+
+    @PutMapping("admin/interviewSkill/remind")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = " Remind Educator"
+    )
+    public @Valid UnifiedResponse<Void> remind(
+            @RequestBody InterviewSkillRemindRequest payload
+    ) {
+        interviewSkillService.remind(payload);
+        return UnifiedResponse.of(
+                null
         );
     }
 
