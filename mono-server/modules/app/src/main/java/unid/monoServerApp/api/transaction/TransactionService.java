@@ -124,7 +124,7 @@ public class TransactionService {
         payload.setOrderRef(transaction.getTransactionSerialNumber());
         payload.setPaymentType("N");
         payload.setCurrCode(request.getAsiaPayPayload().getCurrCode());
-        payload.setMerchantId("88163035");
+        payload.setMerchantId("88163124");
         payload.setPayMethod(request.getAsiaPayPayload().getPayMethod());
         try{
             payload.setSecureHash(PaydollarSecureUtil.generatePaymentSecureHash(payload.getMerchantId(),payload.getOrderRef(),payload.getCurrCode(),payload.getAmount(),"N"));
