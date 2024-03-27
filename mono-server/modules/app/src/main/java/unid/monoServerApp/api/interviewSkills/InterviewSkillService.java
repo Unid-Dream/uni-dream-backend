@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pwh.springWebStarter.response.UniErrorCode;
-import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
@@ -30,14 +29,12 @@ import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
-import unid.monoServerMeta.api.version2.request.InterviewSkillEducatorRequest;
+import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
-import unid.monoServerMeta.api.version2.request.InterviewSkillUpdateRequest;
 import unid.monoServerMeta.model.I18n;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.*;
@@ -402,7 +399,7 @@ public class InterviewSkillService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public InterviewSkillAssignPayload update(InterviewSkillEducatorRequest request) {
+    public InterviewSkillAssignPayload update(InterviewSkillAssignRequest request) {
         var table = dbStudentUploadedInterview.getTable();
         List<StudentUploadedInterviewPojo> interviews = dbStudentUploadedInterview.getDsl()
                 .select().from(table).where(dbStudentUploadedInterview.getTable().ID.in(request.getInterviewIds()))

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row20;
+import org.jooq.Row21;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -178,6 +178,12 @@ public class _AuditLogStudentUploadedInterviewTable extends TableImpl<_AuditLogS
      */
     public final TableField<_AuditLogStudentUploadedInterviewRecord, ReviewTypeEnum> REVIEW_TYPE = createField(DSL.name("review_type"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.ReviewTypeEnum.class), this, "");
 
+    /**
+     * The column
+     * <code>public._audit_log_student_uploaded_interview.educator_profile_id</code>.
+     */
+    public final TableField<_AuditLogStudentUploadedInterviewRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
+
     private _AuditLogStudentUploadedInterviewTable(Name alias, Table<_AuditLogStudentUploadedInterviewRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -257,12 +263,12 @@ public class _AuditLogStudentUploadedInterviewTable extends TableImpl<_AuditLogS
     }
 
     // -------------------------------------------------------------------------
-    // Row20 type methods
+    // Row21 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, UUID> fieldsRow() {
+        return (Row21) super.fieldsRow();
     }
 }

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row20;
+import org.jooq.Row22;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -25,6 +25,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import unid.jooqMono.model.Public;
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.records._AuditLogStudentUploadedWritingRecord;
 
 
@@ -173,9 +174,21 @@ public class _AuditLogStudentUploadedWritingTable extends TableImpl<_AuditLogStu
 
     /**
      * The column
+     * <code>public._audit_log_student_uploaded_writing.review_type</code>.
+     */
+    public final TableField<_AuditLogStudentUploadedWritingRecord, ReviewTypeEnum> REVIEW_TYPE = createField(DSL.name("review_type"), SQLDataType.VARCHAR.asEnumDataType(unid.jooqMono.model.enums.ReviewTypeEnum.class), this, "");
+
+    /**
+     * The column
      * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
      */
     public final TableField<_AuditLogStudentUploadedWritingRecord, String> SERIAL_NUMBER = createField(DSL.name("serial_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>public._audit_log_student_uploaded_writing.educator_profile_id</code>.
+     */
+    public final TableField<_AuditLogStudentUploadedWritingRecord, UUID> EDUCATOR_PROFILE_ID = createField(DSL.name("educator_profile_id"), SQLDataType.UUID, this, "");
 
     private _AuditLogStudentUploadedWritingTable(Name alias, Table<_AuditLogStudentUploadedWritingRecord> aliased) {
         this(alias, aliased, null);
@@ -256,12 +269,12 @@ public class _AuditLogStudentUploadedWritingTable extends TableImpl<_AuditLogStu
     }
 
     // -------------------------------------------------------------------------
-    // Row20 type methods
+    // Row22 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row22<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> fieldsRow() {
+        return (Row22) super.fieldsRow();
     }
 }

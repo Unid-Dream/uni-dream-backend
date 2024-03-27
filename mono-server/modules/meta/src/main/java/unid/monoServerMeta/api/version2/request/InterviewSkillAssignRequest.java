@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Data
 @FieldNameConstants
-public class InterviewSkillEducatorRequest {
+public class InterviewSkillAssignRequest {
     @NotNull
     private List<UUID> interviewIds;
     @NotNull

@@ -17,6 +17,10 @@ import pwh.springWebStarter.response.UnifiedResponse;
 import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
+import unid.monoServerMeta.api.version2.WritingSkillAssignPayload;
+import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
+import unid.monoServerMeta.api.version2.request.WritingSkillAssignRequest;
 import unid.monoServerMeta.api.version2.request.WritingSkillReviewRequest;
 
 import javax.validation.Valid;
@@ -141,4 +145,20 @@ public class WritingSkillController {
     }
 
 
+    @PutMapping("admin/writingSkill/assign")
+    @ACL(
+            authed = true,
+            allowedRoles = {UserRoleEnum.ADMIN}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = " Assign Educator"
+    )
+    public @Valid UnifiedResponse<WritingSkillAssignPayload> assign(
+            @RequestBody WritingSkillAssignRequest payload
+    ) {
+        return UnifiedResponse.of(
+                writingSkillService.update(payload)
+        );
+    }
 }

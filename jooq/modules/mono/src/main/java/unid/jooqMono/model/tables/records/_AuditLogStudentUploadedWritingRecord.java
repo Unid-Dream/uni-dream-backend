@@ -15,10 +15,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.jooq.Field;
-import org.jooq.Record20;
-import org.jooq.Row20;
+import org.jooq.Record22;
+import org.jooq.Row22;
 import org.jooq.impl.TableRecordImpl;
 
+import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables._AuditLogStudentUploadedWritingTable;
 import unid.jooqMono.model.tables.pojos._AuditLogStudentUploadedWritingPojo;
 
@@ -35,7 +36,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogStudentUploadedWritingPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_AuditLogStudentUploadedWritingRecord> implements Record20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> {
+public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_AuditLogStudentUploadedWritingRecord> implements Record22<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> {
 
     private static final long serialVersionUID = 1L;
 
@@ -388,10 +389,28 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     /**
      * Setter for
+     * <code>public._audit_log_student_uploaded_writing.review_type</code>.
+     */
+    public _AuditLogStudentUploadedWritingRecord setReviewType(@Nullable ReviewTypeEnum value) {
+        set(19, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_uploaded_writing.review_type</code>.
+     */
+    @Nullable
+    public ReviewTypeEnum getReviewType() {
+        return (ReviewTypeEnum) get(19);
+    }
+
+    /**
+     * Setter for
      * <code>public._audit_log_student_uploaded_writing.serial_number</code>.
      */
     public _AuditLogStudentUploadedWritingRecord setSerialNumber(@Nullable String value) {
-        set(19, value);
+        set(20, value);
         return this;
     }
 
@@ -402,23 +421,41 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
     @Size(max = 255)
     @Nullable
     public String getSerialNumber() {
-        return (String) get(19);
+        return (String) get(20);
+    }
+
+    /**
+     * Setter for
+     * <code>public._audit_log_student_uploaded_writing.educator_profile_id</code>.
+     */
+    public _AuditLogStudentUploadedWritingRecord setEducatorProfileId(@Nullable UUID value) {
+        set(21, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_uploaded_writing.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return (UUID) get(21);
     }
 
     // -------------------------------------------------------------------------
-    // Record20 type implementation
+    // Record22 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row22<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> fieldsRow() {
+        return (Row22) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, String> valuesRow() {
-        return (Row20) super.valuesRow();
+    public Row22<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, String, UUID> valuesRow() {
+        return (Row22) super.valuesRow();
     }
 
     @Override
@@ -537,8 +574,20 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nonnull
-    public Field<String> field20() {
+    public Field<ReviewTypeEnum> field20() {
+        return _AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING.REVIEW_TYPE;
+    }
+
+    @Override
+    @Nonnull
+    public Field<String> field21() {
         return _AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING.SERIAL_NUMBER;
+    }
+
+    @Override
+    @Nonnull
+    public Field<UUID> field22() {
+        return _AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING.EDUCATOR_PROFILE_ID;
     }
 
     @Override
@@ -657,8 +706,20 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nullable
-    public String component20() {
+    public ReviewTypeEnum component20() {
+        return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public String component21() {
         return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public UUID component22() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -777,8 +838,20 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nullable
-    public String value20() {
+    public ReviewTypeEnum value20() {
+        return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public String value21() {
         return getSerialNumber();
+    }
+
+    @Override
+    @Nullable
+    public UUID value22() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -916,14 +989,28 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
 
     @Override
     @Nonnull
-    public _AuditLogStudentUploadedWritingRecord value20(@Nullable String value) {
+    public _AuditLogStudentUploadedWritingRecord value20(@Nullable ReviewTypeEnum value) {
+        setReviewType(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogStudentUploadedWritingRecord value21(@Nullable String value) {
         setSerialNumber(value);
         return this;
     }
 
     @Override
     @Nonnull
-    public _AuditLogStudentUploadedWritingRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19, @Nullable String value20) {
+    public _AuditLogStudentUploadedWritingRecord value22(@Nullable UUID value) {
+        setEducatorProfileId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogStudentUploadedWritingRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19, @Nullable ReviewTypeEnum value20, @Nullable String value21, @Nullable UUID value22) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -944,6 +1031,8 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
         value18(value18);
         value19(value19);
         value20(value20);
+        value21(value21);
+        value22(value22);
         return this;
     }
 
@@ -961,8 +1050,8 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
     /**
      * Create a detached, initialised _AuditLogStudentUploadedWritingRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "serialNumber" })
-    public _AuditLogStudentUploadedWritingRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable String serialNumber) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "writingTopicId", "paymentTransactionId", "uploadedFile", "grammarAndExpressionReviewId", "contentReviewId", "compositionReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType", "serialNumber", "educatorProfileId" })
+    public _AuditLogStudentUploadedWritingRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID writingTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID grammarAndExpressionReviewId, @Nullable UUID contentReviewId, @Nullable UUID compositionReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType, @Nullable String serialNumber, @Nullable UUID educatorProfileId) {
         super(_AuditLogStudentUploadedWritingTable._AUDIT_LOG_STUDENT_UPLOADED_WRITING);
 
         setAuditSeq(auditSeq);
@@ -984,7 +1073,9 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
         setUpdatedBy(updatedBy);
         setRecommendedActivity(recommendedActivity);
         setRecommendation(recommendation);
+        setReviewType(reviewType);
         setSerialNumber(serialNumber);
+        setEducatorProfileId(educatorProfileId);
     }
 
     /**
@@ -1013,7 +1104,9 @@ public class _AuditLogStudentUploadedWritingRecord extends TableRecordImpl<_Audi
             setUpdatedBy(value.getUpdatedBy());
             setRecommendedActivity(value.getRecommendedActivity());
             setRecommendation(value.getRecommendation());
+            setReviewType(value.getReviewType());
             setSerialNumber(value.getSerialNumber());
+            setEducatorProfileId(value.getEducatorProfileId());
         }
     }
 }

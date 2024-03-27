@@ -2,9 +2,6 @@ package unid.monoServerApp.api.interviewSkills;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +15,10 @@ import unid.jooqMono.model.enums.UserRoleEnum;
 import unid.monoServerApp.api.ACL;
 import unid.monoServerMeta.api.*;
 import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
-import unid.monoServerMeta.api.version2.request.InterviewSkillEducatorRequest;
+import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
 import unid.monoServerMeta.api.version2.request.InterviewSkillReviewRequest;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -156,7 +152,7 @@ public class InterviewSkillController {
             summary = " Assign Educator"
     )
     public @Valid UnifiedResponse<InterviewSkillAssignPayload> assign(
-            @RequestBody InterviewSkillEducatorRequest payload
+            @RequestBody InterviewSkillAssignRequest payload
     ) {
         return UnifiedResponse.of(
                 interviewSkillService.update(payload)

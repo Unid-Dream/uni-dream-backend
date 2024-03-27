@@ -15,9 +15,11 @@ import unid.jooqMono.model.enums.PaymentStatusEnum;
 import unid.jooqMono.model.enums.ReviewTypeEnum;
 import unid.jooqMono.model.tables.WritingTopicTable;
 import unid.jooqMono.model.tables.pojos.StudentPaymentTransactionPojo;
+import unid.jooqMono.model.tables.pojos.StudentUploadedInterviewPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedSupervisorReviewPojo;
 import unid.jooqMono.model.tables.pojos.StudentUploadedWritingPojo;
 import unid.monoServerApp.Exceptions;
+import unid.monoServerApp.api.user.profile.educator.EducatorProfileService;
 import unid.monoServerApp.database.table.i18n.DbI18N;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedInterview;
 import unid.monoServerApp.database.table.skill.DbStudentUploadedSupervisorReview;
@@ -27,6 +29,10 @@ import unid.monoServerApp.mapper.*;
 import unid.monoServerApp.service.SessionService;
 import unid.monoServerApp.util.TypeSerialNumberUtils;
 import unid.monoServerMeta.api.*;
+import unid.monoServerMeta.api.version2.InterviewSkillAssignPayload;
+import unid.monoServerMeta.api.version2.WritingSkillAssignPayload;
+import unid.monoServerMeta.api.version2.request.InterviewSkillAssignRequest;
+import unid.monoServerMeta.api.version2.request.WritingSkillAssignRequest;
 import unid.monoServerMeta.api.version2.request.WritingSkillReviewRequest;
 import unid.monoServerMeta.model.Currency;
 import unid.monoServerMeta.model.I18n;
@@ -53,7 +59,7 @@ public class WritingSkillService {
     private final DbStudentUploadedWriting dbStudentUploadedWriting;
     private final DbStudentUploadedSupervisorReview dbStudentUploadedSupervisorReview;
     private final StudentUploadedSupervisorReviewMapper studentUploadedSupervisorReviewMapper;
-
+    private final EducatorProfileService educatorProfileService;
 
     public WritingSkillAssessmentResponse query(UUID studentProfileId) {
         List<DbStudentUploadedWriting.Result> results = dslContext.select(
@@ -326,6 +332,51 @@ public class WritingSkillService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
+    public WritingSkillAssignPayload update(WritingSkillAssignRequest request) {
+        var table = dbStudentUploadedWriting.getTable();
+        List<StudentUploadedWritingPojo> writings = dbStudentUploadedWriting.getDsl()
+                .select().from(table).where(dbStudentUploadedWriting.getTable().ID.in(request.getWritingIds()))
+                .fetchInto(StudentUploadedWritingPojo.class);
+        writings.forEach(writing -> writing.setEducatorProfileId(request.getEducatorProfileId()));
+        dbStudentUploadedWriting.getDao().update(writings);
+
+        //查询educator
+        WritingSkillAssignPayload payload = new WritingSkillAssignPayload();
+        EducatorProfileSimpleResponse educator = educatorProfileService.getSimpleCache(request.getEducatorProfileId());
+
+        List<WritingSkillPayload> list = dbStudentUploadedWriting.getDsl()
+                .select(
+                        table.asterisk(),
+                        table.CREATED_ON.as(WritingSkillPayload.Fields.submissionTime),
+                        DSL.case_()
+                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .otherwise(ReviewTypeEnum.PENDING)
+                                .as(WritingSkillPayload.Fields.status),
+                        DSL.multiset(
+                                DSL.select(
+                                                STUDENT_PROFILE.asterisk(),
+                                                USER.EMAIL,
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.FIST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.firstNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class)),
+                                                DSL.multiset(
+                                                        DSL.selectFrom(I18N).where(I18N.ID.eq(USER.LAST_NAME_I18N_ID))
+                                                ).as(WritingSkillPayload.StudentProfile.Fields.lastNameI18n).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(I18n.class))
+                                        )
+                                        .from(STUDENT_PROFILE, USER)
+                                        .where(STUDENT_PROFILE.USER_ID.eq(USER.ID).and(STUDENT_PROFILE.ID.eq(table.STUDENT_PROFILE_ID))
+                                        )
+                        ).as(WritingSkillPayload.Fields.studentProfile).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(WritingSkillPayload.StudentProfile.class))
+                )
+                .from(table, STUDENT_PAYMENT_TRANSACTION)
+                .where(table.PAYMENT_TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.ID))
+                .fetchInto(WritingSkillPayload.class);
+
+        payload.setWritings(list);
+        payload.setEducator(educator);
+        return payload;
+    }
 }
 
 

@@ -14,8 +14,8 @@ import javax.annotation.processing.Generated;
 import javax.validation.constraints.NotNull;
 
 import org.jooq.Field;
-import org.jooq.Record20;
-import org.jooq.Row20;
+import org.jooq.Record21;
+import org.jooq.Row21;
 import org.jooq.impl.TableRecordImpl;
 
 import unid.jooqMono.model.enums.ReviewTypeEnum;
@@ -35,7 +35,7 @@ import unid.jooqMono.model.tables.pojos._AuditLogStudentUploadedInterviewPojo;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @lombok.experimental.FieldNameConstants(innerTypeName = "Columns")
-public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_AuditLogStudentUploadedInterviewRecord> implements Record20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> {
+public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_AuditLogStudentUploadedInterviewRecord> implements Record21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, UUID> {
 
     private static final long serialVersionUID = 1L;
 
@@ -404,20 +404,38 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
         return (ReviewTypeEnum) get(19);
     }
 
+    /**
+     * Setter for
+     * <code>public._audit_log_student_uploaded_interview.educator_profile_id</code>.
+     */
+    public _AuditLogStudentUploadedInterviewRecord setEducatorProfileId(@Nullable UUID value) {
+        set(20, value);
+        return this;
+    }
+
+    /**
+     * Getter for
+     * <code>public._audit_log_student_uploaded_interview.educator_profile_id</code>.
+     */
+    @Nullable
+    public UUID getEducatorProfileId() {
+        return (UUID) get(20);
+    }
+
     // -------------------------------------------------------------------------
-    // Record20 type implementation
+    // Record21 type implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> fieldsRow() {
-        return (Row20) super.fieldsRow();
+    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, UUID> fieldsRow() {
+        return (Row21) super.fieldsRow();
     }
 
     @Override
     @Nonnull
-    public Row20<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum> valuesRow() {
-        return (Row20) super.valuesRow();
+    public Row21<Long, OffsetDateTime, String, String, String, UUID, UUID, UUID, UUID, String, UUID, UUID, UUID, OffsetDateTime, String, OffsetDateTime, String, String[], String, ReviewTypeEnum, UUID> valuesRow() {
+        return (Row21) super.valuesRow();
     }
 
     @Override
@@ -542,6 +560,12 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
 
     @Override
     @Nonnull
+    public Field<UUID> field21() {
+        return _AuditLogStudentUploadedInterviewTable._AUDIT_LOG_STUDENT_UPLOADED_INTERVIEW.EDUCATOR_PROFILE_ID;
+    }
+
+    @Override
+    @Nonnull
     public Long component1() {
         return getAuditSeq();
     }
@@ -658,6 +682,12 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
     @Nullable
     public ReviewTypeEnum component20() {
         return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public UUID component21() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -778,6 +808,12 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
     @Nullable
     public ReviewTypeEnum value20() {
         return getReviewType();
+    }
+
+    @Override
+    @Nullable
+    public UUID value21() {
+        return getEducatorProfileId();
     }
 
     @Override
@@ -922,7 +958,14 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
 
     @Override
     @Nonnull
-    public _AuditLogStudentUploadedInterviewRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19, @Nullable ReviewTypeEnum value20) {
+    public _AuditLogStudentUploadedInterviewRecord value21(@Nullable UUID value) {
+        setEducatorProfileId(value);
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public _AuditLogStudentUploadedInterviewRecord values(@Nonnull Long value1, @Nonnull OffsetDateTime value2, @Nonnull String value3, @Nonnull String value4, @Nonnull String value5, @Nonnull UUID value6, @Nonnull UUID value7, @Nonnull UUID value8, @Nonnull UUID value9, @Nullable String value10, @Nullable UUID value11, @Nullable UUID value12, @Nullable UUID value13, @Nullable OffsetDateTime value14, @Nullable String value15, @Nullable OffsetDateTime value16, @Nullable String value17, @Nullable String[] value18, @Nullable String value19, @Nullable ReviewTypeEnum value20, @Nullable UUID value21) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -943,6 +986,7 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
         value18(value18);
         value19(value19);
         value20(value20);
+        value21(value21);
         return this;
     }
 
@@ -960,8 +1004,8 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
     /**
      * Create a detached, initialised _AuditLogStudentUploadedInterviewRecord
      */
-    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "interviewTopicId", "paymentTransactionId", "uploadedFile", "contentReviewId", "clarityReviewId", "charismaReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType" })
-    public _AuditLogStudentUploadedInterviewRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID interviewTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID contentReviewId, @Nullable UUID clarityReviewId, @Nullable UUID charismaReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType) {
+    @ConstructorProperties({ "auditSeq", "auditCreatedon", "auditCreatedby", "auditOperation", "auditType", "id", "studentProfileId", "interviewTopicId", "paymentTransactionId", "uploadedFile", "contentReviewId", "clarityReviewId", "charismaReviewId", "createdOn", "createdBy", "updatedOn", "updatedBy", "recommendedActivity", "recommendation", "reviewType", "educatorProfileId" })
+    public _AuditLogStudentUploadedInterviewRecord(@Nonnull Long auditSeq, @Nonnull OffsetDateTime auditCreatedon, @Nonnull String auditCreatedby, @Nonnull String auditOperation, @Nonnull String auditType, @Nonnull UUID id, @Nonnull UUID studentProfileId, @Nonnull UUID interviewTopicId, @Nonnull UUID paymentTransactionId, @Nullable String uploadedFile, @Nullable UUID contentReviewId, @Nullable UUID clarityReviewId, @Nullable UUID charismaReviewId, @Nullable OffsetDateTime createdOn, @Nullable String createdBy, @Nullable OffsetDateTime updatedOn, @Nullable String updatedBy, @Nullable String[] recommendedActivity, @Nullable String recommendation, @Nullable ReviewTypeEnum reviewType, @Nullable UUID educatorProfileId) {
         super(_AuditLogStudentUploadedInterviewTable._AUDIT_LOG_STUDENT_UPLOADED_INTERVIEW);
 
         setAuditSeq(auditSeq);
@@ -984,6 +1028,7 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
         setRecommendedActivity(recommendedActivity);
         setRecommendation(recommendation);
         setReviewType(reviewType);
+        setEducatorProfileId(educatorProfileId);
     }
 
     /**
@@ -1013,6 +1058,7 @@ public class _AuditLogStudentUploadedInterviewRecord extends TableRecordImpl<_Au
             setRecommendedActivity(value.getRecommendedActivity());
             setRecommendation(value.getRecommendation());
             setReviewType(value.getReviewType());
+            setEducatorProfileId(value.getEducatorProfileId());
         }
     }
 }
