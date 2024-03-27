@@ -287,7 +287,7 @@ public class EducatorProfileService {
     public EducatorProfileSimpleResponse getSimpleCache(UUID profileId) {
         DbEducatorProfile.Result result = dbEducatorProfile.getDsl().select(
                         EDUCATOR_PROFILE.asterisk(),
-                        USER.asterisk(),
+                        USER.EMAIL,
                         multiset(
                                 select(
                                             EDUCATOR_SCHOOL.asterisk()
