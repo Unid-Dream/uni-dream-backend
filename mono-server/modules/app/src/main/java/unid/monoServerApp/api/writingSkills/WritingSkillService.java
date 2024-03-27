@@ -139,7 +139,7 @@ public class WritingSkillService {
                         table.asterisk(),
                         table.CREATED_ON.as(WritingSkillPayload.Fields.submissionTime),
                         DSL.case_()
-                                .when(table.REVIEW_TYPE.isNotNull(), table.REVIEW_TYPE)
+                                .when(table.REVIEW_TYPE.eq(ReviewTypeEnum.REVIEWED), ReviewTypeEnum.REVIEWED)
                                 .otherwise(ReviewTypeEnum.PENDING)
                                 .as(WritingSkillPayload.Fields.status),
                         DSL.multiset(

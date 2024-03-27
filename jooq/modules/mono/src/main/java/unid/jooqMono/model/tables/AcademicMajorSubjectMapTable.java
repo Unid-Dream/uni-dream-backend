@@ -152,29 +152,6 @@ public class AcademicMajorSubjectMapTable extends TableImpl<AcademicMajorSubject
 
     @Override
     @Nonnull
-    public List<ForeignKey<AcademicMajorSubjectMapRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ACADEMIC_MAJOR_SUBJECT_MAP__FK_ACAD_MAJ_SUB_MAP_MAJ, Keys.ACADEMIC_MAJOR_SUBJECT_MAP__FK_ACAD_MAJ_SUB_MAP_ACAD_SUB);
-    }
-
-    private transient AcademicMajorTable _academicMajor;
-    private transient AcademicSubjectTable _academicSubject;
-
-    public AcademicMajorTable academicMajor() {
-        if (_academicMajor == null)
-            _academicMajor = new AcademicMajorTable(this, Keys.ACADEMIC_MAJOR_SUBJECT_MAP__FK_ACAD_MAJ_SUB_MAP_MAJ);
-
-        return _academicMajor;
-    }
-
-    public AcademicSubjectTable academicSubject() {
-        if (_academicSubject == null)
-            _academicSubject = new AcademicSubjectTable(this, Keys.ACADEMIC_MAJOR_SUBJECT_MAP__FK_ACAD_MAJ_SUB_MAP_ACAD_SUB);
-
-        return _academicSubject;
-    }
-
-    @Override
-    @Nonnull
     public AcademicMajorSubjectMapTable as(String alias) {
         return new AcademicMajorSubjectMapTable(DSL.name(alias), this);
     }

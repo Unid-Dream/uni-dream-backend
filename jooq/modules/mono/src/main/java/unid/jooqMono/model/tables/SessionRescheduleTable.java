@@ -92,7 +92,7 @@ public class SessionRescheduleTable extends TableImpl<SessionRescheduleRecord> {
     /**
      * The column <code>public.session_reschedule.accpet</code>.
      */
-    public final TableField<SessionRescheduleRecord, Boolean> ACCPET = createField(DSL.name("accpet"), SQLDataType.BOOLEAN.defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<SessionRescheduleRecord, Boolean> ACCPET = createField(DSL.name("accpet"), SQLDataType.BOOLEAN, this, "");
 
     /**
      * The column <code>public.session_reschedule.admin_user_id</code>.

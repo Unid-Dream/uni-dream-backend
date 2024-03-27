@@ -123,8 +123,7 @@ public class EmailService {
         sendEmail(
                 "Remind No Response Session",
                 html,
-                Collections.singletonList("1019193566@qq.com").toArray(new String[]{})
-//                Collections.singletonList(payload.getEmail()).toArray(new String[]{})
+                Collections.singletonList(payload.getEmail()).toArray(new String[]{})
         );
     }
 

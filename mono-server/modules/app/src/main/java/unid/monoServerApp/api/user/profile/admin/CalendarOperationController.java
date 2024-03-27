@@ -136,6 +136,27 @@ public class CalendarOperationController {
 
 
 
+    @GetMapping("admin/consultation-session/reschedule/{id}/accept")
+    @Transactional
+    @ACL(
+            authed = true,
+            allowedRoles = UserRoleEnum.ADMIN
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Query Reschedule Session Page"
+    )
+    public @Valid UnifiedResponse<Void> getRescheduleSessionPage(
+            @PathVariable("id") UUID id
+    ) {
+        calendarOperationService.acceptOrRejectReschedule(id,true);
+        return UnifiedResponse.of(
+                null
+        );
+    }
+
+
+
 
 
 

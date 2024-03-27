@@ -25,6 +25,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldNameConstants
 @Validated
+@Schema
 public class EducatorSessionCommentRequest {
     @NotEmpty
     @Valid
@@ -32,6 +33,7 @@ public class EducatorSessionCommentRequest {
 
     @Data
     @FieldNameConstants
+    @Schema
     public static class EducatorSessionCommentNote{
         private String comment;
         private UUID id;

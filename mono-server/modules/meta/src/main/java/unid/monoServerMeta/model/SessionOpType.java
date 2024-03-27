@@ -20,6 +20,9 @@ public enum SessionOpType implements NamedEnum {
     REJECT("REJECT"),
 
     CANCEL("CANCEL"),
+    RESCHEDULE_ACCEPTED("RESCHEDULE_ACCEPTED"),
+    RESCHEDULE_REJECTED("RESCHEDULE_REJECTED"),
+
 
     ;
 

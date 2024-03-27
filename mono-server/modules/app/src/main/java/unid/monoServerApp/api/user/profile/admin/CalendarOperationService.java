@@ -21,6 +21,7 @@ import unid.monoServerApp.Exceptions;
 import unid.monoServerApp.api.user.profile.educator.calendar.comment.EducatorSessionCommentService;
 import unid.monoServerApp.database.table.course.DbEvent;
 import unid.monoServerApp.database.table.course.DbEventScheduleTime;
+import unid.monoServerApp.database.table.educatorCalendar.DbSessionReschedule;
 import unid.monoServerApp.database.table.educatorProfile.DbEducatorProfile;
 import unid.monoServerApp.database.table.eventLog.DbSessionOpLog;
 import unid.monoServerApp.database.table.i18n.DbI18N;
@@ -69,6 +70,7 @@ public class CalendarOperationService {
     private final DbUser dbUser;
     private final DbEducatorProfile dbEducatorProfile;
     private final EmailService emailService;
+    private final DbSessionReschedule dbSessionReschedule;
 
     //查询session 分页列表
     //查询条件(transactionId, educatorName, studentName, status )
@@ -269,8 +271,9 @@ public class CalendarOperationService {
                                         .where(USER.ID.eq(table.USER_ID))
                         ).as(SessionEventLogResponse.SessionEventLogPayload.Fields.user).convertFrom(r -> r.isEmpty() ? null : r.get(0).into(SessionEventLogResponse.SessionEventLogPayload.UserPayload.class))
                 )
-                .from(table)
-                .where(table.TRANSACTION_ID.eq(transactionId))
+                .from(table,STUDENT_PAYMENT_TRANSACTION)
+                .where(table.TRANSACTION_ID.eq(STUDENT_PAYMENT_TRANSACTION.TRANSACTION_ITEM_REF_ID)
+                        .and(STUDENT_PAYMENT_TRANSACTION.ID.eq(transactionId)))
                 .fetchInto(SessionEventLogResponse.SessionEventLogPayload.class);
         SessionEventLogResponse response = new SessionEventLogResponse();
         response.setPayload(payload);
@@ -530,5 +533,21 @@ public class CalendarOperationService {
                 null,
                 list
         );
+    }
+
+    public void acceptOrRejectReschedule(UUID id, boolean accept) {
+        Optional.ofNullable(
+                dbSessionReschedule.getDao().fetchOneById(id)
+        ).ifPresent((pojo)->{
+            //更新
+            dbSessionReschedule.getDao().update(pojo.setAccpet(accept));
+            //记录操作日志
+            sessionLoggerService.async(SessionLogger.OpEvent.builder()
+                    .userId(RequestHolder.get().getUser().getUserId())
+                    .status(accept? BookingStatus.RESCHEDULE_ACCEPT : BookingStatus.RESCHEDULE_REJECT)
+                    .transactionId(pojo.getEducatorCalendarId())
+                    .timeUtc(OffsetDateTime.now())
+                    .opType(accept? SessionOpType.RESCHEDULE_ACCEPTED : SessionOpType.RESCHEDULE_REJECTED).build());
+        });
     }
 }

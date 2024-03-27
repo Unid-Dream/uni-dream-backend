@@ -38,7 +38,11 @@ public enum SessionOpTypeEnum implements EnumType {
 
     REJECT("REJECT"),
 
-    CANCEL("CANCEL");
+    CANCEL("CANCEL"),
+
+    RESCHEDULE_REJECT("RESCHEDULE_REJECT"),
+
+    RESCHEDULE_ACCEPT("RESCHEDULE_ACCEPT");
 
     private final String literal;
 
