@@ -36,8 +36,7 @@ public class CalendarOperationController {
     @GetMapping("admin/consultation-session/page")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -53,8 +52,7 @@ public class CalendarOperationController {
     @GetMapping("admin/consultation-session/{id}")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -85,8 +83,7 @@ public class CalendarOperationController {
     @PutMapping("admin/consultation-session/{id}/cancel")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -103,8 +100,7 @@ public class CalendarOperationController {
     @Transactional
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -119,8 +115,7 @@ public class CalendarOperationController {
     @GetMapping("admin/consultation-session/{id}/comments")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -138,8 +133,7 @@ public class CalendarOperationController {
     @GetMapping("admin/promotion-event/page")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -156,8 +150,7 @@ public class CalendarOperationController {
     @GetMapping("admin/promotion-event/{id}")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -194,8 +187,7 @@ public class CalendarOperationController {
     @PutMapping("admin/promotion-event")
     @ACL(
             authed = true,
-            allowedRoles = UserRoleEnum.ADMIN,
-            matchingSessionUserId = true
+            allowedRoles = UserRoleEnum.ADMIN
     )
     @ResponseStatus(HttpStatus.OK)
     @Operation(
