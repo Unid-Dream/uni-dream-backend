@@ -9,6 +9,9 @@ import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import unid.jooqMono.model.tables.LanguageTable;
+import unid.jooqMono.model.tables.daos.LanguageDao;
+import unid.monoServerApp.database.Db;
 import unid.monoServerMeta.api.LearningHubResponse;
 import unid.monoServerMeta.model.I18n;
 

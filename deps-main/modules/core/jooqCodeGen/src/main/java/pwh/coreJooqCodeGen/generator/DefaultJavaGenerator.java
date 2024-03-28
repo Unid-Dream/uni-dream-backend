@@ -4,7 +4,11 @@ import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.codegen.JavaGenerator;
 import org.jooq.codegen.JavaWriter;
 import org.jooq.meta.Definition;
+import org.jooq.meta.TableDefinition;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 public class DefaultJavaGenerator extends JavaGenerator {
@@ -15,4 +19,7 @@ public class DefaultJavaGenerator extends JavaGenerator {
             out.println("@lombok.experimental.FieldNameConstants(innerTypeName = \"Columns\")");
         }
     }
+
+
+
 }

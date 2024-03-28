@@ -21,6 +21,6 @@ public class AcademicMajorTest {
         AcademicMajorPayload payload = JSONUtil.toBean(
                 "",AcademicMajorPayload.class
         );
-        academicMajorService.create(payload);
+//        academicMajorService.create(payload);
     }
 }

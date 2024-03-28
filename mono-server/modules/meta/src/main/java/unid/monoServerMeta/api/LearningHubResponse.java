@@ -38,6 +38,7 @@ public class LearningHubResponse {
     @JsonIgnore
     private String agenda;
     private I18n agendaI18n;
+    private Integer total;
 
 
     @Data

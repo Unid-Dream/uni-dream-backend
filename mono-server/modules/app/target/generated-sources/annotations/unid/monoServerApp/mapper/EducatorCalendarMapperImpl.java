@@ -25,7 +25,7 @@ import unid.monoServerMeta.model.PaymentStatus;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-24T12:33:15+0800",
+    date = "2024-03-28T23:20:22+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.20.1 (Amazon.com Inc.)"
 )
 @Component
@@ -170,6 +170,10 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
             break;
             case CANCELLED: bookingStatusEnum = BookingStatusEnum.CANCELLED;
             break;
+            case RESCHEDULE_REJECTED: bookingStatusEnum = BookingStatusEnum.RESCHEDULE_REJECTED;
+            break;
+            case RESCHEDULE_ACCEPTED: bookingStatusEnum = BookingStatusEnum.RESCHEDULE_ACCEPTED;
+            break;
             case VOID: bookingStatusEnum = BookingStatusEnum.VOID;
             break;
             case FINISHED: bookingStatusEnum = BookingStatusEnum.FINISHED;
@@ -185,6 +189,10 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
             case RESCHEDULE: bookingStatusEnum = BookingStatusEnum.RESCHEDULE;
             break;
             case REVIEWED: bookingStatusEnum = BookingStatusEnum.REVIEWED;
+            break;
+            case PENDING_APPROVAL: bookingStatusEnum = BookingStatusEnum.PENDING_APPROVAL;
+            break;
+            case PENDING_PAYMENT: bookingStatusEnum = BookingStatusEnum.PENDING_PAYMENT;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatus );
         }
@@ -330,6 +338,14 @@ public class EducatorCalendarMapperImpl implements EducatorCalendarMapper {
             case RESCHEDULE: bookingStatus = BookingStatus.RESCHEDULE;
             break;
             case REVIEWED: bookingStatus = BookingStatus.REVIEWED;
+            break;
+            case PENDING_APPROVAL: bookingStatus = BookingStatus.PENDING_APPROVAL;
+            break;
+            case PENDING_PAYMENT: bookingStatus = BookingStatus.PENDING_PAYMENT;
+            break;
+            case RESCHEDULE_REJECTED: bookingStatus = BookingStatus.RESCHEDULE_REJECTED;
+            break;
+            case RESCHEDULE_ACCEPTED: bookingStatus = BookingStatus.RESCHEDULE_ACCEPTED;
             break;
             default: throw new IllegalArgumentException( "Unexpected enum constant: " + bookingStatusEnum );
         }

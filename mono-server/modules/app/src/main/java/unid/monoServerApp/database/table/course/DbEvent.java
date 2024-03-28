@@ -100,5 +100,9 @@ public class DbEvent extends Db<EventTable, EventDao> {
     // (selectively) inherited from related jOOQ generated POJO
     // expanding foreign keys
     public static final class Result extends EventPojo implements Serializable {
+        private DbI18N.Result titleI18n;
+        private DbI18N.Result agendaI18n;
+        private DbI18N.Result descriptionI18n;
+        private Integer enrollNumber;
     }
 }
